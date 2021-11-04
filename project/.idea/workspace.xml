@@ -5,33 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f5679b8-ee3b-4cd9-87f9-55bb7389b099" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/MiniTramways.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/MapController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/interfaces/Controler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/interfaces/Listened.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/interfaces/Listener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Game.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Line.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/People.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/PlaceToBe.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Player.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Tramway.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Vector2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/Area.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/AreaTypes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/Cell.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/Map.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Building.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/House.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Office.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Shop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Station.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/HelloApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/HelloController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/MapController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/MapController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +45,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../Desktop/ExempleMVC" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -93,7 +69,7 @@
     <configuration name="MiniTramways" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.stonksco.minitramways.MiniTramways" />
       <module name="MiniTramways" />
-      <option name="PROGRAM_PARAMETERS" value="--debug=3" />
+      <option name="PROGRAM_PARAMETERS" value="--debug=2" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.stonksco.minitramways.*" />

@@ -9,7 +9,10 @@ public class MapController implements Controler {
     private Map map;
     private GameView gameview;
 
-
+    public MapController(Map map, GameView view) {
+        this.map = map;
+        this.gameview = view;
+    }
 
     @Override
     public void Warn() {
