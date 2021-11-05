@@ -3,6 +3,7 @@ package com.stonksco.minitramways.control;
 import com.stonksco.minitramways.control.interfaces.Controler;
 import com.stonksco.minitramways.logic.map.Map;
 import com.stonksco.minitramways.views.GameView;
+import javafx.scene.Node;
 
 public class MapController implements Controler {
 
@@ -18,4 +19,9 @@ public class MapController implements Controler {
     public void Warn() {
 
     }
+
+   public void createLine(Node debut, Node fin)
+   {
+  //j'ai pas le droit de la coder
+   }
 }

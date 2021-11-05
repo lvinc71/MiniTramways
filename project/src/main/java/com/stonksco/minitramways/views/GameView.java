@@ -10,10 +10,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
+import com.stonksco.minitramways.control.MapController;
 
 import java.util.HashMap;
 
@@ -33,6 +35,10 @@ public class GameView extends Scene implements Listener {
 
     private Color backgroundColor = Color.web("0xE9E9E9",1);
     private Color dotColor = Color.web("0xC2C2C2",1);
+
+    // Click construction
+    private Node firstClick = null;
+    private Node secondClick = null;
 
     /**
      * Crée une nouvelle fenêtre de jeu, avec sa grille et l'UI associée
@@ -157,21 +163,31 @@ public class GameView extends Scene implements Listener {
     EventHandler<MouseEvent> gridClickEvent = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent mouseEvent) {
-            Game.Debug(3,"Grid click triggered.");
-            Node clickedNode = mouseEvent.getPickResult().getIntersectedNode();
-            if(clickedNode != grid) {
-                Node parent = clickedNode.getParent();
-                while(parent != grid) {
-                    clickedNode = parent;
-                    parent = clickedNode.getParent();
+            if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                Game.Debug(3,"Grid click triggered.");
+                Node clickedNode = mouseEvent.getPickResult().getIntersectedNode();
+                if(clickedNode != grid) {
+                    Node parent = clickedNode.getParent();
+                    while(parent != grid) {
+                        clickedNode = parent;
+                        parent = clickedNode.getParent();
+                    }
+
+                    int col = GridPane.getColumnIndex(clickedNode);
+                    int row = GridPane.getRowIndex(clickedNode);
+                    Game.Debug(2,"Clicked on cell at ( "+col+" , "+row+" )");
+                    cellClick(clickedNode);
+
                 }
 
-                int col = GridPane.getColumnIndex(clickedNode);
-                int row = GridPane.getRowIndex(clickedNode);
-                Game.Debug(2,"Clicked on cell at ( "+col+" , "+row+" )");
-                cellClick(clickedNode);
-
             }
+            else
+            {
+                firstClick = null;
+                secondClick = null;
+                Game.Debug(2,"restart creation line ");
+            }
+
         }
     };
 
@@ -179,7 +195,29 @@ public class GameView extends Scene implements Listener {
      * Appelée au clic sur une cellule de la grille
      * @param cell sur laquelle le clic a été fait
      */
-    private void cellClick(Node cell) {
+    private void cellClick(Node cell)
+    {
+            if (firstClick == null)
+            {
+                firstClick = cell;
+                Game.Debug(2, "First Station at ( " + GridPane.getColumnIndex(firstClick)+ " , "+ GridPane.getRowIndex(firstClick)+ " )");
+
+            }
+            else if (secondClick == null && firstClick != null)
+            {
+                secondClick = cell;
+                Game.Debug(2, "Second Station at ( " + GridPane.getColumnIndex(secondClick)+ " , "+ GridPane.getRowIndex(secondClick)+ " )");
+                // appel pour la création de la ligne
+                mapController.createLine(firstClick,secondClick);
+            }
+
+            if (firstClick != null && secondClick != null )
+            {
+                firstClick = null;
+                secondClick = null;
+                Game.Debug(2, " good new station ");
+            }
+
 
     }
 
