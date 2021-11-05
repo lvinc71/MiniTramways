@@ -37,8 +37,8 @@ public class GameView extends Scene implements Listener {
     private Color dotColor = Color.web("0xC2C2C2",1);
 
     // Click construction
-    private Node firstClick = null;
-    private Node secondClick = null;
+    private Node firstCell = null;
+    private Node secondCell = null;
 
     /**
      * Crée une nouvelle fenêtre de jeu, avec sa grille et l'UI associée
@@ -163,6 +163,7 @@ public class GameView extends Scene implements Listener {
     EventHandler<MouseEvent> gridClickEvent = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent mouseEvent) {
+            // Clic gauche
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                 Game.Debug(3,"Grid click triggered.");
                 Node clickedNode = mouseEvent.getPickResult().getIntersectedNode();
@@ -181,11 +182,10 @@ public class GameView extends Scene implements Listener {
                 }
 
             }
-            else
+            // Clic droit
+            else if(mouseEvent.getButton() == MouseButton.SECONDARY)
             {
-                firstClick = null;
-                secondClick = null;
-                Game.Debug(2,"restart creation line ");
+                resetCellSelection();
             }
 
         }
@@ -194,31 +194,45 @@ public class GameView extends Scene implements Listener {
     /**
      * Appelée au clic sur une cellule de la grille
      * @param cell sur laquelle le clic a été fait
+     * @author Thomas Coulon
      */
     private void cellClick(Node cell)
     {
-            if (firstClick == null)
+            if (firstCell == null)
             {
-                firstClick = cell;
-                Game.Debug(2, "First Station at ( " + GridPane.getColumnIndex(firstClick)+ " , "+ GridPane.getRowIndex(firstClick)+ " )");
+                firstCell = cell;
+                Game.Debug(2, "First cell at ( " + GridPane.getColumnIndex(firstCell)+ " , "+ + " )");
 
             }
-            else if (secondClick == null && firstClick != null)
+            else if (secondCell == null && firstCell != null)
             {
-                secondClick = cell;
-                Game.Debug(2, "Second Station at ( " + GridPane.getColumnIndex(secondClick)+ " , "+ GridPane.getRowIndex(secondClick)+ " )");
+                secondCell = cell;
+                Game.Debug(2, "Second cell at ( " + GridPane.getColumnIndex(secondCell)+ " , "+ GridPane.getRowIndex(secondCell)+ " )");
                 // appel pour la création de la ligne
-                mapController.createLine(firstClick,secondClick);
+                mapController.createLine(firstCell,secondCell);
             }
 
-            if (firstClick != null && secondClick != null )
+            if (firstCell != null && secondCell != null )
             {
-                firstClick = null;
-                secondClick = null;
-                Game.Debug(2, " good new station ");
+                firstCell = null;
+                secondCell = null;
+                Game.Debug(2, "Two cells selected.");
+                Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
+                Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
+                mapController.createLine(firstPos,secondPos);
             }
 
 
+    }
+
+    /**
+     * Réinitialise les cellules actuellement sélectionnées
+     * @author Thomas Coulon
+     */
+    private void resetCellSelection() {
+        firstCell = null;
+        secondCell = null;
+        Game.Debug(2,"Cell selection cleared.");
     }
 
     @Override
