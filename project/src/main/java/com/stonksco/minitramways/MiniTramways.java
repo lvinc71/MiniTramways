@@ -43,7 +43,6 @@ public class MiniTramways extends Application {
 
         primaryStage.setResizable(false);
         primaryStage.setTitle("Mini Tramways");
-        primaryStage.initStyle(StageStyle.UNIFIED);
         primaryStage.show();
 
         Group root = new Group();

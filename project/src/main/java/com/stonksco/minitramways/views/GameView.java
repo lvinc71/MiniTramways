@@ -6,6 +6,7 @@ import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.Map;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -17,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
 import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 
 import java.util.HashMap;
 
@@ -24,21 +26,25 @@ public class GameView extends Scene implements Listener {
 
 
 
-    private Group root  = null;
-    private Vector2 windowSize = null;
+    private Group root;
+    private Vector2 windowSize;
 
-    private GridPane grid = null;
-    private BorderPane regions = null;
-    private HashMap<Vector2, Node> cells = null;
-    private AnchorPane centerPane = null;
+    // Scene elements and layout
+    private GridPane grid;
+    private BorderPane regions;
+    private HashMap<Vector2, CellView> cells = null;
+    private AnchorPane centerPane;
+    private HashMap<Color,LineView> lines;
 
     // Controllers
     private MapController mapController;
 
+
+    // Colors
     private Color backgroundColor = Color.web("0xE9E9E9",1);
     private Color dotColor = Color.web("0xC2C2C2",1);
 
-    // Click construction
+    // Line creation selection
     private Node firstCell = null;
     private Node secondCell = null;
 
@@ -66,6 +72,8 @@ public class GameView extends Scene implements Listener {
 
         initGrid();
         initWindowRegions();
+
+        lines = new HashMap<>();
     }
 
     /**
@@ -88,11 +96,11 @@ public class GameView extends Scene implements Listener {
 
         for(int i=0; i<map.getGridSize().getY(); i++) {
             for(int j=0; j<map.getGridSize().getX(); j++) {
-                // Ici, dessiner points pour chaque case
 
                 CellView cell = new CellView();
+                cell.setGridPos(new Vector2(i,j));
                 cell.setAlignment(Pos.CENTER);
-                cells.put(new Vector2(i,i),cell);
+                cells.put(new Vector2(i,j),cell);
                 grid.add(cell,i,j);
 
                 if(i!=map.getGridSize().getY()-1 && j!=map.getGridSize().getX()-1) {
@@ -242,19 +250,32 @@ public class GameView extends Scene implements Listener {
 
     }
 
-    private void DrawLine(Vector2 pos1, Vector2 pos2)
-    {
-        Line line = new Line();
-        line.setStartX(pos1.getX());
-        line.setStartY(pos1.getY());
-        line.setEndX(pos2.getX());
-        line.setEndY(pos2.getY());
-        line.setStrokeWidth(10);
-        line.setStroke(Color.PINK);
-        centerPane.getChildren().add(line);
-    }
+
     public void CreateLine (Vector2 start, Vector2 end)
     {
-        DrawLine(start,end);
+        this.lines.put(Color.GOLD,new LineView(this,start,end));
+    }
+
+    /**
+     * Retourne les coordonnées en pixels du centre d'une cellule de la grille
+     * @param cellPos coordonnées de la cellule dans la grille
+     * @return coordonnées en pixels dans la scène
+     * @author Léo Vincent
+     */
+    public Vector2 CellToPixels(Vector2 cellPos) {
+        Game.Debug(3,"Trying to get pixels of "+cellPos);
+        CellView cell = cells.get(cellPos);
+        Bounds b = cell.localToScene(cell.getBoundsInLocal());
+        Vector2 res = new Vector2(b.getCenterX(),b.getCenterY());
+        Game.Debug(3,"Conversion from cell  "+cellPos+" to pixels "+res+" .");
+        return res;
+    }
+
+    public CellView GetCellAt(Vector2 pos) {
+        return cells.get(pos);
+    }
+
+    public void AddNodeToView(Node node) {
+        this.centerPane.getChildren().add(node);
     }
 }
