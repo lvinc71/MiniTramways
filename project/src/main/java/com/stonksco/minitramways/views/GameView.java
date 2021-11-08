@@ -88,7 +88,7 @@ public class GameView extends Scene implements Listener {
             for(int j=0; j<map.getGridSize().getX(); j++) {
                 // Ici, dessiner points pour chaque case
 
-                StackPane cell = new StackPane();
+                CellView cell = new CellView();
                 cell.setAlignment(Pos.CENTER);
                 cells.put(new Vector2(i,i),cell);
                 grid.add(cell,i,j);
@@ -177,7 +177,7 @@ public class GameView extends Scene implements Listener {
                     int col = GridPane.getColumnIndex(clickedNode);
                     int row = GridPane.getRowIndex(clickedNode);
                     Game.Debug(2,"Clicked on cell at ( "+col+" , "+row+" )");
-                    cellClick(clickedNode);
+                    cellClick((CellView) clickedNode);
 
                 }
 
@@ -196,7 +196,7 @@ public class GameView extends Scene implements Listener {
      * @param cell sur laquelle le clic a été fait
      * @author Thomas Coulon
      */
-    private void cellClick(Node cell)
+    private void cellClick(CellView cell)
     {
             if (firstCell == null)
             {
@@ -210,7 +210,7 @@ public class GameView extends Scene implements Listener {
                 Game.Debug(2, "Second cell at ( " + GridPane.getColumnIndex(secondCell)+ " , "+ GridPane.getRowIndex(secondCell)+ " )");
             }
 
-            if (firstCell != null && secondCell != null )
+            if (firstCell != null && secondCell != null)
             {
                 Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
                 Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
