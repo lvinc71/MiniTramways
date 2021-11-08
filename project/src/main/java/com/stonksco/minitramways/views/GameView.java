@@ -201,24 +201,22 @@ public class GameView extends Scene implements Listener {
             if (firstCell == null)
             {
                 firstCell = cell;
-                Game.Debug(2, "First cell at ( " + GridPane.getColumnIndex(firstCell)+ " , "+ + " )");
+                Game.Debug(2, "First cell at ( " + GridPane.getColumnIndex(firstCell)+ " , "+ GridPane.getRowIndex(firstCell) + " )");
 
             }
             else if (secondCell == null && firstCell != null)
             {
                 secondCell = cell;
                 Game.Debug(2, "Second cell at ( " + GridPane.getColumnIndex(secondCell)+ " , "+ GridPane.getRowIndex(secondCell)+ " )");
-                // appel pour la création de la ligne
-                mapController.createLine(firstCell,secondCell);
             }
 
             if (firstCell != null && secondCell != null )
             {
+                Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
+                Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
                 firstCell = null;
                 secondCell = null;
                 Game.Debug(2, "Two cells selected.");
-                Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
-                Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
                 mapController.createLine(firstPos,secondPos);
             }
 

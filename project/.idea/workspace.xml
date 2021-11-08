@@ -5,14 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f5679b8-ee3b-4cd9-87f9-55bb7389b099" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MiniTramways.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MiniTramways.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/MapController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/MapController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/control/MapController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/control/MapController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/views/GameView$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/views/GameView$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/views/GameView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/views/GameView.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,8 +46,8 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="C:/Program Files/Java/javafx-sdk-11.0.2/lib" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.38505748" />
   </component>
