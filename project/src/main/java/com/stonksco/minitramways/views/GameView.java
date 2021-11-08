@@ -29,6 +29,7 @@ public class GameView extends Scene implements Listener {
     private GridPane grid = null;
     private BorderPane regions = null;
     private HashMap<Vector2, Node> cells = null;
+    private AnchorPane centerPane = null;
 
     // Controllers
     private MapController mapController;
@@ -59,8 +60,8 @@ public class GameView extends Scene implements Listener {
         this.setFill(backgroundColor);
 
         grid = new GridPane();
-
         regions = new BorderPane();
+        centerPane = new AnchorPane();
 
         initGrid();
         initWindowRegions();
@@ -99,6 +100,7 @@ public class GameView extends Scene implements Listener {
                     e.setTranslateX(3);
                     e.setTranslateY(3);
                     e.setFill(dotColor);
+                    e.setViewOrder(40);
                     cell.getChildren().add(e);
                     StackPane.setAlignment(e,Pos.BOTTOM_RIGHT);
                 }
@@ -151,7 +153,8 @@ public class GameView extends Scene implements Listener {
 
         BorderPane.setAlignment(regions.getTop(),Pos.TOP_CENTER);
 
-        regions.setCenter(grid);
+        regions.setCenter(centerPane);
+        centerPane.getChildren().add(grid);
         this.root.getChildren().add(regions);
     }
 

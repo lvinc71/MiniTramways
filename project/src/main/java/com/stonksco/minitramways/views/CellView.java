@@ -8,6 +8,10 @@ public class CellView extends StackPane {
     private BuildingEnum building = null;
 
     public void setBuilding(BuildingEnum b) {
+        if(building==null) {
+
+        }
+
         this.building = b;
     }
 
@@ -15,6 +19,13 @@ public class CellView extends StackPane {
         return this.building;
     }
 
-    
+    /**
+     * Retourne l'image image correspondant au tybe de bâtiment donné
+     * @param b
+     */
+    private BufferedImage getBuildingImage(BuildingEnum b) {
+        return null;
+    }
+
 
 }
