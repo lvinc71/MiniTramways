@@ -23,7 +23,7 @@ public class CellView extends StackPane {
      * Retourne l'image image correspondant au tybe de bâtiment donné
      * @param b
      */
-    private BufferedImage getBuildingImage(BuildingEnum b) {
+    private Image getBuildingImage(BuildingEnum b) {
         return null;
     }
 
