@@ -1,6 +1,7 @@
 package com.stonksco.minitramways.views;
 
 import com.stonksco.minitramways.logic.map.building.BuildingEnum;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 
 public class CellView extends StackPane {
