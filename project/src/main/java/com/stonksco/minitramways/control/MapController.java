@@ -23,6 +23,6 @@ public class MapController implements Controler {
 
    public void createLine(Vector2 start, Vector2 end)
    {
-        //j'ai pas le droit de la coder
+       gameview.CreateLine(start,end);
    }
 }

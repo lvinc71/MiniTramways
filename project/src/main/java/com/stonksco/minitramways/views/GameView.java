@@ -15,7 +15,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-import com.stonksco.minitramways.control.MapController;
+
+import javafx.scene.shape.Line;
 
 import java.util.HashMap;
 
@@ -239,5 +240,21 @@ public class GameView extends Scene implements Listener {
     @Override
     public void Notify(String msg) {
 
+    }
+
+    private void DrawLine(Vector2 pos1, Vector2 pos2)
+    {
+        Line line = new Line();
+        line.setStartX(pos1.getX());
+        line.setStartY(pos1.getY());
+        line.setEndX(pos2.getX());
+        line.setEndY(pos2.getY());
+        line.setStrokeWidth(10);
+        line.setStroke(Color.PINK);
+        centerPane.getChildren().add(line);
+    }
+    public void CreateLine (Vector2 start, Vector2 end)
+    {
+        DrawLine(start,end);
     }
 }
