@@ -9,7 +9,19 @@
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../../Program Files/Java/javafx-sdk-11.0.2/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../../Program Files/Java/javafx-sdk-11.0.2/lib" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../../../Program Files/Java/javafx-sdk-11.0.2/lib" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../../Program Files/Java/javafx-sdk-11.0.2/lib" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:11.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:11.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:11.0.2" level="project" />
@@ -31,21 +43,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-commons:1.7.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.7.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.7.1" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/../../../java/javafx-sdk-11/lib" />
-        </CLASSES>
-        <JAVADOC />
-        <NATIVE>
-          <root url="file://$MODULE_DIR$/../../../java/javafx-sdk-11/lib" />
-        </NATIVE>
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../../../java/javafx-sdk-11/lib" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/../../../java/javafx-sdk-11/lib" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../java/javafx-sdk-11/lib" recursive="false" type="SOURCES" />
-      </library>
-    </orderEntry>
+    <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

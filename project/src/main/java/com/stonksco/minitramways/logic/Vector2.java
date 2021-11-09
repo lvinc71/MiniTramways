@@ -36,6 +36,38 @@ public class Vector2 {
         this.y = y;
     }
 
+    public Vector2 div(Vector2 v) {
+        return new Vector2(x/v.getX(),y/v.getY());
+    }
+
+    public Vector2 scale(Vector2 v) {
+        return new Vector2(x*v.getX(),y*v.getY());
+    }
+
+    public Vector2 scale(double s) {
+        return new Vector2(x*s,y*s);
+    }
+
+    public Vector2 sub(Vector2 v) {
+        return new Vector2(x-v.getX(),y-v.getY());
+    }
+
+    public Vector2 add(Vector2 v) {
+        return new Vector2(x+v.getX(),y+v.getY());
+    }
+
+    public Vector2 normalize() {
+        return new Vector2(x/length(),y/length());
+    }
+
+    public double length() {
+        return Math.sqrt(x*x+y*y);
+    }
+
+    public double scalar(Vector2 v) {
+        return x*v.getX()+y*v.getY();
+    }
+
     public Vector2 clone() {
         return new Vector2(x,y);
     }

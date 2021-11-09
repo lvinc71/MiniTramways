@@ -1,8 +1,10 @@
 package com.stonksco.minitramways.control;
 
 import com.stonksco.minitramways.control.interfaces.Controler;
+import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.Map;
+import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 import com.stonksco.minitramways.views.GameView;
 import javafx.scene.Node;
 
@@ -21,8 +23,15 @@ public class MapController implements Controler {
 
     }
 
-   public void createLine(Vector2 start, Vector2 end)
+   public boolean createLine(Vector2 start, Vector2 end)
    {
-       gameview.CreateLine(start,end);
+       boolean res = true;
+       if(Game.get().CreateLine(start,end))
+           gameview.CreateLine(start,end);
+       else
+           res = false;
+
+       return res;
    }
+
 }

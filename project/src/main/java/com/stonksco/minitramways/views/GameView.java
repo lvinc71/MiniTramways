@@ -28,6 +28,7 @@ public class GameView extends Scene implements Listener {
 
     private Group root;
     private Vector2 windowSize;
+    private Vector2 cellSize;
 
     // Scene elements and layout
     private GridPane grid;
@@ -35,6 +36,7 @@ public class GameView extends Scene implements Listener {
     private HashMap<Vector2, CellView> cells = null;
     private AnchorPane centerPane;
     private HashMap<Color,LineView> lines;
+    private HashMap<Vector2, StationView> stations;
 
     // Controllers
     private MapController mapController;
@@ -59,7 +61,12 @@ public class GameView extends Scene implements Listener {
 
         this.root = parent;
         this.windowSize = windowSize;
+    }
 
+    /**
+     * Suite du constructeur, appelée après l'affichage de la fenêtre
+     */
+    public void Enable() {
         mapController = new MapController(Game.get().getMap(),this);
 
         Game.get().initGame();
@@ -70,10 +77,12 @@ public class GameView extends Scene implements Listener {
         regions = new BorderPane();
         centerPane = new AnchorPane();
 
-        initGrid();
         initWindowRegions();
+        initGrid();
+
 
         lines = new HashMap<>();
+        stations = new HashMap<>();
     }
 
     /**
@@ -98,10 +107,11 @@ public class GameView extends Scene implements Listener {
             for(int j=0; j<map.getGridSize().getX(); j++) {
 
                 CellView cell = new CellView();
-                cell.setGridPos(new Vector2(i,j));
+                cell.setGridPos(new Vector2(j,i));
                 cell.setAlignment(Pos.CENTER);
-                cells.put(new Vector2(i,j),cell);
-                grid.add(cell,i,j);
+
+                cells.put(new Vector2(j,i),cell);
+                grid.add(cell,j,i);
 
                 if(i!=map.getGridSize().getY()-1 && j!=map.getGridSize().getX()-1) {
 
@@ -113,8 +123,6 @@ public class GameView extends Scene implements Listener {
                     cell.getChildren().add(e);
                     StackPane.setAlignment(e,Pos.BOTTOM_RIGHT);
                 }
-
-
             }
         }
 
@@ -137,6 +145,14 @@ public class GameView extends Scene implements Listener {
 
         grid.addEventFilter(MouseEvent.MOUSE_CLICKED,gridClickEvent);
 
+        root.layout();
+        centerPane.layout();
+        grid.layout();
+        Vector2 gridSizePx = new Vector2(grid.getWidth(),grid.getHeight());
+        Vector2 gridSize = Game.get().getMap().getGridSize().clone();
+        cellSize = new Vector2(grid.getCellBounds(0,0).getWidth(),grid.getCellBounds(0,0).getHeight());
+        //System.out.println("A RETIRER : BOUNDS : "+grid.getCellBounds(0,0));
+        Game.Debug(2,"Calculated cell size of "+cellSize+" from grid of "+gridSizePx+" pixels and "+gridSize+" cells");
     }
 
     /**
@@ -229,7 +245,8 @@ public class GameView extends Scene implements Listener {
                 firstCell = null;
                 secondCell = null;
                 Game.Debug(2, "Two cells selected.");
-                mapController.createLine(firstPos,secondPos);
+                if(!mapController.createLine(firstPos,secondPos))
+                    Game.Debug(1,"Line creation aborted.");
             }
 
 
@@ -253,7 +270,7 @@ public class GameView extends Scene implements Listener {
 
     public void CreateLine (Vector2 start, Vector2 end)
     {
-        this.lines.put(Color.GOLD,new LineView(this,start,end));
+            this.lines.put(Color.GOLD,new LineView(this,start,end));
     }
 
     /**
@@ -277,5 +294,19 @@ public class GameView extends Scene implements Listener {
 
     public void AddNodeToView(Node node) {
         this.centerPane.getChildren().add(node);
+    }
+
+    public void addStationAt(Vector2 at) {
+        StationView s = new StationView(cellSize);
+        s.prefWidth(cellSize.getX());
+        s.prefHeight(cellSize.getY());
+        s.maxWidth(cellSize.getX());
+        s.maxHeight(cellSize.getY());
+        GetCellAt(at).getChildren().add(s);
+        stations.put(at,s);
+    }
+
+    public Vector2 GetCellSize() {
+        return cellSize.clone();
     }
 }
