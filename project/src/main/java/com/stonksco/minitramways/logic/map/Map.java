@@ -1,16 +1,22 @@
 package com.stonksco.minitramways.logic.map;
 
 import com.stonksco.minitramways.logic.Game;
+import com.stonksco.minitramways.logic.Line;
 import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Map {
 
+    // Grille
     private HashMap<Vector2,Cell> grid = null;
-
-    private Vector2 windowSize = null;
     private Vector2 gridSize = null;
+
+    // Elements de la map
+    private ArrayList<Line> lines;
+
 
     public Map() {
         init();
@@ -42,24 +48,8 @@ public class Map {
      * Initialise tous les composants de la map
      */
     private void init() {
-        initGrid(23,36);
-    }
-
-    /**
-     *
-     * @param pixels
-     */
-    public Vector2 PixelsToGrid(Vector2 pixels) {
-        return null;
-    }
-
-    /**
-     *
-     * @param grid
-     * @param mode
-     */
-    public Vector2 GridToPixels(Vector2 grid,int mode) {
-        return null;
+        initGrid(36,23);
+        lines = new ArrayList<>();
     }
 
     public HashMap<Vector2,Cell> GetGrid() {
@@ -69,4 +59,34 @@ public class Map {
     public Vector2 getGridSize() {
         return gridSize.clone();
     }
+
+    public boolean CreateLine(Vector2 start, Vector2 end) {
+        Game.Debug(2,"Line creation initiated from "+start+" to "+end);
+        boolean canCreate = true;
+        if(grid.get(start).getBuilding() != null)
+            canCreate=false;
+        else if(grid.get(end).getBuilding() != null)
+            canCreate=false;
+
+        if(canCreate) {
+            Line l = new Line(start,end);
+            lines.add(l);
+        }
+
+        Game.Debug(1,"Line created from "+start+" to "+end);
+        return canCreate;
+    }
+
+    public boolean isEmpty(Vector2 cell) {
+        boolean res=false;
+        try {
+            res = (this.grid.get(cell).getBuilding() == null);
+        } catch (Exception e) {}
+        return res;
+    }
+
+    public boolean addBuildingTo(BuildingEnum b, Vector2 to) {
+        return false;
+    }
+
 }

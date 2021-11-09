@@ -41,4 +41,15 @@ public class Game {
         return this.debug;
     }
 
+    public boolean CreateLine(Vector2 start, Vector2 end) {
+        boolean canCreate = true;
+
+        if(!map.CreateLine(start,end))
+            canCreate = false;
+
+        // ICI, AJOUTER CONTROLE ARGENT/DISPO
+
+        return canCreate;
+    }
+
 }
