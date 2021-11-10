@@ -47,8 +47,8 @@ public class GameView extends Scene implements Listener {
     private Color dotColor = Color.web("0xC2C2C2",1);
 
     // Line creation selection
-    private Node firstCell = null;
-    private Node secondCell = null;
+    private CellView firstCell = null;
+    private CellView secondCell = null;
 
     /**
      * Crée une nouvelle fenêtre de jeu, avec sa grille et l'UI associée
@@ -219,6 +219,9 @@ public class GameView extends Scene implements Listener {
         }
     };
 
+
+    private StationView tempStation;
+
     /**
      * Appelée au clic sur une cellule de la grille
      * @param cell sur laquelle le clic a été fait
@@ -230,9 +233,10 @@ public class GameView extends Scene implements Listener {
             {
                 firstCell = cell;
                 Game.Debug(2, "First cell at ( " + GridPane.getColumnIndex(firstCell)+ " , "+ GridPane.getRowIndex(firstCell) + " )");
-
+                tempStation = new StationView(cellSize);
+                firstCell.getChildren().add(tempStation);
             }
-            else if (secondCell == null && firstCell != null)
+            else if (secondCell == null && firstCell != null && cell != firstCell)
             {
                 secondCell = cell;
                 Game.Debug(2, "Second cell at ( " + GridPane.getColumnIndex(secondCell)+ " , "+ GridPane.getRowIndex(secondCell)+ " )");
@@ -242,11 +246,10 @@ public class GameView extends Scene implements Listener {
             {
                 Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
                 Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
-                firstCell = null;
-                secondCell = null;
                 Game.Debug(2, "Two cells selected.");
                 if(!mapController.createLine(firstPos,secondPos))
                     Game.Debug(1,"Line creation aborted.");
+                resetCellSelection();
             }
 
 
@@ -257,6 +260,9 @@ public class GameView extends Scene implements Listener {
      * @author Thomas Coulon
      */
     private void resetCellSelection() {
+        if(firstCell!=null)
+            firstCell.getChildren().remove(tempStation);
+        tempStation = null;
         firstCell = null;
         secondCell = null;
         Game.Debug(2,"Cell selection cleared.");
