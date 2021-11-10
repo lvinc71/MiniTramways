@@ -119,7 +119,7 @@ public class GameView extends Scene implements Listener {
                     e.setTranslateX(3);
                     e.setTranslateY(3);
                     e.setFill(dotColor);
-                    e.setViewOrder(40);
+                    e.setViewOrder(100);
                     cell.getChildren().add(e);
                     StackPane.setAlignment(e,Pos.BOTTOM_RIGHT);
                 }
