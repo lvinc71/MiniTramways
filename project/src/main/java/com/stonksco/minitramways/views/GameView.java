@@ -220,6 +220,7 @@ public class GameView extends Scene implements Listener {
     };
 
 
+    // Station temporaire pour affichage ; aucun lien métier
     private StationView tempStation;
 
     /**
@@ -294,14 +295,27 @@ public class GameView extends Scene implements Listener {
         return res;
     }
 
+    /**
+     * Retourne la cellule correspondant aux coordonnées passées en paramètres
+     * @param pos coordonnées de la cellule
+     * @return cellule en question | null si inexistante
+     */
     public CellView GetCellAt(Vector2 pos) {
         return cells.get(pos);
     }
 
+    /**
+     * Ajoute une node dans la zone centrale de la fenêtre
+     * @param node Node à ajouter
+     */
     public void AddNodeToView(Node node) {
         this.centerPane.getChildren().add(node);
     }
 
+    /**
+     * Ajoute une station aux coordonnées passées en paramètres
+     * @param at
+     */
     public void addStationAt(Vector2 at) {
         StationView s = new StationView(cellSize);
         s.prefWidth(cellSize.getX());
@@ -312,6 +326,10 @@ public class GameView extends Scene implements Listener {
         stations.put(at,s);
     }
 
+    /**
+     * Retourne la taille en pixels des cellules de la grille
+     * @return
+     */
     public Vector2 GetCellSize() {
         return cellSize.clone();
     }

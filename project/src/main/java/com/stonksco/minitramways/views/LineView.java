@@ -6,10 +6,14 @@ import javafx.scene.Group;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Représente une ligne et les trams associés
+ */
 public class LineView extends Group {
 
     private GameView gw;
 
+    // Liste des trams, stockés avec leur identifiant (1..n)
     private HashMap<Integer,TramView> trams;
 
     // Stocke les différents tronçons de la ligne.

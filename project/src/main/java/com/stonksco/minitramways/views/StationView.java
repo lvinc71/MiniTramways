@@ -8,6 +8,9 @@ import javafx.scene.image.ImageView;
 
 import java.io.FileInputStream;
 
+/**
+ * Représente l'affichage d'une station
+ */
 public class StationView extends Group {
 
     private ImageView sprite;

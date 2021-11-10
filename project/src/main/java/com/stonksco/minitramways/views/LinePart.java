@@ -13,12 +13,17 @@ public class LinePart extends Node {
 
     private GameView gw;
 
+    // Coordonnées en pixels des deux points du tronçon
     private Vector2 pxStart;
     private Vector2 pxEnd;
 
-    private Line line;
+    // Cellules correspondant aux deux extrémités du tronçon (stations)
     private CellView start;
     private CellView end;
+
+    // Ligne graphique
+    private Line line;
+
 
     public LinePart(GameView gw, CellView start, CellView end) {
         super();
@@ -33,6 +38,9 @@ public class LinePart extends Node {
     }
 
 
+    /**
+     * Dessine la ligne entre les deux stations
+     */
     private void DrawLine()
     {
         line = new Line();
@@ -50,7 +58,8 @@ public class LinePart extends Node {
 
     /**
      * Retourne l'orientation, en degré, que les tramways devront appliquer pour être alignés à ce tronçon
-     * @return
+     * @return angle en degrés
+     * @author Léo Vincent
      */
     public double getOrientation() {
         Vector2 startPos = start.getGridPos();
@@ -75,8 +84,9 @@ public class LinePart extends Node {
 
     /**
      * Retourne les coordonnées en pixels sur la ligne selon le pourcentage fourni en paramètre
-     * @param at
-     * @return
+     * 0% = Station de départ | 100% = Station d'arrivée
+     * @param at pourcentage sur la ligne
+     * @return coordonnées en pixels
      */
     public Vector2 getPosAt(double at) {
         Vector2 res = new Vector2(0,0);

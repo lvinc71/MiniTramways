@@ -7,6 +7,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
+/**
+ * Gère l'affichage d'un tram
+ */
 public class TramView extends Group {
 
     private LineView lv;
@@ -24,7 +27,9 @@ public class TramView extends Group {
         Image img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_GOLD);
         sprite  = new ImageView();
         sprite.setPreserveRatio(true);
+        // Règle l'échelle par rapport à la taille d'une cellule
         sprite.setFitHeight(gw.GetCellSize().getY()/2d);
+        // Règle la rotation selon le tronçon courant
         sprite.setRotate(lp.getOrientation());
 
         Vector2 pos = lp.getPosAt(50);

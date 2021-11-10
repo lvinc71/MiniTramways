@@ -8,6 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * Classe permettant de récupérer les assets graphiques du projet simplement
+ */
 public class ImageGetter {
 
     public Image getImageOf(ImagesEnum img) {
