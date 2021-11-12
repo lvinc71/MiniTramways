@@ -1,6 +1,6 @@
 package com.stonksco.minitramways.logic;
 
-import com.stonksco.minitramways.logic.map.Map;
+import com.stonksco.minitramways.logic.map.GameMap;
 
 public class Game {
 
@@ -22,9 +22,9 @@ public class Game {
             Debug(debug,"DEBUG ENABLED WITH A LEVEL OF "+debug);
     }
 
-    private Map map;
+    private GameMap map;
 
-    public Map getMap() {
+    public GameMap getMap() {
         return map;
     }
 
@@ -34,7 +34,7 @@ public class Game {
     }
 
     public void initGame() {
-        map = new Map();
+        map = new GameMap();
     }
 
     public int getDebug() {
@@ -50,6 +50,10 @@ public class Game {
         // ICI, AJOUTER CONTROLE ARGENT/DISPO
 
         return canCreate;
+    }
+
+    public Vector2 getMapSize() {
+        return map.getGridSize().clone();
     }
 
 }

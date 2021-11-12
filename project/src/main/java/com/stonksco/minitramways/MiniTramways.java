@@ -41,16 +41,15 @@ public class MiniTramways extends Application {
                 Game.get().setDebug(nb);
         }
 
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.setTitle("Mini Tramways");
 
         Group root = new Group();
 
-        Vector2 windowSize = new Vector2(1600,900);
-        GameView gw = new GameView(root,windowSize);
+        GameView gw = new GameView(root,primaryStage);
         primaryStage.setScene(gw);
         primaryStage.show();
-        gw.Enable();
+        gw.enable();
 
 
 

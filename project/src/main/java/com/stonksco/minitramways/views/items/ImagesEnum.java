@@ -1,4 +1,4 @@
-package com.stonksco.minitramways.views;
+package com.stonksco.minitramways.views.items;
 
 public enum ImagesEnum {
     HOUSE, OFFICE, SHOP, STATION, PIN, TRAMWAY_GOLD
