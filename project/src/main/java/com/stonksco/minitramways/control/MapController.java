@@ -3,17 +3,15 @@ package com.stonksco.minitramways.control;
 import com.stonksco.minitramways.control.interfaces.Controler;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.Map;
-import com.stonksco.minitramways.logic.map.building.BuildingEnum;
+import com.stonksco.minitramways.logic.map.GameMap;
 import com.stonksco.minitramways.views.GameView;
-import javafx.scene.Node;
 
 public class MapController implements Controler {
 
-    private Map map;
+    private GameMap map;
     private GameView gameview;
 
-    public MapController(Map map, GameView view) {
+    public MapController(GameMap map, GameView view) {
         this.map = map;
         this.gameview = view;
     }

@@ -1,11 +1,8 @@
-package com.stonksco.minitramways.views;
+package com.stonksco.minitramways.views.items;
 
 import com.stonksco.minitramways.logic.Game;
 import javafx.scene.image.Image;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.net.URL;
 
 /**

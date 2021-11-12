@@ -8,7 +8,7 @@ import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Map {
+public class GameMap {
 
     // Grille
     private HashMap<Vector2,Cell> grid = null;
@@ -18,7 +18,7 @@ public class Map {
     private ArrayList<Line> lines;
 
 
-    public Map() {
+    public GameMap() {
         init();
     }
 

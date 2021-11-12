@@ -4,220 +4,193 @@ import com.stonksco.minitramways.control.MapController;
 import com.stonksco.minitramways.control.interfaces.Listener;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.Map;
-import javafx.event.EventHandler;
+import com.stonksco.minitramways.views.layers.*;
+import com.stonksco.minitramways.views.layers.cells.CellView;
+import com.stonksco.minitramways.views.layers.cells.GridDisplayCell;
+import com.stonksco.minitramways.views.layers.cells.StationView;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.When;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
-import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
-
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class GameView extends Scene implements Listener {
 
 
-
     private Group root;
-    private Vector2 windowSize;
-    private Vector2 cellSize;
+    private Stage primaryStage;
 
-    // Scene elements and layout
-    private GridPane grid;
-    private BorderPane regions;
-    private HashMap<Vector2, CellView> cells = null;
-    private AnchorPane centerPane;
-    private HashMap<Color,LineView> lines;
-    private HashMap<Vector2, StationView> stations;
+    // Calques et conteneurs
+    private GridDisplay gridDisplay; // Points de la grille
+    private StationsView gridStations; // Stations
+    private BuildingsView gridBuildings; // Bâtiments (sauf stations)
+    private PinsView gridPins; // Épingles représentant le nombre de personnes
+    private AreasView areasPane; // Quartiers
+    private LinesView linesPane; // Lignes et trams
 
-    // Controllers
+    private StackPane mainPane; // Conteneur principal remplissant la fenêtre
+    private Pane centerPane; // Conteneur central contenant la carte du jeu
+
+    // Contrôleurs
     private MapController mapController;
 
 
-    // Colors
-    private Color backgroundColor = Color.web("0xE9E9E9",1);
-    private Color dotColor = Color.web("0xC2C2C2",1);
+    // Couleurs
+    private Map<ColorEnum,Color> colors = Map.ofEntries(
+            Map.entry(ColorEnum.BACKGROUND,Color.web("0xE9E9E9",1)),
+            Map.entry(ColorEnum.GRID_DOT,Color.web("0xC2C2C2",1))
+    );
 
-    // Line creation selection
+    // Sélection de cellules
     private CellView firstCell = null;
     private CellView secondCell = null;
+
+    // Taille des cellules
+    DoubleProperty cellSizeX;
+    DoubleProperty cellSizeY;
+
 
     /**
      * Crée une nouvelle fenêtre de jeu, avec sa grille et l'UI associée
      * @param parent
-     * @param windowSize Taille de la fenêtre en pixels
+     * @param primaryStage
      * @author Léo Vincent
      */
-    public GameView(Group parent, Vector2 windowSize) {
-        super(parent,windowSize.getX(),windowSize.getY());
+    public GameView(Group parent, Stage primaryStage) {
+        super(parent, 1600,900);
 
         this.root = parent;
-        this.windowSize = windowSize;
-    }
+        this.primaryStage = primaryStage;
 
-    /**
-     * Suite du constructeur, appelée après l'affichage de la fenêtre
-     */
-    public void Enable() {
-        mapController = new MapController(Game.get().getMap(),this);
+        mapController = new MapController(Game.get().getMap(), this);
 
         Game.get().initGame();
 
-        this.setFill(backgroundColor);
-
-        grid = new GridPane();
-        regions = new BorderPane();
-        centerPane = new AnchorPane();
-
-        initWindowRegions();
-        initGrid();
-
-
-        lines = new HashMap<>();
-        stations = new HashMap<>();
+        this.setFill(getColor(ColorEnum.BACKGROUND));
     }
 
-    /**
-     * Initialise l'affichage de la grille
-     * @author Léo Vincent
-     */
-    private void initGrid() {
-        Game.Debug(1,"Generating grid display...");
-        grid.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(grid,Pos.CENTER);
-
-        if(Game.get().getDebug()>2)
-            grid.setGridLinesVisible(true);
-
-        Map map = Game.get().getMap();
-
-        if(cells!=null)
-            cells.clear();
-        cells=new HashMap<>();
-
-        for(int i=0; i<map.getGridSize().getY(); i++) {
-            for(int j=0; j<map.getGridSize().getX(); j++) {
-
-                CellView cell = new CellView();
-                cell.setGridPos(new Vector2(j,i));
-                cell.setAlignment(Pos.CENTER);
-
-                cells.put(new Vector2(j,i),cell);
-                grid.add(cell,j,i);
-
-                if(i!=map.getGridSize().getY()-1 && j!=map.getGridSize().getX()-1) {
-
-                    Ellipse e = new Ellipse(0,0,3,3);
-                    e.setTranslateX(3);
-                    e.setTranslateY(3);
-                    e.setFill(dotColor);
-                    e.setViewOrder(100);
-                    cell.getChildren().add(e);
-                    StackPane.setAlignment(e,Pos.BOTTOM_RIGHT);
-                }
-            }
-        }
-
-        double gridHeight = windowSize.getY()*0.88;
-        grid.setPrefHeight(gridHeight);
-        grid.setPrefWidth((gridHeight/(double)grid.getRowCount())*(double)grid.getColumnCount());
-
-        ColumnConstraints cc = new ColumnConstraints();
-        cc.setPercentWidth(100d/grid.getColumnCount());
-
-        RowConstraints rc = new RowConstraints();
-        rc.setPercentHeight(100d/grid.getRowCount());
-
-        for(int i = 0; i<grid.getColumnCount(); i++)
-            grid.getColumnConstraints().add(cc);
-        for(int i = 0; i<grid.getRowCount(); i++)
-            grid.getRowConstraints().add(rc);
-
-        Game.Debug(1,"Grid displayed.");
-
-        grid.addEventFilter(MouseEvent.MOUSE_CLICKED,gridClickEvent);
-
-        root.layout();
-        centerPane.layout();
-        grid.layout();
-        Vector2 gridSizePx = new Vector2(grid.getWidth(),grid.getHeight());
-        Vector2 gridSize = Game.get().getMap().getGridSize().clone();
-        cellSize = new Vector2(grid.getCellBounds(0,0).getWidth(),grid.getCellBounds(0,0).getHeight());
-        //System.out.println("A RETIRER : BOUNDS : "+grid.getCellBounds(0,0));
-        Game.Debug(2,"Calculated cell size of "+cellSize+" from grid of "+gridSizePx+" pixels and "+gridSize+" cells");
+    public void enable() {
+        initWindowLayout();
+        initMapLayers();
     }
+
 
     /**
      * Initialise les zones de la fenêtre
      * @author Léo Vincent
      */
-    private void initWindowRegions() {
-        double topSpaceHeight = windowSize.getY() * 0.08d;
-        double bottomSpaceHeight = windowSize.getY() * 0.04d;
+    private void initWindowLayout() {
 
-        HBox top = new HBox();
-        top.prefHeight(topSpaceHeight);
-        HBox bottom = new HBox();
-        bottom.prefHeight(bottomSpaceHeight);
+        centerPane = new Pane();
+        mainPane = new StackPane();
 
-        regions.setTop(top);
-        regions.setBottom(bottom);
-        regions.setRight(new VBox());
-        regions.setLeft(new VBox());
+        mainPane.prefWidthProperty().bind(this.widthProperty());
+        mainPane.prefHeightProperty().bind(this.heightProperty());
+
+        root.layout();
+        mainPane.layout();
+
+        if(Game.get().getDebug()>2) {
+            BorderStroke[] strokes = {
+                    new BorderStroke(Color.RED,BorderStrokeStyle.SOLID,new CornerRadii(5),new BorderWidths(2d)),
+                    new BorderStroke(Color.RED,BorderStrokeStyle.SOLID,new CornerRadii(5),new BorderWidths(2d)),
+                    new BorderStroke(Color.RED,BorderStrokeStyle.SOLID,new CornerRadii(5),new BorderWidths(2d)),
+                    new BorderStroke(Color.RED,BorderStrokeStyle.SOLID,new CornerRadii(5),new BorderWidths(2d))
+            };
+            centerPane.setBorder(new Border(strokes));
+            mainPane.setBorder(new Border(strokes));
+        }
 
 
-        Game.Debug(3,"Calculated top spacing : "+topSpaceHeight+" | Bottom spacing : "+bottomSpaceHeight);
+        mainPane.paddingProperty().bind(Bindings.createObjectBinding(() -> new Insets(mainPane.heightProperty().multiply(0.05d).get())));
+        mainPane.getChildren().add(centerPane);
+        root.getChildren().add(mainPane);
 
-        BorderPane.setAlignment(regions.getTop(),Pos.TOP_CENTER);
+        When bindCondition = new When(mainPane.widthProperty().lessThan(mainPane.heightProperty().multiply(Game.get().getMapSize().getX()/Game.get().getMapSize().getY())));
+        SimpleDoubleProperty widthBinding = new SimpleDoubleProperty();
+        SimpleDoubleProperty heightBinding = new SimpleDoubleProperty();
+        widthBinding.bind(bindCondition.then(mainPane.widthProperty().multiply(0.85d)).otherwise(  heightBinding.divide(Game.get().getMapSize().getY()).multiply(Game.get().getMapSize().getX())  ));
+        heightBinding.bind(bindCondition.then(  widthBinding.divide(Game.get().getMapSize().getX()).multiply(Game.get().getMapSize().getY())  ).otherwise(mainPane.heightProperty().multiply(0.85d)));
 
-        regions.setCenter(centerPane);
-        centerPane.getChildren().add(grid);
-        this.root.getChildren().add(regions);
+        centerPane.prefWidthProperty().bind(widthBinding);
+        centerPane.prefHeightProperty().bind(heightBinding);
+        centerPane.maxWidthProperty().bind(widthBinding);
+        centerPane.maxHeightProperty().bind(heightBinding);
+
+        root.layout();
+        mainPane.layout();
+        centerPane.layout();
+        mainPane.layout();
+        root.layout();
+
+        Game.Debug(3,"Main container got width of "+mainPane.widthProperty().get()+" (wanted: "+mainPane.prefWidthProperty().get()+" ) pixels and height of "+mainPane.heightProperty().get()+" pixels (wanted: "+mainPane.prefHeightProperty().get()+" )");
+        Game.Debug(3,"Center container got width of "+centerPane.widthProperty().get()+" (wanted: "+centerPane.prefWidthProperty().get()+" ) pixels and height of "+centerPane.heightProperty().get()+" pixels (wanted: "+centerPane.prefHeightProperty().get()+" )");
+
     }
 
 
     /**
-     * Évènement de clic sur la grille
+     * Initialise l'affichage de la grille
      * @author Léo Vincent
      */
-    EventHandler<MouseEvent> gridClickEvent = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent mouseEvent) {
-            // Clic gauche
-            if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                Game.Debug(3,"Grid click triggered.");
-                Node clickedNode = mouseEvent.getPickResult().getIntersectedNode();
-                if(clickedNode != grid) {
-                    Node parent = clickedNode.getParent();
-                    while(parent != grid) {
-                        clickedNode = parent;
-                        parent = clickedNode.getParent();
-                    }
+    private void initMapLayers() {
+        Vector2 s = Game.get().getMapSize();
 
-                    int col = GridPane.getColumnIndex(clickedNode);
-                    int row = GridPane.getRowIndex(clickedNode);
-                    Game.Debug(2,"Clicked on cell at ( "+col+" , "+row+" )");
-                    cellClick((CellView) clickedNode);
+        gridDisplay = new GridDisplay(this,s);
+        gridStations = new StationsView(this,s);
+        gridBuildings = new BuildingsView(this,s);
+        gridPins = new PinsView(this,s);
+        areasPane = new AreasView(this);
+        linesPane = new LinesView(this);
 
-                }
+        centerPane.getChildren().add(areasPane);
+        centerPane.getChildren().add(gridDisplay);
+        centerPane.getChildren().add(gridBuildings);
+        centerPane.getChildren().add(linesPane);
+        centerPane.getChildren().add(gridStations);
+        centerPane.getChildren().add(gridPins);
 
-            }
-            // Clic droit
-            else if(mouseEvent.getButton() == MouseButton.SECONDARY)
-            {
-                resetCellSelection();
-            }
+        centerPane.layout();
 
+        this.getWindow().setWidth(this.getWindow().getWidth()+0.001);
+        this.getWindow().setWidth(this.getWindow().getWidth()-0.001);
+
+        gridDisplay.prefWidthProperty().bind(centerPane.widthProperty());
+        gridDisplay.prefHeightProperty().bind(centerPane.heightProperty());
+
+        ArrayList<Pane> layersList = new ArrayList<>();
+        //layersList.add(gridDisplay);
+        layersList.add(gridStations);
+        layersList.add(gridBuildings);
+        layersList.add(gridPins);
+        layersList.add(areasPane);
+        layersList.add(linesPane);
+
+        for (Pane layer:layersList) {
+            layer.prefWidthProperty().bind(gridDisplay.widthProperty());
+            layer.prefHeightProperty().bind(gridDisplay.heightProperty());
         }
-    };
+
+        centerPane.layout();
+
+        Game.Debug(1,"Map layers initialized with a size of "+centerPane.widthProperty().get()+" * "+centerPane.heightProperty().get()+" pixels");
+
+    }
+
+
+
 
 
     // Station temporaire pour affichage ; aucun lien métier
@@ -228,13 +201,13 @@ public class GameView extends Scene implements Listener {
      * @param cell sur laquelle le clic a été fait
      * @author Thomas Coulon
      */
-    private void cellClick(CellView cell)
+    public void cellClick(CellView cell)
     {
             if (firstCell == null)
             {
                 firstCell = cell;
                 Game.Debug(2, "First cell at ( " + GridPane.getColumnIndex(firstCell)+ " , "+ GridPane.getRowIndex(firstCell) + " )");
-                tempStation = new StationView(cellSize);
+                tempStation = new StationView(this,firstCell.getGridPos());
                 firstCell.getChildren().add(tempStation);
             }
             else if (secondCell == null && firstCell != null && cell != firstCell)
@@ -257,6 +230,14 @@ public class GameView extends Scene implements Listener {
     }
 
     /**
+     * Appelée lors du clic droit sur la grille
+     */
+    public void gridRightClick() {
+        resetCellSelection();
+    }
+
+
+    /**
      * Réinitialise les cellules actuellement sélectionnées
      * @author Thomas Coulon
      */
@@ -274,63 +255,73 @@ public class GameView extends Scene implements Listener {
 
     }
 
-
     public void CreateLine (Vector2 start, Vector2 end)
     {
-            this.lines.put(Color.GOLD,new LineView(this,start,end));
+            linesPane.createLine(start,end);
     }
 
+
     /**
-     * Retourne les coordonnées en pixels du centre d'une cellule de la grille
+     * Retourne les coordonnées  X en pixels du centre d'une cellule de la grille
      * @param cellPos coordonnées de la cellule dans la grille
      * @return coordonnées en pixels dans la scène
      * @author Léo Vincent
      */
-    public Vector2 CellToPixels(Vector2 cellPos) {
-        Game.Debug(3,"Trying to get pixels of "+cellPos);
-        CellView cell = cells.get(cellPos);
-        Bounds b = cell.localToScene(cell.getBoundsInLocal());
-        Vector2 res = new Vector2(b.getCenterX(),b.getCenterY());
-        Game.Debug(3,"Conversion from cell  "+cellPos+" to pixels "+res+" .");
-        return res;
+    public ReadOnlyDoubleProperty CellToPixelsX(Vector2 cellPos) {
+        return ((GridDisplayCell)gridDisplay.getCellAt(cellPos)).getPixelsX();
     }
 
-    /**
-     * Retourne la cellule correspondant aux coordonnées passées en paramètres
-     * @param pos coordonnées de la cellule
-     * @return cellule en question | null si inexistante
-     */
-    public CellView GetCellAt(Vector2 pos) {
-        return cells.get(pos);
+    public ReadOnlyDoubleProperty CellToPixelsY(Vector2 cellPos) {
+        return ((GridDisplayCell)gridDisplay.getCellAt(cellPos)).getPixelsY();
     }
 
-    /**
-     * Ajoute une node dans la zone centrale de la fenêtre
-     * @param node Node à ajouter
-     */
-    public void AddNodeToView(Node node) {
-        this.centerPane.getChildren().add(node);
-    }
 
     /**
      * Ajoute une station aux coordonnées passées en paramètres
      * @param at
      */
     public void addStationAt(Vector2 at) {
-        StationView s = new StationView(cellSize);
-        s.prefWidth(cellSize.getX());
-        s.prefHeight(cellSize.getY());
-        s.maxWidth(cellSize.getX());
-        s.maxHeight(cellSize.getY());
-        GetCellAt(at).getChildren().add(s);
-        stations.put(at,s);
+        gridStations.addStationAt(at);
     }
 
     /**
-     * Retourne la taille en pixels des cellules de la grille
+     * Retourne la largeur en pixels des cellules de la grille
      * @return
      */
-    public Vector2 GetCellSize() {
-        return cellSize.clone();
+    public ReadOnlyDoubleProperty getCellSizeX() {
+        DoubleProperty res;
+        if(cellSizeX==null) {
+            cellSizeX = new SimpleDoubleProperty(0);
+            cellSizeX.bind(centerPane.widthProperty().divide(Game.get().getMapSize().getX()));
+        }
+        res = cellSizeX;
+        return res;
     }
+
+    /**
+     * Retourne la hauteur en pixels des cellules de la grille
+     * @return
+     */
+    public ReadOnlyDoubleProperty getCellSizeY() {
+        DoubleProperty res;
+        if(cellSizeY==null) {
+            cellSizeY = new SimpleDoubleProperty(0);
+            cellSizeY.bind(centerPane.heightProperty().divide(Game.get().getMapSize().getY()));
+        }
+        res = cellSizeY;
+        return res;
+    }
+
+
+
+    /**
+     * Retourne la couleur associée à la couleur demandée
+     * @param c
+     * @return
+     */
+    public Color getColor(ColorEnum c) {
+        return this.colors.get(c);
+    }
+
+
 }

@@ -1,6 +1,11 @@
-package com.stonksco.minitramways.views;
+package com.stonksco.minitramways.views.items.lines;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.views.GameView;
+import com.stonksco.minitramways.views.layers.LinesView;
+import com.stonksco.minitramways.views.layers.cells.CellView;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -12,27 +17,33 @@ import javafx.scene.shape.StrokeLineCap;
 public class LinePart extends Node {
 
     private GameView gw;
+    private LinesView layer;
 
     // Coordonnées en pixels des deux points du tronçon
-    private Vector2 pxStart;
-    private Vector2 pxEnd;
+    private ReadOnlyDoubleProperty  pxStartX;
+    private ReadOnlyDoubleProperty  pxStartY;
+    private ReadOnlyDoubleProperty  pxEndX;
+    private ReadOnlyDoubleProperty  pxEndY;
 
     // Cellules correspondant aux deux extrémités du tronçon (stations)
-    private CellView start;
-    private CellView end;
+    private Vector2 start;
+    private Vector2 end;
 
     // Ligne graphique
     private Line line;
 
 
-    public LinePart(GameView gw, CellView start, CellView end) {
+    public LinePart(GameView gw, LinesView layer, Vector2 start, Vector2 end) {
         super();
         this.gw = gw;
+        this.layer = layer;
         this.start = start;
         this.end = end;
 
-        pxStart = gw.CellToPixels(start.getGridPos());
-        pxEnd = gw.CellToPixels(end.getGridPos());
+        pxStartX = gw.CellToPixelsX(start);
+        pxStartY = gw.CellToPixelsY(start);
+        pxEndX = gw.CellToPixelsX(end);
+        pxEndY = gw.CellToPixelsY(end);
 
         DrawLine();
     }
@@ -44,16 +55,16 @@ public class LinePart extends Node {
     private void DrawLine()
     {
         line = new Line();
-        line.setStartX(pxStart.getX());
-        line.setStartY(pxStart.getY());
-        line.setEndX(pxEnd.getX());
-        line.setEndY(pxEnd.getY());
-        line.setStrokeWidth(8);
+
+        line.startXProperty().bind(pxStartX);
+        line.startYProperty().bind(pxStartY);
+        line.endXProperty().bind(pxEndX);
+        line.endYProperty().bind(pxEndY);
+        line.setStrokeWidth(6);
         line.setStroke(Color.GOLD);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
-        line.setViewOrder(40);
-        gw.AddNodeToView(line);
-        Game.Debug(3,"Line drawn from "+pxStart.toString()+" to "+pxEnd.toString());
+        layer.getChildren().add(line);
+        Game.Debug(3,"Line drawn from "+pxStartX.get()+","+pxStartY.get()+" to "+pxEndX.get()+","+pxEndY.get());
     }
 
     /**
@@ -62,8 +73,8 @@ public class LinePart extends Node {
      * @author Léo Vincent
      */
     public double getOrientation() {
-        Vector2 startPos = start.getGridPos();
-        Vector2 endPos = end.getGridPos();
+        Vector2 startPos = start;
+        Vector2 endPos = end;
         Vector2 lineVector = endPos.sub(startPos);
 
         Vector2 normalizedLineVector = lineVector.normalize();
@@ -88,17 +99,29 @@ public class LinePart extends Node {
      * @param at pourcentage sur la ligne
      * @return coordonnées en pixels
      */
-    public Vector2 getPosAt(double at) {
-        Vector2 res = new Vector2(0,0);
+    public ReadOnlyDoubleProperty getPosXAt(double at) {
+        SimpleDoubleProperty res = new SimpleDoubleProperty(0);
         if(at==0)
-            res = pxStart.clone();
+            res.bind(pxStartX);
         else if(at==100)
-            res = pxEnd.clone();
+            res.bind(pxEndX);
         else
         {
-            Vector2 lineVector = pxEnd.sub(pxStart);
-            Vector2 posVector = lineVector.scale(at/100d);
-            res = pxStart.add(posVector);
+            res.bind(pxEndX.subtract(pxStartX).multiply(at/100d).add(pxStartX));
+        }
+
+        return res;
+    }
+
+    public ReadOnlyDoubleProperty getPosYAt(double at) {
+        SimpleDoubleProperty res = new SimpleDoubleProperty(0);
+        if(at==0)
+            res.bind(pxStartY);
+        else if(at==100)
+            res.bind(pxEndY);
+        else
+        {
+            res.bind(pxEndY.subtract(pxStartY).multiply(at/100d).add(pxStartY));
         }
 
         return res;
