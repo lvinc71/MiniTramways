@@ -27,6 +27,6 @@ public class LinesView extends Pane {
     }
 
     public Color getColor(){
-        return gw.getColor(ColorEnum.values()[lines.size()%7]);
+        return gw.getColor(ColorEnum.values()[lines.size()%8]);
     }
 }
