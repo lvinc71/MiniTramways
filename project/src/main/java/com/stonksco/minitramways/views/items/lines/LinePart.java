@@ -32,15 +32,16 @@ public class LinePart extends Node {
 
     // Ligne graphique
     private Line line;
-    private Color ColorEnum;
+    private Color color;
 
 
-    public LinePart(GameView gw, LinesView layer, Vector2 start, Vector2 end) {
+    public LinePart(GameView gw, LinesView layer, Vector2 start, Vector2 end, Color color) {
         super();
         this.gw = gw;
         this.layer = layer;
         this.start = start;
         this.end = end;
+        this.color = color;
 
         pxStartX = gw.CellToPixelsX(start);
         pxStartY = gw.CellToPixelsY(start);
@@ -63,7 +64,7 @@ public class LinePart extends Node {
         line.endXProperty().bind(pxEndX);
         line.endYProperty().bind(pxEndY);
         line.setStrokeWidth(6);
-        line.setStroke(layer.getColor());
+        line.setStroke(color);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
         layer.getChildren().add(line);
         Game.Debug(3,"Line drawn from "+pxStartX.get()+","+pxStartY.get()+" to "+pxEndX.get()+","+pxEndY.get());

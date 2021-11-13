@@ -22,7 +22,7 @@ public class LinesView extends Pane {
     }
 
     public boolean createLine(Vector2 start, Vector2 end) {
-        this.lines.put(lines.size(),new LineView(gw,this,start,end));
+        this.lines.put(lines.size(),new LineView(gw,this,start,end,getColor()));
         return true;
     }
 

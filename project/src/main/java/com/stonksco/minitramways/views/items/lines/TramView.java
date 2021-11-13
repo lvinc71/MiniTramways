@@ -22,13 +22,14 @@ public class TramView extends Group {
 
     private ImageView sprite;
 
+
     public TramView(LineView lv, LinePart lp, GameView gw) {
         super();
         this.lp = lp;
         this.lv = lv;
         this.gw = gw;
 
-        Image img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_GOLD);
+        Image img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_BLUE);
         sprite  = new ImageView();
         sprite.setPreserveRatio(true);
         // Règle l'échelle par rapport à la taille d'une cellule

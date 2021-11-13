@@ -19,24 +19,23 @@ public class LineView extends Group {
     private HashMap<Integer,TramView> trams;
 
 
-
+    private Color c;
 
     // Stocke les différents tronçons de la ligne.
     // Pour chaque tronçon, le vecteur associé correspond aux positions de début (x) et fin (y) dans la ligne
     private HashMap<Vector2, LinePart> parts;
 
-    public LineView(GameView gw, LinesView layer, Vector2 start, Vector2 end) {
+    public LineView(GameView gw, LinesView layer, Vector2 start, Vector2 end, Color c) {
         super();
         this.gw = gw;
         this.layer = layer;
         parts = new HashMap<>();
         trams = new HashMap<>();
-        parts.put(new Vector2(0,100), new LinePart(gw,layer,start,end));
+        parts.put(new Vector2(0,100), new LinePart(gw,layer,start,end,c));
         gw.addStationAt(start);
         gw.addStationAt(end);
         addTram();
         layer.getChildren().add(this);
-        layer.getColor();
     }
 
 
