@@ -4,6 +4,7 @@ import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.layers.LinesView;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 
@@ -16,6 +17,9 @@ public class LineView extends Group {
     private LinesView layer;
     // Liste des trams, stockés avec leur identifiant (1..n)
     private HashMap<Integer,TramView> trams;
+
+
+
 
     // Stocke les différents tronçons de la ligne.
     // Pour chaque tronçon, le vecteur associé correspond aux positions de début (x) et fin (y) dans la ligne
@@ -32,7 +36,9 @@ public class LineView extends Group {
         gw.addStationAt(end);
         addTram();
         layer.getChildren().add(this);
+        layer.getColor();
     }
+
 
     public void addTram() {
         if(trams.isEmpty()) {

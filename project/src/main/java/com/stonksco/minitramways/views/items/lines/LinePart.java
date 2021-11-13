@@ -1,6 +1,7 @@
 package com.stonksco.minitramways.views.items.lines;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.layers.LinesView;
 import com.stonksco.minitramways.views.layers.cells.CellView;
@@ -31,6 +32,7 @@ public class LinePart extends Node {
 
     // Ligne graphique
     private Line line;
+    private Color ColorEnum;
 
 
     public LinePart(GameView gw, LinesView layer, Vector2 start, Vector2 end) {
@@ -61,7 +63,7 @@ public class LinePart extends Node {
         line.endXProperty().bind(pxEndX);
         line.endYProperty().bind(pxEndY);
         line.setStrokeWidth(6);
-        line.setStroke(Color.GOLD);
+        line.setStroke(layer.getColor());
         line.setStrokeLineCap(StrokeLineCap.ROUND);
         layer.getChildren().add(line);
         Game.Debug(3,"Line drawn from "+pxStartX.get()+","+pxStartY.get()+" to "+pxEndX.get()+","+pxEndY.get());
