@@ -28,39 +28,39 @@ public class TramView extends Group {
     private ImageView sprite;
     private HashMap<Integer,LineView> lines;
 
-    public TramView(LineView lv, LinePart lp, GameView gw) {
+    public TramView(LineView lv, LinePart lp, GameView gw, int colorID) {
         super();
         this.lp = lp;
         this.lv = lv;
         this.gw = gw;
-        lines = new HashMap<>();
+
 
         Image img = null;
 
         try{
-            switch (ColorEnum.values()[lines.size()%8]){
-                case LINE_GOLD:
+            switch (colorID){
+                case 0:
                     img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_GOLD);
                     break;
-                case LINE_BLUE:
+                case 1:
                     img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_BLUE);
                     break;
-                case LINE_RED:
+                case 2:
                     img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_RED);
                     break;
-                case LINE_LIME:
+                case 3:
                     img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_LIME);
                     break;
-                case LINE_PURPLE:
+                case 4:
                     img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_PURPLE);
                     break;
-                case LINE_CYAN:
+                case 5:
                     img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_CYAN);
                     break;
-                case LINE_YELLOW:
+                case 6:
                     img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_YELLOW);
                     break;
-                case LINE_ROSEGOLD:
+                case 7:
                     img = new ImageGetter().getImageOf(ImagesEnum.TRAMWAY_ROSEGOLD);
                     break;
             }

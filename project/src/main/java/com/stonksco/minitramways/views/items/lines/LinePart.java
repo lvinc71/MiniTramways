@@ -39,7 +39,7 @@ public class LinePart extends Node {
         this.layer = layer;
         this.start = start;
         this.end = end;
-        this.color = color ;
+        this.color = color;
 
         pxStartX = gw.CellToPixelsX(start);
         pxStartY = gw.CellToPixelsY(start);

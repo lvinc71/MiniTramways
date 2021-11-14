@@ -22,11 +22,14 @@ public class LinesView extends Pane {
     }
 
     public boolean createLine(Vector2 start, Vector2 end) {
-        this.lines.put(lines.size(),new LineView(gw,this,start,end,getColor()));
+        this.lines.put(lines.size(),new LineView(gw,this,start,end,getColor(),getColorId()));
         return true;
     }
 
     public Color getColor(){
-        return gw.getColor(ColorEnum.values()[lines.size()%8]);
+        return gw.getColor(ColorEnum.values()[getColorId()]);
+    }
+    public int getColorId() {
+        return lines.size()%8;
     }
 }
