@@ -39,16 +39,21 @@ public class Station extends Building {
 	 * @param line
 	 */
 	public boolean addLine(Line line) {
-		// TODO - implement Station.addLine
-		throw new UnsupportedOperationException();
+		if(lines==null)
+			lines = new HashMap<>();
+		return !(lines.put(line.getID(),line)==null);
 	}
 
 	/**
 	 * Retourne l'ensemble des lignes qui désservent par la station
 	 */
 	public Line[] getLines() {
-		// TODO - implement Station.getLines
-		throw new UnsupportedOperationException();
+		Line[] res;
+		if(lines.size()>0)
+			res = lines.values().toArray(new Line[0]);
+		else
+			res = null;
+		return res;
 	}
 
 	/**

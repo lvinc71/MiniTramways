@@ -17,14 +17,23 @@ public class LinePart {
     }
 
     private Line line;
+
+    public int getStart() {
+        return start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
     private int start;
     private int end;
 
-    public Vector2 getStart() {
+    public Vector2 getStartPos() {
         return startStation.clone();
     }
 
-    public Vector2 getEnd() {
+    public Vector2 getEndPos() {
         return endStation.clone();
     }
 
