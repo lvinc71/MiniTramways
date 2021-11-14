@@ -3,7 +3,6 @@ import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.layers.LinesView;
-import com.stonksco.minitramways.views.layers.cells.CellView;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
@@ -31,14 +30,16 @@ public class LinePartView extends Node {
 
     // Ligne graphique
     private Line line;
+    private Color color;
 
 
-    public LinePartView(GameView gw, LinesView layer, Vector2 start, Vector2 end) {
+    public LinePartView(GameView gw, LinesView layer, Vector2 start, Vector2 end, Color color) {
         super();
         this.gw = gw;
         this.layer = layer;
         this.start = start;
         this.end = end;
+        this.color = color;
 
         pxStartX = gw.CellToPixelsX(start);
         pxStartY = gw.CellToPixelsY(start);
@@ -61,7 +62,7 @@ public class LinePartView extends Node {
         line.endXProperty().bind(pxEndX);
         line.endYProperty().bind(pxEndY);
         line.setStrokeWidth(6);
-        line.setStroke(Color.GOLD);
+        line.setStroke(color);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
         layer.getChildren().add(line);
         Game.Debug(3,"Line drawn from "+pxStartX.get()+","+pxStartY.get()+" to "+pxEndX.get()+","+pxEndY.get());
