@@ -163,6 +163,8 @@ public class GameView extends Scene implements Listener {
         areasPane = new AreasView(this);
         linesPane = new LinesView(this);
 
+        areasPane.AddArea();
+
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
         centerPane.getChildren().add(gridBuildings);
