@@ -19,6 +19,8 @@ public class LinesView extends Pane {
         super();
         this.gw = gw;
         lines = new HashMap<>();
+
+
     }
 
     public boolean createLine(Vector2 start, Vector2 end) {

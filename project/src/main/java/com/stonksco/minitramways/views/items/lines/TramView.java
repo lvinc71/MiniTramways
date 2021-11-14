@@ -21,14 +21,14 @@ import java.util.HashMap;
 public class TramView extends Group {
 
     private LineView lv;
-    private LinePart lp;
+    private LinePartView lp;
     private GameView gw;
 
 
     private ImageView sprite;
     private HashMap<Integer,LineView> lines;
 
-    public TramView(LineView lv, LinePart lp, GameView gw, int colorID) {
+    public TramView(LineView lv, LinePartView lp, GameView gw, int colorID) {
         super();
         this.lp = lp;
         this.lv = lv;
