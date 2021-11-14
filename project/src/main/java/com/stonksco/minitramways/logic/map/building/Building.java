@@ -23,6 +23,7 @@ public abstract class Building implements PlaceToBe {
 	 */
 	public Building(Cell c) {
 		this.cell = c;
+		c.setBuilding(this);
 	}
 
 }
