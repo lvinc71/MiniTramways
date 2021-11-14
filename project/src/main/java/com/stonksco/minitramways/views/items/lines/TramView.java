@@ -17,12 +17,12 @@ import javafx.scene.shape.Ellipse;
 public class TramView extends Group {
 
     private LineView lv;
-    private LinePart lp;
+    private LinePartView lp;
     private GameView gw;
 
     private ImageView sprite;
 
-    public TramView(LineView lv, LinePart lp, GameView gw) {
+    public TramView(LineView lv, LinePartView lp, GameView gw) {
         super();
         this.lp = lp;
         this.lv = lv;
