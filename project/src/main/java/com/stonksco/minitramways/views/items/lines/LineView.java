@@ -1,6 +1,7 @@
 package com.stonksco.minitramways.views.items.lines;
 
 import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.layers.LinesView;
 import javafx.scene.Group;
@@ -17,7 +18,6 @@ public class LineView extends Group {
     private LinesView layer;
     // Liste des trams, stockés avec leur identifiant (1..n)
     private HashMap<Integer,TramView> trams;
-
 
     private Color c;
 
@@ -36,6 +36,7 @@ public class LineView extends Group {
         gw.addStationAt(end);
         addTram();
         layer.getChildren().add(this);
+
     }
 
 

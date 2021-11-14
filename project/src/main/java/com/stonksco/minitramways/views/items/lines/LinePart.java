@@ -1,10 +1,8 @@
 package com.stonksco.minitramways.views.items.lines;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.layers.LinesView;
-import com.stonksco.minitramways.views.layers.cells.CellView;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
@@ -41,7 +39,7 @@ public class LinePart extends Node {
         this.layer = layer;
         this.start = start;
         this.end = end;
-        this.color = color;
+        this.color = color ;
 
         pxStartX = gw.CellToPixelsX(start);
         pxStartY = gw.CellToPixelsY(start);
