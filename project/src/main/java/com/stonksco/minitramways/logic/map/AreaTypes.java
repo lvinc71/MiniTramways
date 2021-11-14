@@ -1,5 +1,19 @@
 package com.stonksco.minitramways.logic.map;
 
+/**
+ * Diff�rents types de zones
+ */
 public enum AreaTypes {
-    Work,Shop;
+	/**
+	 * Zone r�sidentielle
+	 */
+	residential,
+	/**
+	 * Zone de bureaux
+	 */
+	office,
+	/**
+	 * Zone commerciale
+	 */
+	shopping
 }

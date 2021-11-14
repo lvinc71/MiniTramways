@@ -15,8 +15,8 @@ public class Vector2 {
     }
 
     public Vector2(int x, int y) {
-        this.x=(double)x;
-        this.y=(double)y;
+        this.x= x;
+        this.y= y;
     }
 
 
@@ -81,7 +81,7 @@ public class Vector2 {
         xFormatted.stripTrailingZeros();
         yFormatted.stripTrailingZeros();
 
-        return "( "+xFormatted.toString()+" , "+yFormatted.toString()+" )";
+        return "( "+ xFormatted +" , "+ yFormatted +" )";
     }
 
     @Override
@@ -95,5 +95,41 @@ public class Vector2 {
     @Override
     public int hashCode() {
         return Objects.hash(getX(), getY());
+    }
+
+    /**
+     * Retourne le point d'intersection entre deux segments
+     * @param start1 Premier point du premier segment
+     * @param end1 Deuxième point du deuxième segment
+     * @param start2 Premier point du deuxième segment
+     * @param end2 Deuxième point du deuxième segment
+     * @return Point d'intersection entre les segments, ou null si les segments ne se croisent pas
+     */
+    public static Vector2 getIntersectionOf(Vector2 start1, Vector2 end1, Vector2 start2, Vector2 end2) {
+        Vector2 res = null;
+        double x1 = start1.getX();
+        double x2 = end1.getX();
+        double x3 = start2.getX();
+        double x4 = end2.getX();
+        double y1 = start1.getY();
+        double y2 = end1.getY();
+        double y3 = start2.getY();
+        double y4 = end2.getY();
+
+        double a1 = (y2-y1)/(x2-x1);
+        double b1 = y1-(a1*x1);
+        double a2 = (y4-y3)/(x4-x3);
+        double b2 = y3 - a2*x3;
+
+        // Si les deux segments ne sont pas parallèles
+        if(a1!=a2) {
+            double x5 = -(b1-b2)/(a1-a2);
+
+            if((Math.min(x1,x2) < x5) && (x5 < Math.max(x1,x2)) && ((Math.min(x3,x4) < x5) && (x5 < Math.max(x3,x5)))) {
+                double y5 = a1 * x5 + b1;
+                res = new Vector2(x5,y5);
+            }
+        }
+        return res;
     }
 }
