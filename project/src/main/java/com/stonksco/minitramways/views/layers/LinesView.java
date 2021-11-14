@@ -1,6 +1,7 @@
 package com.stonksco.minitramways.views.layers;
 
 import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.lines.LineView;
 import javafx.scene.layout.Pane;
@@ -18,10 +19,15 @@ public class LinesView extends Pane {
         super();
         this.gw = gw;
         lines = new HashMap<>();
+
+
     }
 
     public boolean createLine(Vector2 start, Vector2 end) {
         this.lines.put(lines.size(),new LineView(gw,this,start,end));
         return true;
     }
+
+
+
 }

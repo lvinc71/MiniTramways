@@ -28,7 +28,6 @@ import java.util.Map;
 
 public class GameView extends Scene implements Listener {
 
-
     private Group root;
     private Stage primaryStage;
 
@@ -128,6 +127,7 @@ public class GameView extends Scene implements Listener {
         centerPane.prefHeightProperty().bind(heightBinding);
         centerPane.maxWidthProperty().bind(widthBinding);
         centerPane.maxHeightProperty().bind(heightBinding);
+
 
         root.layout();
         mainPane.layout();

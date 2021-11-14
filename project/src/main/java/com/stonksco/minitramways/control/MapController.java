@@ -24,7 +24,7 @@ public class MapController implements Controler {
    public boolean createLine(Vector2 start, Vector2 end)
    {
        boolean res = true;
-       if(Game.get().CreateLine(start,end))
+       if(Game.get().CreateLine(start,end)!=null)
            gameview.CreateLine(start,end);
        else
            res = false;

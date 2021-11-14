@@ -1,6 +1,10 @@
 package com.stonksco.minitramways.logic;
 
+import com.stonksco.minitramways.logic.map.Cell;
 import com.stonksco.minitramways.logic.map.GameMap;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Game {
 
@@ -35,25 +39,33 @@ public class Game {
 
     public void initGame() {
         map = new GameMap();
+        map.init();
     }
 
     public int getDebug() {
         return this.debug;
     }
 
-    public boolean CreateLine(Vector2 start, Vector2 end) {
-        boolean canCreate = true;
+    public ArrayList<Integer> CreateLine(Vector2 start, Vector2 end) {
+        ArrayList<Integer> res = null;
 
-        if(!map.CreateLine(start,end))
-            canCreate = false;
+        // Vérifier argent, si c'est ok on exécute
+        res = map.CreateLine(start, end);
 
-        // ICI, AJOUTER CONTROLE ARGENT/DISPO
-
-        return canCreate;
+        return res;
     }
 
     public Vector2 getMapSize() {
         return map.getGridSize().clone();
     }
+
+    public HashMap<Integer, HashMap<Vector2, Cell>> getAreas(){
+
+        return getMap().getAreas();
+
+    }
+
+
+
 
 }
