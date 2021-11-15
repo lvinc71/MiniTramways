@@ -167,4 +167,19 @@ public class Line {
 		Game.Debug(1,"Line "+id+" extended from "+from+" to "+to);
 		return lp;
 	}
+
+	public String toString() {
+		String res = "-------EMPTY LINE------";
+		if(first!=null)
+			res= first.toStringFull();
+		return res;
+	}
+
+	public HashMap<Vector2,Vector2> getPartsVectors() {
+		HashMap<Vector2,Vector2> res = new HashMap<>();
+		for(LinePart p : first.getParts()) {
+			res.put(p.getStartPos().clone(),p.getEndPos().clone());
+		}
+		return res;
+	}
 }
