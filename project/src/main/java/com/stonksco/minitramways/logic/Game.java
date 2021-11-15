@@ -65,6 +65,8 @@ public class Game {
 
     }
 
+    public HashMap<Vector2, Vector2> getLine(int line){ return map.getLine(line);}
+
 
 
 

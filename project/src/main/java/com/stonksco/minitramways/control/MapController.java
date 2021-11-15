@@ -6,6 +6,8 @@ import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.GameMap;
 import com.stonksco.minitramways.views.GameView;
 
+import java.util.ArrayList;
+
 public class MapController implements Controler {
 
     private GameMap map;

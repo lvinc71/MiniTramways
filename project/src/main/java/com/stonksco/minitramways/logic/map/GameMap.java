@@ -242,5 +242,11 @@ public class GameMap {
         return res;
     }
 
+    public HashMap<Vector2, Vector2> getLine(int line)
+    {
+        lines.get(line);
+        return null;
+    }
+
 
 }

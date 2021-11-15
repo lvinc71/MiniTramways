@@ -36,7 +36,7 @@ public class LineView extends Group {
 
         parts = new HashMap<>();
         trams = new HashMap<>();
-        parts.put(new Vector2(0,100), new LinePartView(gw,layer,start,end,c));
+        parts.put(new Vector2(0,100), new LinePartView(gw,this,start,end,c));
         gw.addStationAt(start);
         gw.addStationAt(end);
         addTram();
@@ -54,6 +54,12 @@ public class LineView extends Group {
             this.getChildren().add(tv);
         }
 
+    }
+
+    public void deleteLine()
+    {
+        for ()
+        this.getChildren().remove(this);
     }
 
 }

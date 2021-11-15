@@ -331,5 +331,13 @@ public class GameView extends Scene implements Listener {
         return this.colors.get(c);
     }
 
+    /**
+     *Fonction qui récupere les identifiants des lignes
+     * @param lines
+     */
+    public void IdLines(ArrayList<Integer> lines)
+    {
 
+    }
 }
+
