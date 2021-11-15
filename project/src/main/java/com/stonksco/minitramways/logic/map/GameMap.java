@@ -83,8 +83,11 @@ public class GameMap {
         if(getBuildingAt(start)==null) {
             // Création d'une nouvelle ligne
             if(getBuildingAt(end) instanceof Station) {
-                // On crée une nouvelle ligne qu'on associe à la station de la deuxième case
-                creationMode = 1;
+                // Si la station est bien concrète et pas une station temporaire
+                if(((Station) getBuildingAt(end)).getLines().length > 0) {
+                    // On crée une nouvelle ligne qu'on associe à la station de la deuxième case
+                    creationMode = 1;
+                }
             } else if(getBuildingAt(end) == null) {
                 // On crée une nouvelle ligne complète
                 creationMode = 1;
@@ -240,6 +243,10 @@ public class GameMap {
             break;
         }
         return res;
+    }
+
+    public HashMap<Vector2,Vector2> getPartsVectorsOf(int lineID) {
+        return lines.get(lineID).getPartsVectors();
     }
 
 

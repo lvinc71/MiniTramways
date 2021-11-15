@@ -13,14 +13,12 @@ import javafx.beans.binding.When;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -57,7 +55,13 @@ public class GameView extends Scene implements Listener {
             Map.entry(ColorEnum.LINE_ROSEGOLD,Color.web("0xE0BFB8",1)),
             Map.entry(ColorEnum.LINE_PURPLE,Color.web("0xCC00CC",1)),
             Map.entry(ColorEnum.LINE_RED,Color.web("0xCC0000",1)),
-            Map.entry(ColorEnum.LINE_YELLOW,Color.web("0xFFFF33",1))
+            Map.entry(ColorEnum.LINE_YELLOW,Color.web("0xFFFF33",1)),
+            Map.entry(ColorEnum.RESIDENTIAL_BACKGROUND,Color.web("0xD1DFBC",1)),
+            Map.entry(ColorEnum.RESIDENTIAL_BORDER,Color.web("0xE9FFD6",1)),
+            Map.entry(ColorEnum.COMMERCIAL_BACKGROUND,Color.web("0xEE6F66",1)),
+            Map.entry(ColorEnum.COMMERCIAL_BORDER,Color.web("0xFF8A6D",1)),
+            Map.entry(ColorEnum.OFFICE_BACKGROUND,Color.web("0x53B0D1",1)),
+            Map.entry(ColorEnum.OFFICE_BORDER,Color.web("0x65D6FF",1))
     );
 
     // Sélection de cellules
@@ -195,6 +199,14 @@ public class GameView extends Scene implements Listener {
 
         Game.Debug(1,"Map layers initialized with a size of "+centerPane.widthProperty().get()+" * "+centerPane.heightProperty().get()+" pixels");
 
+        if(Game.get().getDebug()>2) {
+            Ellipse e = new Ellipse(15,15);
+            e.setFill(Color.BLUE);
+            e.translateXProperty().bind(gridPosX());
+            e.translateYProperty().bind(gridPosY());
+            gridPins.getChildren().add(e);
+        }
+
     }
 
 
@@ -331,5 +343,19 @@ public class GameView extends Scene implements Listener {
         return this.colors.get(c);
     }
 
+    public ReadOnlyDoubleProperty gridPosX() {
+        SimpleDoubleProperty p = new SimpleDoubleProperty();
+        p.bind(this.gridDisplay.translateXProperty());
+        return p;
+    }
 
+    public ReadOnlyDoubleProperty gridPosY() {
+        SimpleDoubleProperty p = new SimpleDoubleProperty();
+        p.bind(this.gridDisplay.translateYProperty());
+        return p;
+    }
+
+    public void updateLines(ArrayList<Integer> lines) {
+
+    }
 }

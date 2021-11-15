@@ -4,6 +4,8 @@ import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.building.Station;
 
+import java.util.ArrayList;
+
 public class LinePart {
 
     private Vector2 startStation;
@@ -98,6 +100,8 @@ public class LinePart {
             if (next!=null)
                 res=next.divide(start,end,at);
         }
+
+        Game.Debug(2,"Line part divided at "+at);
         return res;
 
     }
@@ -109,6 +113,25 @@ public class LinePart {
             prec.setPos(start,start-100);
         if(next != null)
             next.setPos(end,end+100);
+    }
+
+    @Override
+    public String toString() {
+        return startStation+"----------"+endStation;
+    }
+
+    public String toStringFull() {
+        String s = toString();
+        if(next != null)
+            s+=next.toStringFull();
+        return s;
+    }
+
+    public ArrayList<LinePart> getParts() {
+        ArrayList<LinePart> parts = new ArrayList<>();
+        if(next!=null)
+            parts.addAll(next.getParts());
+        return parts;
     }
 
 }
