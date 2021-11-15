@@ -65,6 +65,10 @@ public class Game {
 
     }
 
+    public HashMap<Vector2,Vector2> getPartsVectorsOf(int lineID) {
+        return map.getPartsVectorsOf(lineID);
+    }
+
 
 
 

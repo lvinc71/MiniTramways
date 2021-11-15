@@ -44,7 +44,6 @@ public class AreaView extends Group {
             case residential:
                 e.setContent("M2,597.78V142.87H118.73a131.39,131.39,0,0,1,90.93,36.54l16.39,15.71a166,166,0,0,1,50.8,109.4l1.15,18.3a152.44,152.44,0,0,1-7.14,56.66l-1.37,4.25a145.51,145.51,0,0,0-5.57,65.85l4.53,31.15a184.77,184.77,0,0,0,9.39,37l29.38,80Z");
                 e.setFill(gw.getColor(ColorEnum.RESIDENTIAL_BACKGROUND));
-                e.setFill(gw.getColor(ColorEnum.RESIDENTIAL_BACKGROUND));
                 e.setStroke(gw.getColor(ColorEnum.RESIDENTIAL_BORDER));
                 e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));
 
@@ -52,10 +51,18 @@ public class AreaView extends Group {
                 e.scaleYProperty().bind(gw.getCellSizeY().divide(Game.get().getMapSize().getY()));
                 e.translateXProperty().bind(gw.gridPosX().add(gw.getCellSizeX().multiply(2)));
                 e.translateYProperty().bind(gw.gridPosY().add(gw.getCellSizeY().multiply(0)));
+
+                if(Game.get().getDebug()>2) {
+                    Ellipse el = new Ellipse(3,3);
+                    el.setFill(Color.LIGHTBLUE);
+                    el.translateXProperty().bind(gw.gridPosX().add(gw.getCellSizeX().multiply(2)));
+                    el.translateYProperty().bind(gw.gridPosY().add(gw.getCellSizeY().multiply(0)));
+                    el.setViewOrder(-5);
+                    this.getChildren().add(el);
+                }
                 break;
             case shopping:
                 e.setContent("M614.78,2.5H293.13L328.62,100A62.9,62.9,0,0,0,403,139.54a376.74,376.74,0,0,1,44.33-8.21c7.38-1,126.79,12.32,137.74,17.8s39.13,22.7,47.74,22.7c3,0,7-9.13,11.08-21.12A134.33,134.33,0,0,0,637.35,49Z");
-                e.setFill(gw.getColor(ColorEnum.COMMERCIAL_BACKGROUND));
                 e.setFill(gw.getColor(ColorEnum.COMMERCIAL_BACKGROUND));
                 e.setStroke(gw.getColor(ColorEnum.COMMERCIAL_BORDER));
                 e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));

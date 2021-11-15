@@ -354,4 +354,8 @@ public class GameView extends Scene implements Listener {
         p.bind(this.gridDisplay.translateYProperty());
         return p;
     }
+
+    public void updateLines(ArrayList<Integer> lines) {
+
+    }
 }
