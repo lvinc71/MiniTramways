@@ -1,7 +1,10 @@
 package com.stonksco.minitramways.logic;
 
+import com.stonksco.minitramways.logic.map.AreaTypes;
 import com.stonksco.minitramways.logic.map.Cell;
 import com.stonksco.minitramways.logic.map.GameMap;
+import com.stonksco.minitramways.logic.map.building.Building;
+import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +68,51 @@ public class Game {
 
     }
 
+    public HashMap<BuildingEnum,ArrayList<Vector2>> getBuildings(){
+        HashMap<BuildingEnum,ArrayList<Vector2>> hm = new HashMap<>();
+        ArrayList<Cell> tempC = new ArrayList<>();
+        ArrayList<Vector2> tempV = new ArrayList<>();
 
+        for(int i = 0; i<this.getMap().getNombreArea(); i++){
+            switch (this.getMap().getAreas(i).getType()){
+                case residential:
+                   tempC = Game.get().getMap().getAreas(i).getCells();
+                   for(int b=0; b<tempC.size();b++){
+                       if(tempC.get(b).getBuilding()!=null) {
+                           tempV.add(tempC.get(b).getCoordinates());
+
+                       }
+                   }
+                   hm.put(BuildingEnum.HOUSE,tempV);
+                    break;
+
+                case office:
+                    tempC = Game.get().getMap().getAreas(i).getCells();
+                    for(int b=0; b<tempC.size();b++){
+                        if(tempC.get(b).getBuilding()!=null) {
+                            tempV.add(tempC.get(b).getCoordinates());
+
+                        }
+                    }
+                    hm.put(BuildingEnum.OFFICE,tempV);
+                    break;
+
+                case shopping:
+                    tempC = Game.get().getMap().getAreas(i).getCells();
+                    for(int b=0; b<tempC.size();b++){
+                        if(tempC.get(b).getBuilding()!=null) {
+                            tempV.add(tempC.get(b).getCoordinates());
+
+                        }
+                    }
+                    hm.put(BuildingEnum.SHOP,tempV);
+                    break;
+
+            }
+            tempC=null;
+        }
+        return hm;
+    }
 
 
 }

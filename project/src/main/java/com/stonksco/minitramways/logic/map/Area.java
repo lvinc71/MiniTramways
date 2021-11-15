@@ -3,6 +3,9 @@ package com.stonksco.minitramways.logic.map;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.building.Building;
+import com.stonksco.minitramways.logic.map.building.House;
+import com.stonksco.minitramways.logic.map.building.Office;
+import com.stonksco.minitramways.logic.map.building.Shop;
 
 import java.util.ArrayList;
 
@@ -17,6 +20,35 @@ public class Area {
 	 * Type de zone
 	 */
 	private AreaTypes type;
+
+	// densité = nombre de building créé
+	private int densite = 3;
+
+	//Constructeur de la classe area qui prend en parametre une liste de cell et un type
+	public Area(ArrayList<Cell> area,AreaTypes areasType) {
+		buildings = new ArrayList<>();
+		this.cells = area;
+		this.type = areasType;
+		for (int i = 0; i < densite; i++) {
+			switch (type){
+				case office:
+					Office o = new Office(area.get(i));
+					area.get(i).setBuilding(o);
+					addBuilding(o);
+					break;
+				case shopping:
+					Shop s = new Shop(area.get(i));
+					area.get(i).setBuilding(s);
+					addBuilding(s);
+					break;
+				case residential:
+					House h = new House(area.get(i));
+					area.get(i).setBuilding(h);
+					addBuilding(h);
+					break;
+			}
+		}
+	}
 
 	/**
 	 * Ajoute une case de la grille � la zone
@@ -50,8 +82,7 @@ public class Area {
 	 * @param b
 	 */
 	private void addBuilding(Building b) {
-		// TODO - implement Area.addBuilding
-		throw new UnsupportedOperationException();
+		buildings.add(b);
 	}
 
 	/**
@@ -73,4 +104,16 @@ public class Area {
     public boolean isIn(Vector2 pos) {
 		return cells.contains(Game.get().getMap().getCellAt(pos));
     }
+
+	public AreaTypes getType() {
+		return type;
+	}
+
+	public ArrayList<Building> getBuildings() {
+		return buildings;
+	}
+
+	public ArrayList<Cell> getCells() {
+		return cells;
+	}
 }

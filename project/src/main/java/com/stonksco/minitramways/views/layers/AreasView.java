@@ -24,7 +24,7 @@ public class AreasView extends Pane {
     }
 
     public void AddArea(){
-        area = new AreaView(gw,AreaTypes.Work);
+        area = new AreaView(gw,AreaTypes.office);
         this.getChildren().add(area);
         areas.add(area);
     }

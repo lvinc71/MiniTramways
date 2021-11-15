@@ -55,6 +55,7 @@ public class GameMap {
         lines = new HashMap<>();
         initAreas();
         initBuildings();
+
     }
 
     public Cell getCellAt(Vector2 v) {
@@ -200,11 +201,30 @@ public class GameMap {
     public void initAreas() {
         areas = new HashMap<>();
 
-        ArrayList<Cell> cells1 = new ArrayList<>();
-        ArrayList<Cell> cells2 = new ArrayList<>();
-        ArrayList<Cell> cells3 = new ArrayList<>();
+        ArrayList<Cell> list1 = new ArrayList<>();
+        list1.add(Game.get().getMap().grid.get(new Vector2(8.0,1.0)));//
+        list1.add(Game.get().getMap().grid.get(new Vector2(1.0,0.0)));//
+        list1.add(Game.get().getMap().grid.get(new Vector2(2.0,0.0)));//
+        list1.add(Game.get().getMap().grid.get(new Vector2(3.0,0.0)));
+        Area shop = new Area(list1, AreaTypes.shopping);
 
+        ArrayList<Cell> list2 = new ArrayList<>();
+        list2.add(Game.get().getMap().grid.get(new Vector2(0.0,19.0)));//
+        list2.add(Game.get().getMap().grid.get(new Vector2(0.0,20.0)));//
+        list2.add(Game.get().getMap().grid.get(new Vector2(0.0,21.0)));//
+        list2.add(Game.get().getMap().grid.get(new Vector2(0.0,22.0)));
+        Area office = new Area(list2,AreaTypes.office);
 
+        ArrayList<Cell> list3 = new ArrayList<>();
+        list3.add(Game.get().getMap().grid.get(new Vector2(14.0,19.0)));
+        list3.add(Game.get().getMap().grid.get(new Vector2(13.0,20.0)));
+        list3.add(Game.get().getMap().grid.get(new Vector2(10.0,21.0)));
+        list3.add(Game.get().getMap().grid.get(new Vector2(12.0,22.0)));
+        Area residence = new Area(list3,AreaTypes.residential);
+
+        areas.put(0,shop);
+        areas.put(1,office);
+        areas.put(2,residence);
 
     }
 
@@ -241,6 +261,16 @@ public class GameMap {
         }
         return res;
     }
+
+    public Area getAreas(int i ){
+        return areas.get(i);
+    }
+
+    public int getNombreArea(){
+        return areas.size();
+
+    }
+
 
 
 }

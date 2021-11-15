@@ -9,49 +9,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5f5679b8-ee3b-4cd9-87f9-55bb7389b099" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/LinePart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../assets/MiniTramways.ai" beforeDir="false" afterPath="$PROJECT_DIR$/../assets/MiniTramways.ai" afterDir="false" />
+    <list default="true" id="5f5679b8-ee3b-4cd9-87f9-55bb7389b099" name="Changes" comment="Changes">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/SVG/House.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MiniTramways.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MiniTramways.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/MiniTramways_jar/MiniTramways.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/MiniTramways_jar/MiniTramways.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/MapController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/control/MapController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Line.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/People.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/People.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/PlaceToBe.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Tramway.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Vector2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Vector2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/Area.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/Area.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/AreaTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/AreaTypes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/Cell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/Cell.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/GameMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/GameMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Building.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Building.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/House.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/House.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Office.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Office.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Shop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Shop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Station.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/building/Station.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/LinePart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/LinePartView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/LineView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/LineView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/TramView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/TramView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/LinesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/LinesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/control/MapController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/control/MapController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/ImageGetter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/ImageGetter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/AreasView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/AreasView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/BuildingsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/BuildingsView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/cells/BuildingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/cells/BuildingView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/Line.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/People.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/People.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/PlaceToBe.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/Player.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/Tramway.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/Vector2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/Vector2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/Area.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/Area.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/AreaTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/AreaTypes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/Cell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/Cell.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/Building.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/Building.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/House.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/House.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/Office.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/Office.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/Shop.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/Shop.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/Station.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/logic/map/building/Station.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/views/GameView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/stonksco/minitramways/views/GameView.class" afterDir="false" />
     </list>
@@ -59,6 +32,9 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="DarkyenusTimeTracker">
     <option name="totalTimeSeconds" value="25184" />
@@ -86,16 +62,18 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/LinePartView.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/Main.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/GameMap.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/MiniTramways.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/TramView.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Vector2.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/layers/cells/StationView.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/ImageGetter.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/MiniTramways.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/TramView.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/items/lines/LineView.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/GameMap.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
   </component>
   <component name="ProjectId" id="20MB8hV3Wyam98VYoqIPayBLyYg" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -108,7 +86,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/p2/MiniTramways/project" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -117,6 +95,9 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Travail\github\MiniTramways\project\src\main\resources\assets" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.stonksco.minitramways.views.grid" />
       <recent name="com.stonksco.minitramways" />
@@ -181,7 +162,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java</url>
-          <line>28</line>
+          <line>27</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -193,6 +174,26 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/map/LinePart.java</url>
           <line>23</line>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java</url>
+          <line>341</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java</url>
+          <line>347</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/views/GameView.java</url>
+          <line>353</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/stonksco/minitramways/logic/Game.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
