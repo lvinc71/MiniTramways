@@ -65,6 +65,16 @@ public class ImageGetter {
                     Game.Debug(3,"found URL for House image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
+                case SHOP:
+                    imgPath = getClass().getResource("/assets/Shop.png");
+                    Game.Debug(3,"found URL for House image : " +imgPath);
+                    image = new Image(imgPath.toString());
+                    break;
+                case OFFICE:
+                    imgPath = getClass().getResource("/assets/Office.png");
+                    Game.Debug(3,"found URL for House image : " +imgPath);
+                    image = new Image(imgPath.toString());
+                    break;
             }
         } catch(Exception e) {
             Game.Debug(1,"ERROR loading an asset : "+e.getMessage());

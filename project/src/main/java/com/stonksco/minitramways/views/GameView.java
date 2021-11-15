@@ -166,6 +166,7 @@ public class GameView extends Scene implements Listener {
         linesPane = new LinesView(this);
 
         areasPane.AddArea();
+        buildBuilding(Game.get().getBuildings());
 
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
@@ -237,8 +238,6 @@ public class GameView extends Scene implements Listener {
                     Game.Debug(1,"Line creation aborted.");
                 resetCellSelection();
             }
-
-            buildBuilding(Game.get().getBuildings());
     }
 
     /**
@@ -340,19 +339,19 @@ public class GameView extends Scene implements Listener {
        pos =hMBuilding.get(BuildingEnum.HOUSE);
        if(pos!=null){
            for(int i=0; i<pos.size();i++){
-               addBuildingAt(pos.get(i));
+               addBuildingAt(pos.get(i),BuildingEnum.HOUSE);
            }
        }
         pos =hMBuilding.get(BuildingEnum.SHOP);
         if(pos!=null) {
             for (int i = 0; i < pos.size(); i++) {
-                addBuildingAt(pos.get(i));
+                addBuildingAt(pos.get(i),BuildingEnum.SHOP);
             }
         }
         pos =hMBuilding.get(BuildingEnum.OFFICE);
         if(pos!=null) {
             for (int i = 0; i < pos.size(); i++) {
-                addBuildingAt(pos.get(i));
+                addBuildingAt(pos.get(i),BuildingEnum.OFFICE);
             }
         }
 
@@ -363,8 +362,8 @@ public class GameView extends Scene implements Listener {
      * Ajoute une batiment aux coordonnées passées en paramètres
      * @param at
      */
-    public void addBuildingAt(Vector2 at) {
-        gridBuildings.addBuildingsAt(at);
+    public void addBuildingAt(Vector2 at,BuildingEnum types) {
+        gridBuildings.addBuildingsAt(at,types);
     }
 }
 
