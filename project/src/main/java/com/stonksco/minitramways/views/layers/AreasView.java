@@ -21,10 +21,14 @@ public class AreasView extends Pane {
         super();
         this.gw = gw;
         areas = new ArrayList<AreaView>();
+
+        this.addArea(AreaTypes.residential);
+        this.addArea(AreaTypes.office);
+        this.addArea(AreaTypes.shopping);
     }
 
-    public void AddArea(){
-        area = new AreaView(gw,AreaTypes.Work);
+    public void addArea(AreaTypes type){
+        area = new AreaView(gw,type);
         this.getChildren().add(area);
         areas.add(area);
     }
