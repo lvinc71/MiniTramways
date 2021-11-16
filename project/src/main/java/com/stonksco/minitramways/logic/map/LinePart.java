@@ -44,9 +44,7 @@ public class LinePart {
         this.line = line;
         this.startStation = start;
         this.endStation = end;
-        if(first!=null)
-            first.add(this);
-        else
+        if(first==null)
             this.setPos(0,100,0);
 
 
@@ -63,8 +61,7 @@ public class LinePart {
         return res;
     }
 
-
-    private boolean add(LinePart partToAdd) {
+    public boolean add(LinePart partToAdd) {
         boolean res = false;
             // Cas où on est du côté droit de la ligne
             if(partToAdd.startStation.equals(this.endStation) && next==null) {
@@ -109,6 +106,7 @@ public class LinePart {
             newPart.next = this.next;
             newPart.prec = this;
             this.next = newPart;
+            this.endStation = at;
             this.next.setPos(this.end,this.end+100,1);
             res=true;
             Game.Debug(2,"Line part "+this+" divided at "+at);

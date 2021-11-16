@@ -223,7 +223,7 @@ public class GameView extends Scene implements Listener {
     /**
      * Appelée au clic sur une cellule de la grille
      * @param cell sur laquelle le clic a été fait
-     * @author Thomas Coulon
+     * @author Thomas Coulon, Léo Vincent
      */
     public void cellClick(CellView cell)
     {

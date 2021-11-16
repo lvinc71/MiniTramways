@@ -75,7 +75,7 @@ public class GameMap {
     public ArrayList<Integer> CreateLine(Vector2 start, Vector2 end) {
         ArrayList<Integer> updatedLines = new ArrayList<>();
 
-        Game.Debug(2,"Line creation initiated from "+start+" to "+end);
+        Game.Debug(2,"Line modification initiated from "+start+" to "+end);
         int creationMode = 0; // Mode de création selon le contexte :
         // 0 = impossible de créer ;
         // 1 = création d'une nouvelle ligne complète OU Création d'une nouvelle ligne avec la deuxième station existante;
@@ -84,11 +84,9 @@ public class GameMap {
         if(getBuildingAt(start)==null) {
             // Création d'une nouvelle ligne
             if(getBuildingAt(end) instanceof Station) {
-                // Si la station est bien concrète et pas une station temporaire
-                if(((Station) getBuildingAt(end)).getLines().length > 0) {
                     // On crée une nouvelle ligne qu'on associe à la station de la deuxième case
                     creationMode = 1;
-                }
+
             } else if(getBuildingAt(end) == null) {
                 // On crée une nouvelle ligne complète
                 creationMode = 1;
@@ -199,6 +197,7 @@ public class GameMap {
         if(stations==null)
             stations = new HashMap<>();
         Station s = new Station(getCellAt(at));
+        getCellAt(at).setBuilding(s);
         stations.put(at,s);
         return s;
     }

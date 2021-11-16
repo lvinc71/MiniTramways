@@ -151,7 +151,12 @@ public class Line {
 
 		// Si from est une extrémité
 		if(from.equals(first.getStartPos()) || from.equals(first.getLast().getEndPos())) {
+			boolean needAdd = !(first==null);
 			lp=new LinePart(this,from,to,first);
+
+			if(needAdd)
+				this.first.add(lp);
+
 			Station endStation = null;
 			// si la deuxième station existe déjà, alors on en crée pas et on ajoute la ligne
 			if(Game.get().getMap().getCellAt(to).getBuilding() instanceof Station) {
@@ -187,7 +192,7 @@ public class Line {
 	public Set<Map.Entry<Vector2,Vector2>> getPartsVectors() {
 		HashMap<Vector2,Vector2> res = new HashMap<>();
 		for(LinePart p : first.getParts()) {
-			res.put(p.getStartPos().clone(),p.getEndPos().clone());
+			res.put(p.getStartPos(),p.getEndPos());
 		}
 		return res.entrySet();
 	}
