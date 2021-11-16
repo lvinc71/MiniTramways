@@ -4,6 +4,7 @@ import com.stonksco.minitramways.control.MapController;
 import com.stonksco.minitramways.control.interfaces.Listener;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 import com.stonksco.minitramways.views.layers.*;
 import com.stonksco.minitramways.views.layers.cells.CellView;
 import com.stonksco.minitramways.views.layers.cells.GridDisplayCell;
@@ -22,6 +23,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GameView extends Scene implements Listener {
@@ -95,6 +97,7 @@ public class GameView extends Scene implements Listener {
     public void enable() {
         initWindowLayout();
         initMapLayers();
+        updateBuildings();
     }
 
 
@@ -262,8 +265,6 @@ public class GameView extends Scene implements Listener {
                 }
 
             }
-
-
     }
 
     /**
@@ -356,6 +357,40 @@ public class GameView extends Scene implements Listener {
         return this.colors.get(c);
     }
 
+    public void updateBuildings(){
+        HashMap<BuildingEnum,ArrayList<Vector2>> buildings = Game.get().getBuildings();
+
+       ArrayList<Vector2> pos;
+       pos =buildings.get(BuildingEnum.HOUSE);
+       if(pos!=null){
+           for(int i=0; i<pos.size();i++){
+               addBuildingAt(pos.get(i),BuildingEnum.HOUSE);
+           }
+       }
+        pos =buildings.get(BuildingEnum.SHOP);
+        if(pos!=null) {
+            for (int i = 0; i < pos.size(); i++) {
+                addBuildingAt(pos.get(i),BuildingEnum.SHOP);
+            }
+        }
+        pos =buildings.get(BuildingEnum.OFFICE);
+        if(pos!=null) {
+            for (int i = 0; i < pos.size(); i++) {
+                addBuildingAt(pos.get(i),BuildingEnum.OFFICE);
+            }
+        }
+
+    }
+
+
+    /**
+     * Ajoute une batiment aux coordonnées passées en paramètres
+     * @param at
+     */
+    private void addBuildingAt(Vector2 at,BuildingEnum types) {
+        gridBuildings.addBuildingAt(at,types);
+    }
+    
     public ReadOnlyDoubleProperty gridPosX() {
         SimpleDoubleProperty p = new SimpleDoubleProperty();
         p.bind(this.gridDisplay.translateXProperty());
@@ -381,3 +416,16 @@ public class GameView extends Scene implements Listener {
         gridStations.updateStations();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

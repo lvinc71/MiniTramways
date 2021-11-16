@@ -60,6 +60,21 @@ public class ImageGetter {
                     Game.Debug(3,"found URL for TRAMWAY_ROSEGOLD image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
+                case HOUSE:
+                    imgPath = getClass().getResource("/assets/house.png");
+                    Game.Debug(3,"found URL for House image : " +imgPath);
+                    image = new Image(imgPath.toString());
+                    break;
+                case SHOP:
+                    imgPath = getClass().getResource("/assets/shop.png");
+                    Game.Debug(3,"found URL for SHOP image : " +imgPath);
+                    image = new Image(imgPath.toString());
+                    break;
+                case OFFICE:
+                    imgPath = getClass().getResource("/assets/office.png");
+                    Game.Debug(3,"found URL for OFFICE image : " +imgPath);
+                    image = new Image(imgPath.toString());
+                    break;
             }
         } catch(Exception e) {
             Game.Debug(1,"ERROR loading an asset : "+e.getMessage());

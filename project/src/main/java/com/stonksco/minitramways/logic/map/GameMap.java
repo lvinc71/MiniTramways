@@ -3,6 +3,7 @@ package com.stonksco.minitramways.logic.map;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.building.Building;
+import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 import com.stonksco.minitramways.logic.map.building.Station;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class GameMap {
         lines = new HashMap<>();
         initAreas();
         initBuildings();
+
     }
 
     public Cell getCellAt(Vector2 v) {
@@ -244,15 +246,41 @@ public class GameMap {
     public void initAreas() {
         areas = new HashMap<>();
 
-        ArrayList<Cell> cells1 = new ArrayList<>();
-        ArrayList<Cell> cells2 = new ArrayList<>();
-        ArrayList<Cell> cells3 = new ArrayList<>();
+        ArrayList<Cell> list1 = new ArrayList<>();
+        list1.add(Game.get().getMap().grid.get(new Vector2(8.0,1.0)));//
+        list1.add(Game.get().getMap().grid.get(new Vector2(1.0,0.0)));//
+        list1.add(Game.get().getMap().grid.get(new Vector2(2.0,0.0)));//
+        list1.add(Game.get().getMap().grid.get(new Vector2(3.0,0.0)));
+        Area shop = new Area(list1, AreaTypes.shopping);
+
+        ArrayList<Cell> list2 = new ArrayList<>();
+        list2.add(Game.get().getMap().grid.get(new Vector2(0.0,19.0)));//
+        list2.add(Game.get().getMap().grid.get(new Vector2(0.0,20.0)));//
+        list2.add(Game.get().getMap().grid.get(new Vector2(0.0,21.0)));//
+        list2.add(Game.get().getMap().grid.get(new Vector2(0.0,22.0)));
+        Area office = new Area(list2,AreaTypes.office);
+
+        ArrayList<Cell> list3 = new ArrayList<>();
+        list3.add(Game.get().getMap().grid.get(new Vector2(14.0,19.0)));
+        list3.add(Game.get().getMap().grid.get(new Vector2(13.0,20.0)));
+        list3.add(Game.get().getMap().grid.get(new Vector2(10.0,21.0)));
+        list3.add(Game.get().getMap().grid.get(new Vector2(12.0,22.0)));
+        Area residence = new Area(list3,AreaTypes.residential);
+
+        areas.put(0,shop);
+        areas.put(1,office);
+        areas.put(2,residence);
 
     }
 
     public void initBuildings() {
         for(Area a : areas.values()) {
-
+            boolean exit=false;
+            while (a.getDensity()<0.4d && !exit) {
+                if(!a.generateBuilding())
+                    exit=true;
+            }
+            Game.Debug(1,"Generated "+a.getBuildings().size()+" buildings in "+a.getType()+" area.");
         }
     }
 
@@ -283,6 +311,66 @@ public class GameMap {
         }
         return res;
     }
+
+    public Area getAreas(int i ){
+        return areas.get(i);
+    }
+
+    public int getNombreArea(){
+        return areas.size();
+
+    }
+
+    public HashMap<BuildingEnum,ArrayList<Vector2>> getBuildings(){
+        HashMap<BuildingEnum,ArrayList<Vector2>> hm = new HashMap<>();
+        ArrayList<Cell> tempC = new ArrayList<>();
+        ArrayList<Vector2> tempV = new ArrayList<>();
+
+        for(Area a : areas.values()) {
+
+            switch(a.getType()) {
+                case residential:
+                    tempV=new ArrayList<>();
+                    tempC = a.getCells();
+                    for(int b=0; b<tempC.size();b++){
+                        if(tempC.get(b).getBuilding()!=null) {
+                            tempV.add(tempC.get(b).getCoordinates());
+
+                        }
+                    }
+                    hm.put(BuildingEnum.HOUSE,tempV);
+                    break;
+
+                case office:
+                    tempV=new ArrayList<>();
+                    tempC = a.getCells();
+                    for(int b=0; b<tempC.size();b++){
+                        if(tempC.get(b).getBuilding()!=null) {
+                            tempV.add(tempC.get(b).getCoordinates());
+
+                        }
+                    }
+                    hm.put(BuildingEnum.OFFICE,tempV);
+                    break;
+
+                case shopping:
+                    tempV=new ArrayList<>();
+                    tempC = a.getCells();
+                    for(int b=0; b<tempC.size();b++){
+                        if(tempC.get(b).getBuilding()!=null) {
+                            tempV.add(tempC.get(b).getCoordinates());
+
+                        }
+                    }
+                    hm.put(BuildingEnum.SHOP,tempV);
+                    break;
+
+            }
+            tempC=null;
+        }
+        return hm;
+    }
+
 
     public Set<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
         return lines.get(lineID).getPartsVectors();
