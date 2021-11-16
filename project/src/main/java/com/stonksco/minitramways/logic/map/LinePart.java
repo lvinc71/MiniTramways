@@ -101,18 +101,22 @@ public class LinePart {
      */
     public boolean divide(Vector2 start, Vector2 end ,Vector2 at) {
         boolean res = false;
-        if(startStation.equals(start) && endStation.equals(end)) {
-            LinePart newPart = new LinePart(line,at,end,line.getFirstPart());
-            newPart.next = this.next;
-            newPart.prec = this;
-            this.next = newPart;
-            this.endStation = at;
-            this.next.setPos(this.end,this.end+100,1);
-            res=true;
-            Game.Debug(2,"Line part "+this+" divided at "+at);
+        if(at!=null) {
+            if(startStation.equals(start) && endStation.equals(end)) {
+                LinePart newPart = new LinePart(line,at,end,line.getFirstPart());
+                newPart.next = this.next;
+                newPart.prec = this;
+                this.next = newPart;
+                this.endStation = at;
+                this.next.setPos(this.end,this.end+100,1);
+                res=true;
+                Game.Debug(2,"Line part "+this+" divided at "+at);
+            } else {
+                if (next!=null)
+                    res=next.divide(start,end,at);
+            }
         } else {
-            if (next!=null)
-                res=next.divide(start,end,at);
+            Game.Debug(1,"ERROR when trying to divide line part : intersection point is null");
         }
 
 

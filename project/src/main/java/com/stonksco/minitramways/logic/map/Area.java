@@ -81,22 +81,28 @@ public class Area {
 	 */
 	public boolean generateBuilding() {
 		boolean res=false;
+
+		Cell c = this.cells.get(Math.round((float)Math.random()*(cells.size()-1)));
+		while(c.getBuilding()!=null) {
+			c = this.cells.get(Math.round((float)Math.random()*cells.size()-1));
+		}
+
 		switch (type){
 			case office:
-				Office o = new Office(cells.get(buildings.size()));
-				cells.get(buildings.size()).setBuilding(o);
+				Office o = new Office(c);
+				c.setBuilding(o);
 				addBuilding(o);
 				res=true;
 				break;
 			case shopping:
-				Shop s = new Shop(cells.get(buildings.size()));
-				cells.get(buildings.size()).setBuilding(s);
+				Shop s = new Shop(c);
+				c.setBuilding(s);
 				addBuilding(s);
 				res=true;
 				break;
 			case residential:
-				House h = new House(cells.get(buildings.size()));
-				cells.get(buildings.size()).setBuilding(h);
+				House h = new House(c);
+				c.setBuilding(h);
 				addBuilding(h);
 				res=true;
 				break;

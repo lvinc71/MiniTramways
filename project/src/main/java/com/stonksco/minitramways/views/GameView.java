@@ -211,6 +211,8 @@ public class GameView extends Scene implements Listener {
             e.setFill(Color.BLUE);
             e.translateXProperty().bind(gridPosX());
             e.translateYProperty().bind(gridPosY());
+            e.radiusXProperty().bind(getCellSizeX().divide(3));
+            e.radiusYProperty().bind(getCellSizeY().divide(3));
             gridPins.getChildren().add(e);
         }
 
@@ -393,13 +395,13 @@ public class GameView extends Scene implements Listener {
     
     public ReadOnlyDoubleProperty gridPosX() {
         SimpleDoubleProperty p = new SimpleDoubleProperty();
-        p.bind(this.gridDisplay.translateXProperty());
+        p.bind(this.gridDisplay.layoutXProperty());
         return p;
     }
 
     public ReadOnlyDoubleProperty gridPosY() {
         SimpleDoubleProperty p = new SimpleDoubleProperty();
-        p.bind(this.gridDisplay.translateYProperty());
+        p.bind(this.gridDisplay.layoutYProperty());
         return p;
     }
 
@@ -414,6 +416,10 @@ public class GameView extends Scene implements Listener {
 
     public void updateStations() {
         gridStations.updateStations();
+    }
+
+    public GridDisplay getGridDisplay() {
+        return gridDisplay;
     }
 }
 
