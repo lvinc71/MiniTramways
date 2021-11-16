@@ -17,7 +17,7 @@ public abstract class GridView extends GridPane {
 
     protected GameView gw;
 
-    protected Vector2 gridSize;
+    protected final Vector2 gridSize;
     protected HashMap<Vector2, CellView> cells;
 
     public GridView(GameView gw, Vector2 size) {

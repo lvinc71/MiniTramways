@@ -132,4 +132,8 @@ public class Vector2 {
         }
         return res;
     }
+
+    public Vector2 round() {
+        return new Vector2(Math.round(x),Math.round(y));
+    }
 }

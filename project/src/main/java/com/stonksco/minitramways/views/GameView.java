@@ -19,6 +19,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -56,7 +57,13 @@ public class GameView extends Scene implements Listener {
             Map.entry(ColorEnum.LINE_ROSEGOLD,Color.web("0xE0BFB8",1)),
             Map.entry(ColorEnum.LINE_PURPLE,Color.web("0xCC00CC",1)),
             Map.entry(ColorEnum.LINE_RED,Color.web("0xCC0000",1)),
-            Map.entry(ColorEnum.LINE_YELLOW,Color.web("0xFFFF33",1))
+            Map.entry(ColorEnum.LINE_YELLOW,Color.web("0xFFFF33",1)),
+            Map.entry(ColorEnum.RESIDENTIAL_BACKGROUND,Color.web("0xD1DFBC",1)),
+            Map.entry(ColorEnum.RESIDENTIAL_BORDER,Color.web("0xE9FFD6",1)),
+            Map.entry(ColorEnum.COMMERCIAL_BACKGROUND,Color.web("0xEE6F66",1)),
+            Map.entry(ColorEnum.COMMERCIAL_BORDER,Color.web("0xFF8A6D",1)),
+            Map.entry(ColorEnum.OFFICE_BACKGROUND,Color.web("0x53B0D1",1)),
+            Map.entry(ColorEnum.OFFICE_BORDER,Color.web("0x65D6FF",1))
     );
 
     // Sélection de cellules
@@ -163,8 +170,6 @@ public class GameView extends Scene implements Listener {
         areasPane = new AreasView(this);
         linesPane = new LinesView(this);
 
-        areasPane.AddArea();
-
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
         centerPane.getChildren().add(gridBuildings);
@@ -191,11 +196,23 @@ public class GameView extends Scene implements Listener {
         for (Pane layer:layersList) {
             layer.prefWidthProperty().bind(gridDisplay.widthProperty());
             layer.prefHeightProperty().bind(gridDisplay.heightProperty());
+            layer.maxWidthProperty().bind(gridDisplay.widthProperty());
+            layer.maxHeightProperty().bind(gridDisplay.heightProperty());
+            layer.minWidthProperty().bind(gridDisplay.widthProperty());
+            layer.minHeightProperty().bind(gridDisplay.heightProperty());
         }
 
         centerPane.layout();
 
         Game.Debug(1,"Map layers initialized with a size of "+centerPane.widthProperty().get()+" * "+centerPane.heightProperty().get()+" pixels");
+
+        if(Game.get().getDebug()>2) {
+            Ellipse e = new Ellipse(15,15);
+            e.setFill(Color.BLUE);
+            e.translateXProperty().bind(gridPosX());
+            e.translateYProperty().bind(gridPosY());
+            gridPins.getChildren().add(e);
+        }
 
     }
 
@@ -209,7 +226,7 @@ public class GameView extends Scene implements Listener {
     /**
      * Appelée au clic sur une cellule de la grille
      * @param cell sur laquelle le clic a été fait
-     * @author Thomas Coulon
+     * @author Thomas Coulon, Léo Vincent
      */
     public void cellClick(CellView cell)
     {
@@ -217,10 +234,17 @@ public class GameView extends Scene implements Listener {
             {
                 firstCell = cell;
                 Game.Debug(2, "First cell at ( " + GridPane.getColumnIndex(firstCell)+ " , "+ GridPane.getRowIndex(firstCell) + " )");
-                tempStation = new StationView(this,firstCell.getGridPos());
-                firstCell.getChildren().add(tempStation);
+                if(Game.get().getMap().getCellAt(firstCell.getGridPos()).getBuilding()==null) {
+                    tempStation = new StationView(this, firstCell.getGridPos());
+                    tempStation.opacityProperty().setValue(0.5);
+                    firstCell.getChildren().add(tempStation);
+                } else {
+                    if (!Game.get().isAtExtremity(firstCell.getGridPos())) {
+                        resetCellSelection();
+                    }
+                }
             }
-            else if (secondCell == null && firstCell != null && cell != firstCell)
+            else if (secondCell == null && cell != firstCell)
             {
                 secondCell = cell;
                 Game.Debug(2, "Second cell at ( " + GridPane.getColumnIndex(secondCell)+ " , "+ GridPane.getRowIndex(secondCell)+ " )");
@@ -231,9 +255,15 @@ public class GameView extends Scene implements Listener {
                 Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
                 Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
                 Game.Debug(2, "Two cells selected.");
-                if(!mapController.createLine(firstPos,secondPos))
-                    Game.Debug(1,"Line creation aborted.");
-                resetCellSelection();
+                if(!mapController.createLine(firstPos,secondPos)) {
+                    Game.Debug(1, "Line creation aborted.");
+                    secondCell = null;
+                }
+                else {
+                    firstCell=secondCell;
+                    secondCell=null;
+                }
+
             }
     }
 
@@ -263,10 +293,6 @@ public class GameView extends Scene implements Listener {
 
     }
 
-    public void CreateLine (Vector2 start, Vector2 end)
-    {
-            linesPane.createLine(start,end);
-    }
 
 
     /**
@@ -363,6 +389,31 @@ public class GameView extends Scene implements Listener {
      */
     private void addBuildingAt(Vector2 at,BuildingEnum types) {
         gridBuildings.addBuildingAt(at,types);
+    }
+    
+    public ReadOnlyDoubleProperty gridPosX() {
+        SimpleDoubleProperty p = new SimpleDoubleProperty();
+        p.bind(this.gridDisplay.translateXProperty());
+        return p;
+    }
+
+    public ReadOnlyDoubleProperty gridPosY() {
+        SimpleDoubleProperty p = new SimpleDoubleProperty();
+        p.bind(this.gridDisplay.translateYProperty());
+        return p;
+    }
+
+    public void updateLines(ArrayList<Integer> lines) {
+        for(int l : lines) {
+            Game.Debug(2,"VIEW : Refreshing line "+l);
+            linesPane.removeLine(l);
+            linesPane.addLine(l);
+        }
+        updateStations();
+    }
+
+    public void updateStations() {
+        gridStations.updateStations();
     }
 }
 

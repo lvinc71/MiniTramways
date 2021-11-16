@@ -2,10 +2,9 @@ package com.stonksco.minitramways.views.items.lines;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
-import com.stonksco.minitramways.views.layers.LinesView;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
@@ -13,10 +12,10 @@ import javafx.scene.shape.StrokeLineCap;
 /**
  * Représente un tronçon de ligne entre deux stations
  */
-public class LinePartView extends Node {
+public class LinePartView extends Group {
 
     private GameView gw;
-    private LinesView layer;
+    private LineView line;
 
     // Coordonnées en pixels des deux points du tronçon
     private ReadOnlyDoubleProperty  pxStartX;
@@ -29,14 +28,14 @@ public class LinePartView extends Node {
     private Vector2 end;
 
     // Ligne graphique
-    private Line line;
+    private Line lineShape;
     private Color color;
 
 
-    public LinePartView(GameView gw, LinesView layer, Vector2 start, Vector2 end, Color color) {
+    public LinePartView(GameView gw, LineView line, Vector2 start, Vector2 end, Color color) {
         super();
         this.gw = gw;
-        this.layer = layer;
+        this.line = line;
         this.start = start;
         this.end = end;
         this.color = color;
@@ -55,17 +54,18 @@ public class LinePartView extends Node {
      */
     private void DrawLine()
     {
-        line = new Line();
+        lineShape = new Line();
 
-        line.startXProperty().bind(pxStartX);
-        line.startYProperty().bind(pxStartY);
-        line.endXProperty().bind(pxEndX);
-        line.endYProperty().bind(pxEndY);
-        line.setStrokeWidth(6);
-        line.setStroke(color);
-        line.setStrokeLineCap(StrokeLineCap.ROUND);
-        layer.getChildren().add(line);
-        Game.Debug(3,"Line drawn from "+pxStartX.get()+","+pxStartY.get()+" to "+pxEndX.get()+","+pxEndY.get());
+        lineShape.startXProperty().bind(pxStartX);
+        lineShape.startYProperty().bind(pxStartY);
+        lineShape.endXProperty().bind(pxEndX);
+        lineShape.endYProperty().bind(pxEndY);
+        lineShape.setStrokeWidth(6);
+        lineShape.setStroke(color);
+        lineShape.setStrokeLineCap(StrokeLineCap.ROUND);
+        line.getChildren().add(this);
+        this.getChildren().add(lineShape);
+        //Game.Debug(3,"Line drawn from "+pxStartX.get()+","+pxStartY.get()+" to "+pxEndX.get()+","+pxEndY.get());
     }
 
     /**
