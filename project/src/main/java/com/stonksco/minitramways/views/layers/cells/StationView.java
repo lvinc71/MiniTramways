@@ -15,8 +15,6 @@ public class StationView extends CellView {
 
     private ImageView sprite;
 
-    private int people = 0;
-
     public StationView(GameView gw, Vector2 gridPos) {
         super(gw,gridPos);
         enable();
@@ -29,8 +27,6 @@ public class StationView extends CellView {
         sprite.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.95d));
         sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
         sprite.setImage(img);
-        Game.Debug(3,"Created station image :"+sprite.getBoundsInLocal());
         this.getChildren().add(sprite);
-        Game.Debug(3,"Created a station with a cell size of "+gw.getCellSizeX().get()+" * "+gw.getCellSizeY().get());
     }
 }

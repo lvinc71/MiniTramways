@@ -45,9 +45,9 @@ public class LinePart {
         this.startStation = start;
         this.endStation = end;
         if(first!=null)
-            first.add(this,start,end);
+            first.add(this);
         else
-            this.setPos(0,100);
+            this.setPos(0,100,0);
 
 
     }
@@ -64,19 +64,34 @@ public class LinePart {
     }
 
 
-    private boolean add(LinePart partToAdd, Vector2 start, Vector2 end) {
+    private boolean add(LinePart partToAdd) {
         boolean res = false;
-        if(start==this.startStation) {
-            this.prec=partToAdd;
-            partToAdd.setPos(this.start,this.start-100);
-            res=true;
-        }
-        else if(start==this.endStation) {
-            this.next = partToAdd;
-            partToAdd.setPos(this.end,this.end+100);
-            res=true;
-        }
+            // Cas où on est du côté droit de la ligne
+            if(partToAdd.startStation.equals(this.endStation) && next==null) {
+                this.next = partToAdd;
+                partToAdd.prec = this;
+                partToAdd.setPos(this.end,this.end+100,1);
+                Game.Debug(3,"Line "+line.getID()+" extended from right.");
+                res=true;
+            } else if(partToAdd.startStation.equals(this.startStation) && prec==null){
+                // Cas où on est du côté gauche
+                this.prec = partToAdd;
+                partToAdd.next = this;
+                line.setFirst(partToAdd);
+                partToAdd.setPos(this.start-100,this.start,2);
+                if(partToAdd.start<0) {
+                    // On inverse les positions départ et arrivée pour conserver l'ordre tout au long de la ligne
+                    partToAdd.reversePositions();
+                }
+                Game.Debug(3,"Line "+line.getID()+" extended from left.");
+                res=true;
+            } else {
+                if(next!=null)
+                    res = next.add(partToAdd);
+            }
 
+        if(!res)
+            Game.Debug(1,"ERROR when trying to add part "+partToAdd+" to line "+line.toString());
         return res;
     }
 
@@ -89,30 +104,47 @@ public class LinePart {
      */
     public boolean divide(Vector2 start, Vector2 end ,Vector2 at) {
         boolean res = false;
-        if(startStation==start && endStation==end) {
+        if(startStation.equals(start) && endStation.equals(end)) {
             LinePart newPart = new LinePart(line,at,end,line.getFirstPart());
             newPart.next = this.next;
             newPart.prec = this;
             this.next = newPart;
-            this.next.setPos(this.end,this.end+100);
+            this.next.setPos(this.end,this.end+100,1);
             res=true;
+            Game.Debug(2,"Line part "+this+" divided at "+at);
         } else {
             if (next!=null)
                 res=next.divide(start,end,at);
         }
 
-        Game.Debug(2,"Line part divided at "+at);
+
         return res;
 
     }
 
-    private void setPos(int start, int end) {
+    /**
+     * Redéfinit la position dans la chaîne de ce membre, et de tous les autres membres par récursion
+     * @param start Position de départ sur la ligne
+     * @param end Position de fin sur la lign
+     * @param from 0 = depuis nulle part ; 1 = depuis le précédent ; 2 = depuis le suivant
+     */
+    private void setPos(int start, int end, int from) {
         this.start = start;
         this.end = end;
-        if(prec!=null)
-            prec.setPos(start,start-100);
-        if(next != null)
-            next.setPos(end,end+100);
+
+        if(from == 0) {
+            if(next!=null)
+                next.setPos(end,end+100,1);
+            if(prec != null)
+                prec.setPos(start,start-100,2);
+        } else if(from == 1) {
+            if(next!=null)
+                next.setPos(end,end+100,1);
+        } else if(from == 2) {
+            if(prec!=null)
+                prec.setPos(start,start-100,2);
+        }
+
     }
 
     @Override
@@ -121,17 +153,26 @@ public class LinePart {
     }
 
     public String toStringFull() {
-        String s = toString();
+        String s = startStation+"----------";
         if(next != null)
-            s+=next.toStringFull();
+            s = s+next.toStringFull();
+        else
+            s+=endStation;
         return s;
     }
 
     public ArrayList<LinePart> getParts() {
         ArrayList<LinePart> parts = new ArrayList<>();
+        parts.add(this);
         if(next!=null)
             parts.addAll(next.getParts());
         return parts;
+    }
+
+    public void reversePositions() {
+        Vector2 temp = startStation;
+        startStation = endStation;
+        endStation=temp;
     }
 
 }

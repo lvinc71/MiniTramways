@@ -8,6 +8,7 @@ import com.stonksco.minitramways.logic.map.building.Station;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class GameMap {
 
@@ -114,29 +115,34 @@ public class GameMap {
                 lines.put(lines.size(),l);
                 // On génère les intersections si nécessaire
                 updatedLines.add(l.getID());
-                HashMap<LinePart,Vector2> intersections =  checkIntersections(l.getParts().get(0));
-                processIntersections(intersections,l.getParts().get(0));
+                HashMap<LinePart,Vector2> intersections =  checkIntersections(l.getFirstPart());
+                processIntersections(intersections,l.getFirstPart());
                 // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
                 for(Map.Entry e : intersections.entrySet()) {
                     updatedLines.add(getIdOf(((LinePart)e.getKey()).getLine()));
                 }
+                Game.Debug(1,"Line "+l.getID()+" created from "+start+" to "+end);
                 break;
             case 2 : // On étend une ligne existante, la station end n'existe pas OU elle existe
                 Line l2 = ((Station)getCellAt(start).getBuilding()).getLines()[0];
                 LinePart lp2 = l2.extend(start,end);
-                // On génère les intersections si nécessaire
-                updatedLines.add(l2.getID());
-                HashMap<LinePart,Vector2> intersections2 =  checkIntersections(lp2);
-                processIntersections(intersections2,lp2);
-                // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
-                for(Map.Entry e : intersections2.entrySet()) {
-                    updatedLines.add(getIdOf(((LinePart)e.getKey()).getLine()));
+                if(lp2!=null) {
+                    // On génère les intersections si nécessaire
+                    updatedLines.add(l2.getID());
+                    HashMap<LinePart,Vector2> intersections2 =  checkIntersections(lp2);
+                    processIntersections(intersections2,lp2);
+                    // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
+                    for(Map.Entry e : intersections2.entrySet()) {
+                        updatedLines.add(getIdOf(((LinePart)e.getKey()).getLine()));
+                    }
+                    Game.Debug(1,"Line "+l2.getID()+" extended from "+start+" to "+end);
                 }
+
                 break;
             default: // Autres cas, ne rien créer
         }
 
-        Game.Debug(1,"Line created from "+start+" to "+end);
+
         return updatedLines;
     }
 
@@ -147,15 +153,46 @@ public class GameMap {
             // On lui donne chaque intersection, pour que le linepart concerné se divise
             for(Map.Entry e : intersections.entrySet()) {
                 if(l.divide(((LinePart)e.getKey()).getStartPos(),((LinePart)e.getKey()).getEndPos(),(Vector2)e.getValue())) {
-                    with.divide(with.getStartPos(),with.getEndPos(),(Vector2)e.getValue());
+                    with.divide(with.getStartPos(),with.getEndPos(),getClosestEmpty((Vector2)e.getValue()));
                     Station s = addStation((Vector2)e.getValue());
                     s.addLine(l);
                     s.addLine(with.getLine());
-                    Game.Debug(2,"Intersection processed : Station créée en "+(Vector2)e.getValue());
+                    Game.Debug(2,"Intersection processed : Station created at "+(Vector2)e.getValue());
                 }
             }
         }
 
+    }
+
+    /**
+     * Boucle 'en spirale' autour du point donné, jusqu'à trouver une case vide
+     * @return position de la case vide la plus proche
+     */
+    public Vector2 getClosestEmpty(Vector2 from) {
+        Game.Debug(2,"Searching for closest empty cell from "+from+"...");
+        Vector2 res = null;
+        from = from.round();
+        int x=(int)from.getX(), y=(int)from.getY(), dx = 0, dy = -1;
+        int t = Math.max(x,y);
+        int maxI = t*t;
+
+        for (int i=0; i < maxI; i++){
+            if ((-x/2 <= x) && (x <= x/2) && (-y/2 <= y) && (y <= y/2)) {
+                System.out.println(x+","+y);
+                if(getCellAt(new Vector2(x,y))!=null)
+                    if(getCellAt(new Vector2(x,y)).getBuilding()==null)
+                        res=new Vector2(x,y);
+            }
+
+            if( (x == y) || ((x < 0) && (x == -y)) || ((x > 0) && (x == 1-y))) {
+                t=dx; dx=-dy; dy=t;
+            }
+            x+=dx; y+=dy;
+            if(res!=null)
+                break;
+        }
+        Game.Debug(2,"Found "+res);
+        return res;
     }
 
     public Station addStation(Vector2 at) {
@@ -179,14 +216,19 @@ public class GameMap {
             alreadyChecked=new ArrayList<>();
 
         HashMap<LinePart,Vector2> intersections = new HashMap<>();
-        for(Line l : lines.values()) {
-            for(LinePart lp : l.getParts()) {
-                Vector2 v = Vector2.getIntersectionOf(newPart.getStartPos(),newPart.getEndPos(),lp.getStartPos(),lp.getEndPos());
-                if(v!=null)
-                    intersections.put(lp,v);
+        if(newPart!=null) {
+            for (Line l : lines.values()) {
+                for (LinePart lp : l.getParts()) {
+                    if (newPart != null) {
+                        Vector2 v = Vector2.getIntersectionOf(newPart.getStartPos(), newPart.getEndPos(), lp.getStartPos(), lp.getEndPos());
+                        if (v != null)
+                            intersections.put(lp, v.round());
+                    }
+                }
+                alreadyChecked.add(newPart);
             }
         }
-        alreadyChecked.add(newPart);
+        Game.Debug(1,"Found intersections for part "+newPart+" : "+intersections.values());
         return intersections;
     }
 
@@ -206,8 +248,6 @@ public class GameMap {
         ArrayList<Cell> cells1 = new ArrayList<>();
         ArrayList<Cell> cells2 = new ArrayList<>();
         ArrayList<Cell> cells3 = new ArrayList<>();
-
-
 
     }
 
@@ -245,8 +285,31 @@ public class GameMap {
         return res;
     }
 
-    public HashMap<Vector2,Vector2> getPartsVectorsOf(int lineID) {
+    public Set<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
         return lines.get(lineID).getPartsVectors();
+    }
+
+    public String getLineString(int lineID) {
+        String res = "LINE "+lineID+" DOES NOT EXIST";
+        Line l = lines.get(lineID);
+        if(l!=null)
+            res=l.toString();
+        return res;
+    }
+
+    public ArrayList<Vector2> getStations() {
+        ArrayList<Vector2> res = new ArrayList<>();
+        res.addAll(stations.keySet());
+        return res;
+    }
+
+    public boolean isAtExtremity(Vector2 pos) {
+        boolean res=false;
+        for(Line l : lines.values()) {
+            res=l.isAtExtremity(pos);
+            if(res) break;
+        }
+        return res;
     }
 
 

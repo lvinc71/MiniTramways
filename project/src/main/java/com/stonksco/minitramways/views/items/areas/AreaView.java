@@ -52,14 +52,6 @@ public class AreaView extends Group {
                 e.translateXProperty().bind(gw.gridPosX().add(gw.getCellSizeX().multiply(2)));
                 e.translateYProperty().bind(gw.gridPosY().add(gw.getCellSizeY().multiply(0)));
 
-                if(Game.get().getDebug()>2) {
-                    Ellipse el = new Ellipse(3,3);
-                    el.setFill(Color.LIGHTBLUE);
-                    el.translateXProperty().bind(gw.gridPosX().add(gw.getCellSizeX().multiply(2)));
-                    el.translateYProperty().bind(gw.gridPosY().add(gw.getCellSizeY().multiply(0)));
-                    el.setViewOrder(-5);
-                    this.getChildren().add(el);
-                }
                 break;
             case shopping:
                 e.setContent("M614.78,2.5H293.13L328.62,100A62.9,62.9,0,0,0,403,139.54a376.74,376.74,0,0,1,44.33-8.21c7.38-1,126.79,12.32,137.74,17.8s39.13,22.7,47.74,22.7c3,0,7-9.13,11.08-21.12A134.33,134.33,0,0,0,637.35,49Z");

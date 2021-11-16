@@ -25,10 +25,20 @@ public class MapController implements Controler {
 
    public boolean createLine(Vector2 start, Vector2 end)
    {
-       boolean res = true;
-       ArrayList<Integer> listeDeLignes =Game.get().CreateLine(start,end);
-       if(listeDeLignes!=null)
-           gameview.updateLines(listeDeLignes);
+       boolean res = false;
+       ArrayList<Integer> listeDeLignes = Game.get().CreateLine(start,end);
+       if(listeDeLignes!=null) {
+           res=true;
+           if(listeDeLignes.size()==0)
+               res=false;
+           else {
+               gameview.updateLines(listeDeLignes);
+               for (int i : listeDeLignes) {
+                   Game.Debug(1, "Updated line " + i + " : " + Game.get().getMap().getLineString(i));
+               }
+           }
+       }
+
        else
            res = false;
 

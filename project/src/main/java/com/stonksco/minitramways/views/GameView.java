@@ -193,6 +193,10 @@ public class GameView extends Scene implements Listener {
         for (Pane layer:layersList) {
             layer.prefWidthProperty().bind(gridDisplay.widthProperty());
             layer.prefHeightProperty().bind(gridDisplay.heightProperty());
+            layer.maxWidthProperty().bind(gridDisplay.widthProperty());
+            layer.maxHeightProperty().bind(gridDisplay.heightProperty());
+            layer.minWidthProperty().bind(gridDisplay.widthProperty());
+            layer.minHeightProperty().bind(gridDisplay.heightProperty());
         }
 
         centerPane.layout();
@@ -227,10 +231,17 @@ public class GameView extends Scene implements Listener {
             {
                 firstCell = cell;
                 Game.Debug(2, "First cell at ( " + GridPane.getColumnIndex(firstCell)+ " , "+ GridPane.getRowIndex(firstCell) + " )");
-                tempStation = new StationView(this,firstCell.getGridPos());
-                firstCell.getChildren().add(tempStation);
+                if(Game.get().getMap().getCellAt(firstCell.getGridPos()).getBuilding()==null) {
+                    tempStation = new StationView(this, firstCell.getGridPos());
+                    tempStation.opacityProperty().setValue(0.5);
+                    firstCell.getChildren().add(tempStation);
+                } else {
+                    if (!Game.get().isAtExtremity(firstCell.getGridPos())) {
+                        resetCellSelection();
+                    }
+                }
             }
-            else if (secondCell == null && firstCell != null && cell != firstCell)
+            else if (secondCell == null && cell != firstCell)
             {
                 secondCell = cell;
                 Game.Debug(2, "Second cell at ( " + GridPane.getColumnIndex(secondCell)+ " , "+ GridPane.getRowIndex(secondCell)+ " )");
@@ -241,9 +252,15 @@ public class GameView extends Scene implements Listener {
                 Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
                 Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
                 Game.Debug(2, "Two cells selected.");
-                if(!mapController.createLine(firstPos,secondPos))
-                    Game.Debug(1,"Line creation aborted.");
-                resetCellSelection();
+                if(!mapController.createLine(firstPos,secondPos)) {
+                    Game.Debug(1, "Line creation aborted.");
+                    secondCell = null;
+                }
+                else {
+                    firstCell=secondCell;
+                    secondCell=null;
+                }
+
             }
 
 
@@ -275,10 +292,6 @@ public class GameView extends Scene implements Listener {
 
     }
 
-    public void CreateLine (Vector2 start, Vector2 end)
-    {
-            linesPane.createLine(start,end);
-    }
 
 
     /**
@@ -356,6 +369,15 @@ public class GameView extends Scene implements Listener {
     }
 
     public void updateLines(ArrayList<Integer> lines) {
+        for(int l : lines) {
+            Game.Debug(2,"VIEW : Refreshing line "+l);
+            linesPane.removeLine(l);
+            linesPane.addLine(l);
+        }
+        updateStations();
+    }
 
+    public void updateStations() {
+        gridStations.updateStations();
     }
 }
