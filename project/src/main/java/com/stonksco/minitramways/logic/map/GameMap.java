@@ -283,8 +283,10 @@ public class GameMap {
         ArrayList<Vector2> tempV = new ArrayList<>();
 
         for(Area a : areas.values()) {
+
             switch(a.getType()) {
                 case residential:
+                    tempV=new ArrayList<>();
                     tempC = a.getCells();
                     for(int b=0; b<tempC.size();b++){
                         if(tempC.get(b).getBuilding()!=null) {
@@ -296,6 +298,7 @@ public class GameMap {
                     break;
 
                 case office:
+                    tempV=new ArrayList<>();
                     tempC = a.getCells();
                     for(int b=0; b<tempC.size();b++){
                         if(tempC.get(b).getBuilding()!=null) {
@@ -307,6 +310,7 @@ public class GameMap {
                     break;
 
                 case shopping:
+                    tempV=new ArrayList<>();
                     tempC = a.getCells();
                     for(int b=0; b<tempC.size();b++){
                         if(tempC.get(b).getBuilding()!=null) {
