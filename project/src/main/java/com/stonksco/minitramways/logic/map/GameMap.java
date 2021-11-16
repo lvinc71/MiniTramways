@@ -231,7 +231,12 @@ public class GameMap {
 
     public void initBuildings() {
         for(Area a : areas.values()) {
-
+            boolean exit=false;
+            while (a.getDensity()<0.4d && !exit) {
+                if(!a.generateBuilding())
+                    exit=true;
+            }
+            Game.Debug(1,"Generated "+a.getBuildings().size()+" buildings in "+a.getType()+" area.");
         }
     }
 
@@ -272,15 +277,15 @@ public class GameMap {
 
     }
 
-    public HashMap<BuildingEnum,ArrayList<Vector2>> getBuilding(){
+    public HashMap<BuildingEnum,ArrayList<Vector2>> getBuildings(){
         HashMap<BuildingEnum,ArrayList<Vector2>> hm = new HashMap<>();
         ArrayList<Cell> tempC = new ArrayList<>();
         ArrayList<Vector2> tempV = new ArrayList<>();
 
-        for(int i = 0; i<this.getNombreArea(); i++){
-            switch (this.getAreas(i).getType()){
+        for(Area a : areas.values()) {
+            switch(a.getType()) {
                 case residential:
-                    tempC = Game.get().getMap().getAreas(i).getCells();
+                    tempC = a.getCells();
                     for(int b=0; b<tempC.size();b++){
                         if(tempC.get(b).getBuilding()!=null) {
                             tempV.add(tempC.get(b).getCoordinates());
@@ -291,7 +296,7 @@ public class GameMap {
                     break;
 
                 case office:
-                    tempC = Game.get().getMap().getAreas(i).getCells();
+                    tempC = a.getCells();
                     for(int b=0; b<tempC.size();b++){
                         if(tempC.get(b).getBuilding()!=null) {
                             tempV.add(tempC.get(b).getCoordinates());
@@ -302,7 +307,7 @@ public class GameMap {
                     break;
 
                 case shopping:
-                    tempC = Game.get().getMap().getAreas(i).getCells();
+                    tempC = a.getCells();
                     for(int b=0; b<tempC.size();b++){
                         if(tempC.get(b).getBuilding()!=null) {
                             tempV.add(tempC.get(b).getCoordinates());

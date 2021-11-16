@@ -14,14 +14,11 @@ import javafx.beans.binding.When;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -93,6 +90,7 @@ public class GameView extends Scene implements Listener {
     public void enable() {
         initWindowLayout();
         initMapLayers();
+        updateBuildings();
     }
 
 
@@ -166,7 +164,6 @@ public class GameView extends Scene implements Listener {
         linesPane = new LinesView(this);
 
         areasPane.AddArea();
-        buildBuilding(Game.get().getBuildings());
 
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
@@ -334,21 +331,23 @@ public class GameView extends Scene implements Listener {
         return this.colors.get(c);
     }
 
-    public void buildBuilding(HashMap<BuildingEnum,ArrayList<Vector2>>hMBuilding){
-       ArrayList<Vector2> pos = new ArrayList<>();
-       pos =hMBuilding.get(BuildingEnum.HOUSE);
+    public void updateBuildings(){
+        HashMap<BuildingEnum,ArrayList<Vector2>> buildings = Game.get().getBuildings();
+
+       ArrayList<Vector2> pos;
+       pos =buildings.get(BuildingEnum.HOUSE);
        if(pos!=null){
            for(int i=0; i<pos.size();i++){
                addBuildingAt(pos.get(i),BuildingEnum.HOUSE);
            }
        }
-        pos =hMBuilding.get(BuildingEnum.SHOP);
+        pos =buildings.get(BuildingEnum.SHOP);
         if(pos!=null) {
             for (int i = 0; i < pos.size(); i++) {
                 addBuildingAt(pos.get(i),BuildingEnum.SHOP);
             }
         }
-        pos =hMBuilding.get(BuildingEnum.OFFICE);
+        pos =buildings.get(BuildingEnum.OFFICE);
         if(pos!=null) {
             for (int i = 0; i < pos.size(); i++) {
                 addBuildingAt(pos.get(i),BuildingEnum.OFFICE);
@@ -362,8 +361,8 @@ public class GameView extends Scene implements Listener {
      * Ajoute une batiment aux coordonnées passées en paramètres
      * @param at
      */
-    public void addBuildingAt(Vector2 at,BuildingEnum types) {
-        gridBuildings.addBuildingsAt(at,types);
+    private void addBuildingAt(Vector2 at,BuildingEnum types) {
+        gridBuildings.addBuildingAt(at,types);
     }
 }
 

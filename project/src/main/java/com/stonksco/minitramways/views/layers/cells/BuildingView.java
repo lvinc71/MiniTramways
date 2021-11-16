@@ -19,13 +19,10 @@ public class BuildingView extends CellView {
 
     private BuildingEnum type;
 
-    public BuildingView(GameView gw, Vector2 gridPos, BuildingEnum types) {
+    public BuildingView(GameView gw, Vector2 gridPos, BuildingEnum type) {
         super(gw,gridPos);
-        enable();
-        this.type = types;
-    }
+        this.type = type;
 
-    private void enable() {
         if (this.type == BuildingEnum.HOUSE) {
             Image img = new ImageGetter().getImageOf(ImagesEnum.HOUSE);
             sprite = new ImageView();
@@ -60,4 +57,5 @@ public class BuildingView extends CellView {
             Game.Debug(3, "Created a Building with a cell size of " + gw.getCellSizeX().get() + " * " + gw.getCellSizeY().get());
         }
     }
+
 }

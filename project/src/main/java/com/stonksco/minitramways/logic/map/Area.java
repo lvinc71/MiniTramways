@@ -29,25 +29,6 @@ public class Area {
 		buildings = new ArrayList<>();
 		this.cells = area;
 		this.type = areasType;
-		for (int i = 0; i < densite; i++) {
-			switch (type){
-				case office:
-					Office o = new Office(area.get(i));
-					area.get(i).setBuilding(o);
-					addBuilding(o);
-					break;
-				case shopping:
-					Shop s = new Shop(area.get(i));
-					area.get(i).setBuilding(s);
-					addBuilding(s);
-					break;
-				case residential:
-					House h = new House(area.get(i));
-					area.get(i).setBuilding(h);
-					addBuilding(h);
-					break;
-			}
-		}
 	}
 
 	/**
@@ -89,16 +70,39 @@ public class Area {
 	 * Retourne la densit� de la zone (rapport cases disponibles/cases occup�es)
 	 */
 	public double getDensity() {
-		// TODO - implement Area.getDensity
-		throw new UnsupportedOperationException();
+		int nbOfCells = cells.size();
+		int notEmptyCells = buildings.size();
+		double res = (double)notEmptyCells/(double)nbOfCells;
+		return res;
 	}
 
 	/**
 	 * Demande � la zone de g�n�rer un nouveau b�timent
 	 */
 	public boolean generateBuilding() {
-		// TODO - implement Area.generateBuilding
-		throw new UnsupportedOperationException();
+		boolean res=false;
+		switch (type){
+			case office:
+				Office o = new Office(cells.get(buildings.size()));
+				cells.get(buildings.size()).setBuilding(o);
+				addBuilding(o);
+				res=true;
+				break;
+			case shopping:
+				Shop s = new Shop(cells.get(buildings.size()));
+				cells.get(buildings.size()).setBuilding(s);
+				addBuilding(s);
+				res=true;
+				break;
+			case residential:
+				House h = new House(cells.get(buildings.size()));
+				cells.get(buildings.size()).setBuilding(h);
+				addBuilding(h);
+				res=true;
+				break;
+		}
+		return res;
+
 	}
 
     public boolean isIn(Vector2 pos) {

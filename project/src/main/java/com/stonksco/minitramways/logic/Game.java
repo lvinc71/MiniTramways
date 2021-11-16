@@ -69,7 +69,7 @@ public class Game {
     }
 
     public HashMap<BuildingEnum,ArrayList<Vector2>> getBuildings(){
-        return this.getMap().getBuilding();
+        return this.getMap().getBuildings();
     }
 
 

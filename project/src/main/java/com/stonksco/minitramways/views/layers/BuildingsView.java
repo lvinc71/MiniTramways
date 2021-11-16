@@ -19,7 +19,7 @@ public class BuildingsView extends GridView {
         Building = new HashMap<>();
     }
 
-    public void addBuildingsAt(Vector2 at, BuildingEnum type) {
+    public void addBuildingAt(Vector2 at, BuildingEnum type) {
         BuildingView b  = new BuildingView(gw,at,type);
         this.getChildren().remove(this.getCellAt(at));
         Building.put(at,b);
