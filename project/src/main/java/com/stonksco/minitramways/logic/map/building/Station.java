@@ -35,7 +35,7 @@ public class Station extends Building {
 
 	/**
 	 * Ajoute une ligne é la station
-	 * @return true si succés
+	 * @return true si succès
 	 * @param line
 	 */
 	public boolean addLine(Line line) {

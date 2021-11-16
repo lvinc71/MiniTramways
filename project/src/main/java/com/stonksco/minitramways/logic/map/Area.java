@@ -3,6 +3,9 @@ package com.stonksco.minitramways.logic.map;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.building.Building;
+import com.stonksco.minitramways.logic.map.building.House;
+import com.stonksco.minitramways.logic.map.building.Office;
+import com.stonksco.minitramways.logic.map.building.Shop;
 
 import java.util.ArrayList;
 
@@ -17,6 +20,16 @@ public class Area {
 	 * Type de zone
 	 */
 	private AreaTypes type;
+
+	// densité = nombre de building créé
+	private int densite = 3;
+
+	//Constructeur de la classe area qui prend en parametre une liste de cell et un type
+	public Area(ArrayList<Cell> area,AreaTypes areasType) {
+		buildings = new ArrayList<>();
+		this.cells = area;
+		this.type = areasType;
+	}
 
 	/**
 	 * Ajoute une case de la grille � la zone
@@ -50,27 +63,67 @@ public class Area {
 	 * @param b
 	 */
 	private void addBuilding(Building b) {
-		// TODO - implement Area.addBuilding
-		throw new UnsupportedOperationException();
+		buildings.add(b);
 	}
 
 	/**
 	 * Retourne la densit� de la zone (rapport cases disponibles/cases occup�es)
 	 */
 	public double getDensity() {
-		// TODO - implement Area.getDensity
-		throw new UnsupportedOperationException();
+		int nbOfCells = cells.size();
+		int notEmptyCells = buildings.size();
+		double res = (double)notEmptyCells/(double)nbOfCells;
+		return res;
 	}
 
 	/**
 	 * Demande � la zone de g�n�rer un nouveau b�timent
 	 */
 	public boolean generateBuilding() {
-		// TODO - implement Area.generateBuilding
-		throw new UnsupportedOperationException();
+		boolean res=false;
+
+		Cell c = this.cells.get(Math.round((float)Math.random()*(cells.size()-1)));
+		while(c.getBuilding()!=null) {
+			c = this.cells.get(Math.round((float)Math.random()*cells.size()-1));
+		}
+
+		switch (type){
+			case office:
+				Office o = new Office(c);
+				c.setBuilding(o);
+				addBuilding(o);
+				res=true;
+				break;
+			case shopping:
+				Shop s = new Shop(c);
+				c.setBuilding(s);
+				addBuilding(s);
+				res=true;
+				break;
+			case residential:
+				House h = new House(c);
+				c.setBuilding(h);
+				addBuilding(h);
+				res=true;
+				break;
+		}
+		return res;
+
 	}
 
     public boolean isIn(Vector2 pos) {
 		return cells.contains(Game.get().getMap().getCellAt(pos));
     }
+
+	public AreaTypes getType() {
+		return type;
+	}
+
+	public ArrayList<Building> getBuildings() {
+		return buildings;
+	}
+
+	public ArrayList<Cell> getCells() {
+		return cells;
+	}
 }

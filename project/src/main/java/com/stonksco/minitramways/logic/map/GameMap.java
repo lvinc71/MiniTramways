@@ -3,11 +3,13 @@ package com.stonksco.minitramways.logic.map;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.building.Building;
+import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 import com.stonksco.minitramways.logic.map.building.Station;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class GameMap {
 
@@ -55,6 +57,7 @@ public class GameMap {
         lines = new HashMap<>();
         initAreas();
         initBuildings();
+
     }
 
     public Cell getCellAt(Vector2 v) {
@@ -74,7 +77,7 @@ public class GameMap {
     public ArrayList<Integer> CreateLine(Vector2 start, Vector2 end) {
         ArrayList<Integer> updatedLines = new ArrayList<>();
 
-        Game.Debug(2,"Line creation initiated from "+start+" to "+end);
+        Game.Debug(2,"Line modification initiated from "+start+" to "+end);
         int creationMode = 0; // Mode de création selon le contexte :
         // 0 = impossible de créer ;
         // 1 = création d'une nouvelle ligne complète OU Création d'une nouvelle ligne avec la deuxième station existante;
@@ -83,8 +86,9 @@ public class GameMap {
         if(getBuildingAt(start)==null) {
             // Création d'une nouvelle ligne
             if(getBuildingAt(end) instanceof Station) {
-                // On crée une nouvelle ligne qu'on associe à la station de la deuxième case
-                creationMode = 1;
+                    // On crée une nouvelle ligne qu'on associe à la station de la deuxième case
+                    creationMode = 1;
+
             } else if(getBuildingAt(end) == null) {
                 // On crée une nouvelle ligne complète
                 creationMode = 1;
@@ -111,29 +115,34 @@ public class GameMap {
                 lines.put(lines.size(),l);
                 // On génère les intersections si nécessaire
                 updatedLines.add(l.getID());
-                HashMap<LinePart,Vector2> intersections =  checkIntersections(l.getParts().get(0));
-                processIntersections(intersections,l.getParts().get(0));
+                HashMap<LinePart,Vector2> intersections =  checkIntersections(l.getFirstPart());
+                processIntersections(intersections,l.getFirstPart());
                 // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
                 for(Map.Entry e : intersections.entrySet()) {
                     updatedLines.add(getIdOf(((LinePart)e.getKey()).getLine()));
                 }
+                Game.Debug(1,"Line "+l.getID()+" created from "+start+" to "+end);
                 break;
             case 2 : // On étend une ligne existante, la station end n'existe pas OU elle existe
                 Line l2 = ((Station)getCellAt(start).getBuilding()).getLines()[0];
                 LinePart lp2 = l2.extend(start,end);
-                // On génère les intersections si nécessaire
-                updatedLines.add(l2.getID());
-                HashMap<LinePart,Vector2> intersections2 =  checkIntersections(lp2);
-                processIntersections(intersections2,lp2);
-                // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
-                for(Map.Entry e : intersections2.entrySet()) {
-                    updatedLines.add(getIdOf(((LinePart)e.getKey()).getLine()));
+                if(lp2!=null) {
+                    // On génère les intersections si nécessaire
+                    updatedLines.add(l2.getID());
+                    HashMap<LinePart,Vector2> intersections2 =  checkIntersections(lp2);
+                    processIntersections(intersections2,lp2);
+                    // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
+                    for(Map.Entry e : intersections2.entrySet()) {
+                        updatedLines.add(getIdOf(((LinePart)e.getKey()).getLine()));
+                    }
+                    Game.Debug(1,"Line "+l2.getID()+" extended from "+start+" to "+end);
                 }
+
                 break;
             default: // Autres cas, ne rien créer
         }
 
-        Game.Debug(1,"Line created from "+start+" to "+end);
+
         return updatedLines;
     }
 
@@ -144,21 +153,53 @@ public class GameMap {
             // On lui donne chaque intersection, pour que le linepart concerné se divise
             for(Map.Entry e : intersections.entrySet()) {
                 if(l.divide(((LinePart)e.getKey()).getStartPos(),((LinePart)e.getKey()).getEndPos(),(Vector2)e.getValue())) {
-                    with.divide(with.getStartPos(),with.getEndPos(),(Vector2)e.getValue());
+                    with.divide(with.getStartPos(),with.getEndPos(),getClosestEmpty((Vector2)e.getValue()));
                     Station s = addStation((Vector2)e.getValue());
                     s.addLine(l);
                     s.addLine(with.getLine());
-                    Game.Debug(2,"Intersection processed : Station créée en "+(Vector2)e.getValue());
+                    Game.Debug(2,"Intersection processed : Station created at "+(Vector2)e.getValue());
                 }
             }
         }
 
     }
 
+    /**
+     * Boucle 'en spirale' autour du point donné, jusqu'à trouver une case vide
+     * @return position de la case vide la plus proche
+     */
+    public Vector2 getClosestEmpty(Vector2 from) {
+        Game.Debug(2,"Searching for closest empty cell from "+from+"...");
+        Vector2 res = null;
+        from = from.round();
+        int x=(int)from.getX(), y=(int)from.getY(), dx = 0, dy = -1;
+        int t = Math.max(x,y);
+        int maxI = t*t;
+
+        for (int i=0; i < maxI; i++){
+            if ((-x/2 <= x) && (x <= x/2) && (-y/2 <= y) && (y <= y/2)) {
+                System.out.println(x+","+y);
+                if(getCellAt(new Vector2(x,y))!=null)
+                    if(getCellAt(new Vector2(x,y)).getBuilding()==null)
+                        res=new Vector2(x,y);
+            }
+
+            if( (x == y) || ((x < 0) && (x == -y)) || ((x > 0) && (x == 1-y))) {
+                t=dx; dx=-dy; dy=t;
+            }
+            x+=dx; y+=dy;
+            if(res!=null)
+                break;
+        }
+        Game.Debug(2,"Found "+res);
+        return res;
+    }
+
     public Station addStation(Vector2 at) {
         if(stations==null)
             stations = new HashMap<>();
         Station s = new Station(getCellAt(at));
+        getCellAt(at).setBuilding(s);
         stations.put(at,s);
         return s;
     }
@@ -176,14 +217,19 @@ public class GameMap {
             alreadyChecked=new ArrayList<>();
 
         HashMap<LinePart,Vector2> intersections = new HashMap<>();
-        for(Line l : lines.values()) {
-            for(LinePart lp : l.getParts()) {
-                Vector2 v = Vector2.getIntersectionOf(newPart.getStartPos(),newPart.getEndPos(),lp.getStartPos(),lp.getEndPos());
-                if(v!=null)
-                    intersections.put(lp,v);
+        if(newPart!=null) {
+            for (Line l : lines.values()) {
+                for (LinePart lp : l.getParts()) {
+                    if (newPart != null && newPart != lp) {
+                        Vector2 v = Vector2.getIntersectionOf(newPart.getStartPos(), newPart.getEndPos(), lp.getStartPos(), lp.getEndPos());
+                        if (v != null)
+                            intersections.put(lp, v.round());
+                    }
+                }
+                alreadyChecked.add(newPart);
             }
         }
-        alreadyChecked.add(newPart);
+        Game.Debug(1,"Found intersections for part "+newPart+" : "+intersections.values());
         return intersections;
     }
 
@@ -200,17 +246,168 @@ public class GameMap {
     public void initAreas() {
         areas = new HashMap<>();
 
-        ArrayList<Cell> cells1 = new ArrayList<>();
-        ArrayList<Cell> cells2 = new ArrayList<>();
-        ArrayList<Cell> cells3 = new ArrayList<>();
+        ArrayList<Cell> list1 = new ArrayList<>();
+        list1.add(Game.get().getMap().grid.get(new Vector2(13,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(14,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(15,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(16,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(17,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(18,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(19,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(20,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(21,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(22,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(23,0)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(13,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(14,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(15,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(16,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(17,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(18,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(19,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(20,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(21,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(22,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(23,1)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(14,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(15,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(16,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(17,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(18,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(19,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(20,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(21,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(22,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(23,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(24,2)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(14,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(15,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(16,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(17,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(18,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(19,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(20,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(21,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(22,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(23,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(24,3)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(14,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(15,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(16,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(17,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(18,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(19,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(20,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(21,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(22,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(23,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(24,4)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(15,5)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(22,5)));
+        list1.add(Game.get().getMap().grid.get(new Vector2(23,5)));
 
+        Area shop = new Area(list1, AreaTypes.shopping);
 
+        ArrayList<Cell> list2 = new ArrayList<>();
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,6)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,6)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,6)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,6)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,6)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,6)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,6)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,7)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,7)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,7)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,7)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,7)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,7)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,7)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,8)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,8)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,8)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,8)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,8)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,8)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,8)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,9)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,9)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,9)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,9)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,9)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,9)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,9)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,10)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,10)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,10)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,10)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,10)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,10)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,10)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,11)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,11)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,11)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,11)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,11)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,11)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,11)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,12)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,12)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,12)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,12)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,12)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,12)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,12)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,13)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,13)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,13)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,13)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,13)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,13)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,13)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,14)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,14)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,14)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,14)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,14)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,14)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,14)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(29,15)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(30,15)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(31,15)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(32,15)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(33,15)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(34,15)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(35,15)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(28,7)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(28,8)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(28,12)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(28,13)));
+        list2.add(Game.get().getMap().grid.get(new Vector2(28,14)));
+
+        Area office = new Area(list2,AreaTypes.office);
+
+        ArrayList<Cell> list3 = new ArrayList<>();
+        for(int x =0; x<6; x++) {
+            for(int y=6; y<23; y++)
+                list3.add(Game.get().getMap().grid.get(new Vector2(x,y)));
+        }
+        Area residence = new Area(list3,AreaTypes.residential);
+
+        areas.put(0,shop);
+        areas.put(1,office);
+        areas.put(2,residence);
 
     }
 
     public void initBuildings() {
         for(Area a : areas.values()) {
-
+            boolean exit=false;
+            while (a.getDensity()<0.2d && !exit) {
+                if(!a.generateBuilding())
+                    exit=true;
+            }
+            Game.Debug(1,"Generated "+a.getBuildings().size()+" buildings in "+a.getType()+" area.");
         }
     }
 
@@ -238,6 +435,93 @@ public class GameMap {
             if(e.getValue()==l)
                 res = (Integer)e.getKey();
             break;
+        }
+        return res;
+    }
+
+    public Area getAreas(int i ){
+        return areas.get(i);
+    }
+
+    public int getNombreArea(){
+        return areas.size();
+
+    }
+
+    public HashMap<BuildingEnum,ArrayList<Vector2>> getBuildings(){
+        HashMap<BuildingEnum,ArrayList<Vector2>> hm = new HashMap<>();
+        ArrayList<Cell> tempC = new ArrayList<>();
+        ArrayList<Vector2> tempV = new ArrayList<>();
+
+        for(Area a : areas.values()) {
+
+            switch(a.getType()) {
+                case residential:
+                    tempV=new ArrayList<>();
+                    tempC = a.getCells();
+                    for(int b=0; b<tempC.size();b++){
+                        if(tempC.get(b).getBuilding()!=null) {
+                            tempV.add(tempC.get(b).getCoordinates());
+
+                        }
+                    }
+                    hm.put(BuildingEnum.HOUSE,tempV);
+                    break;
+
+                case office:
+                    tempV=new ArrayList<>();
+                    tempC = a.getCells();
+                    for(int b=0; b<tempC.size();b++){
+                        if(tempC.get(b).getBuilding()!=null) {
+                            tempV.add(tempC.get(b).getCoordinates());
+
+                        }
+                    }
+                    hm.put(BuildingEnum.OFFICE,tempV);
+                    break;
+
+                case shopping:
+                    tempV=new ArrayList<>();
+                    tempC = a.getCells();
+                    for(int b=0; b<tempC.size();b++){
+                        if(tempC.get(b).getBuilding()!=null) {
+                            tempV.add(tempC.get(b).getCoordinates());
+
+                        }
+                    }
+                    hm.put(BuildingEnum.SHOP,tempV);
+                    break;
+
+            }
+            tempC=null;
+        }
+        return hm;
+    }
+
+
+    public Set<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
+        return lines.get(lineID).getPartsVectors();
+    }
+
+    public String getLineString(int lineID) {
+        String res = "LINE "+lineID+" DOES NOT EXIST";
+        Line l = lines.get(lineID);
+        if(l!=null)
+            res=l.toString();
+        return res;
+    }
+
+    public ArrayList<Vector2> getStations() {
+        ArrayList<Vector2> res = new ArrayList<>();
+        res.addAll(stations.keySet());
+        return res;
+    }
+
+    public boolean isAtExtremity(Vector2 pos) {
+        boolean res=false;
+        for(Line l : lines.values()) {
+            res=l.isAtExtremity(pos);
+            if(res) break;
         }
         return res;
     }
