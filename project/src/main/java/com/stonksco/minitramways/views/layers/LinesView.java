@@ -26,10 +26,13 @@ public class LinesView extends Pane {
 
 
     public Color getColorFor(int id){
-        return gw.getColor(ColorEnum.values()[id]);
+        Color c = gw.getColor(ColorEnum.values()[getColorId(id)]);
+        return c;
     }
     public int getColorId(int id) {
-        return id%8;
+        int res = id%8;
+        Game.Debug(3,"Found color "+res+" for line "+id);
+        return res;
     }
 
     public boolean addLine(int lineID) {
