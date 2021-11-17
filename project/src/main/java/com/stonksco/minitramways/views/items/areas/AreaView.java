@@ -18,8 +18,6 @@ public class AreaView extends Region {
 
     private AreaTypes type;
 
-    private Pane svgContainer;
-
     public AreaView(GameView gw, AreaTypes type, AreasView layer) {
 
         super();
@@ -36,11 +34,10 @@ public class AreaView extends Region {
                 e.setStroke(gw.getColor(ColorEnum.OFFICE_BORDER));
                 e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));
 
-                e.scaleXProperty().bind(gw.getCellSizeX().divide(30));
-                e.scaleYProperty().bind(gw.getCellSizeY().divide(30));
-                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(15)));
-                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(15)));
-                AnchorPane.setRightAnchor(e,0d);
+                e.scaleXProperty().bind(gw.getCellSizeX().divide(25));
+                e.scaleYProperty().bind(gw.getCellSizeY().divide(20));
+                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(6)));
+                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(28)));
 
 
                 break;
@@ -50,10 +47,10 @@ public class AreaView extends Region {
                 e.setStroke(gw.getColor(ColorEnum.RESIDENTIAL_BORDER));
                 e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));
 
-                e.scaleXProperty().bind(gw.getCellSizeX().divide(Game.get().getMapSize().getX()));
-                e.scaleYProperty().bind(gw.getCellSizeY().divide(Game.get().getMapSize().getY()));
-                e.translateXProperty().bind(gw.gridPosX().add(gw.getCellSizeX().multiply(2)));
-                e.translateYProperty().bind(gw.gridPosY().add(gw.getCellSizeY().multiply(0)));
+                e.scaleXProperty().bind(gw.getCellSizeX().divide(25));
+                e.scaleYProperty().bind(gw.getCellSizeY().divide(25));
+                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(7.4d)));
+                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(1.5)));
 
                 break;
             case shopping:
@@ -62,10 +59,10 @@ public class AreaView extends Region {
                 e.setStroke(gw.getColor(ColorEnum.COMMERCIAL_BORDER));
                 e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));
 
-                e.scaleXProperty().bind(gw.getCellSizeX().divide(Game.get().getMapSize().getX()));
-                e.scaleYProperty().bind(gw.getCellSizeY().divide(Game.get().getMapSize().getY()));
-                e.translateXProperty().bind(gw.gridPosX().add(gw.getCellSizeX().multiply(8)));
-                e.translateYProperty().bind(gw.gridPosY().add(gw.getCellSizeY().multiply(0)));
+                e.scaleXProperty().bind(gw.getCellSizeX().divide(25));
+                e.scaleYProperty().bind(gw.getCellSizeY().divide(20));
+                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(1.5d)));
+                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(14)));
                 break;
         }
 
