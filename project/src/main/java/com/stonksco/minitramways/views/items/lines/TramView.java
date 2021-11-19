@@ -28,7 +28,7 @@ public class TramView extends Group {
     private ImageView sprite;
     private HashMap<Integer,LineView> lines;
 
-    public TramView(LineView lv, LinePartView lp, GameView gw, int colorID) {
+    public TramView(LineView lv, LinePartView lp,int pos, GameView gw, int colorID) {
         super();
         this.lp = lp;
         this.lv = lv;
@@ -78,7 +78,7 @@ public class TramView extends Group {
         // Règle la rotation selon le tronçon courant
         sprite.setRotate(lp.getOrientation());
 
-        positionAt(50);
+        positionAt(pos);
 
         sprite.setImage(img);
 

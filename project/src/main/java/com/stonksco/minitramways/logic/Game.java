@@ -1,10 +1,15 @@
 package com.stonksco.minitramways.logic;
 
+import com.stonksco.minitramways.logic.map.AreaTypes;
 import com.stonksco.minitramways.logic.map.Cell;
 import com.stonksco.minitramways.logic.map.GameMap;
+import com.stonksco.minitramways.logic.map.building.Building;
+import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Game {
 
@@ -63,6 +68,26 @@ public class Game {
 
         return getMap().getAreas();
 
+    }
+
+    public HashMap<BuildingEnum,ArrayList<Vector2>> getBuildings(){
+        return this.getMap().getBuildings();
+    }
+    public Set<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
+        return map.getPartsVectorsOf(lineID);
+    }
+
+    public ArrayList<Vector2> getStations() {
+        return map.getStations();
+    }
+
+    /**
+     * Retourne true si la position passée se trouve à une extrémité de ligne
+     * @param pos
+     * @return
+     */
+    public boolean isAtExtremity(Vector2 pos) {
+        return map.isAtExtremity(pos);
     }
 
 

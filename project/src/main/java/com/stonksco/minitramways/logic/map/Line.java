@@ -1,5 +1,6 @@
 package com.stonksco.minitramways.logic.map;
 
+import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.building.Station;
 import javafx.scene.paint.Color;
@@ -7,6 +8,8 @@ import javafx.scene.paint.Color;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Représente une ligne de trams
@@ -14,11 +17,20 @@ import java.util.HashMap;
 public class Line {
 
 	/**
-	 * Table de hachage qui associe chaque station de la ligne é un entier multiple de 100 qui correspond é sa position sur la ligne
+	 * Table de hachage qui associe chaque station de la ligne à un entier multiple de 100 qui correspond é sa position sur la ligne
 	 */
 	private HashMap<Integer,Station> stations;
 	private ArrayList<Tramway> tramways;
 	private LinePart first;
+
+	public int getID() {
+		return id;
+	}
+
+	private final int id;
+
+
+
 	/**
 	 * Code couleur de la ligne
 	 */
@@ -26,20 +38,37 @@ public class Line {
 
 	/**
 	 * Crée une nouvelle ligne entre deux stations
-	 * @param startStation
-	 * @param endStation
+	 * @param start
+	 * @param end
 	 */
-	public Line(Station startStation, Station endStation) {
-		first = new LinePart(this,startStation.getCell().getCoordinates(), endStation.getCell().getCoordinates(),first);
+	public Line(Vector2 start, Vector2 end,int id) {
+		first = new LinePart(this,start, end,null);
+		this.id = id;
 
+		stations = new HashMap<>();
+
+		Station startStation = Game.get().getMap().addStation(start);
+
+		Station endStation = null;
+		// si la deuxième station existe déjà, alors on en crée pas et on ajoute la ligne
+		if(Game.get().getMap().getCellAt(end).getBuilding() instanceof Station) {
+			endStation = (Station)Game.get().getMap().getCellAt(end).getBuilding();
+		} else {
+			endStation = Game.get().getMap().addStation(end);
+		}
+
+
+		stations.put(0,startStation);
+		stations.put(100,endStation);
+		startStation.addLine(this);
+		endStation.addLine(this);
 	}
 
 	/**
 	 * Ajoute une station au début ou é la fin de la ligne
 	 * @param place définit si on doit placer la station en début (true) ou en fin (false) de ligne
-	 * @return true si succés
 	 * @param s
-	 * @param place
+	 * @return true si succés
 	 */
 	public boolean addStation(Station s, boolean place) {
 		// TODO - implement Line.addStation
@@ -103,7 +132,7 @@ public class Line {
 	 * @param at Endroit où la station intermédiaire est construite
 	 * @return true si la division a bien été effectuée
 	 */
-	public boolean divide(Vector2 start, Vector2 end ,Vector2 at) {
+	public LinePart divide(Vector2 start, Vector2 end ,Vector2 at) {
 		return first.divide(start,end,at);
 	}
 
@@ -114,6 +143,83 @@ public class Line {
 			res.add(lp);
 			lp = lp.getNext();
 		}
+		return res;
+	}
+
+	public LinePart extend(Vector2 from, Vector2 to) {
+		LinePart lp = null;
+		Vector2 fromPos = null;
+		Vector2 toPos = null;
+
+		if(from.equals(first.getStartPos())) {
+			fromPos = to;
+			toPos = from;
+		} else if (from.equals(first.getLast().getEndPos())) {
+			fromPos = from;
+			toPos = to;
+		}
+
+
+
+		// Si from est une extrémité
+		if(fromPos != null && toPos != null) {
+			boolean needAdd = !(first==null);
+			lp=new LinePart(this,fromPos,toPos,first);
+
+			if(needAdd)
+				this.first.add(lp);
+
+			Station endStation = null;
+			// si la deuxième station existe déjà, alors on en crée pas et on ajoute la ligne
+			if(Game.get().getMap().getCellAt(toPos).getBuilding() instanceof Station) {
+				endStation = (Station)Game.get().getMap().getCellAt(toPos).getBuilding();
+			} else {
+				endStation = Game.get().getMap().addStation(toPos);
+			}
+
+			if(lp.getStartPos()==first.getStartPos())
+				stations.put(lp.getStart(),endStation);
+			else
+				stations.put(lp.getEnd(),endStation);
+
+			endStation.addLine(this);
+			((Station)Game.get().getMap().getCellAt(fromPos).getBuilding()).addLine(this);
+
+			Game.Debug(1,"Line "+id+" extended from "+from+" to "+to);
+		}
+
+
+
+
+		return lp;
+	}
+
+	public String toString() {
+		String res = "-------EMPTY LINE------";
+		if(first!=null)
+			res= first.toStringFull();
+		return res;
+	}
+
+	public Set<Map.Entry<Vector2,Vector2>> getPartsVectors() {
+		HashMap<Vector2,Vector2> res = new HashMap<>();
+		for(LinePart p : first.getParts()) {
+			res.put(p.getStartPos(),p.getEndPos());
+		}
+		return res.entrySet();
+	}
+
+	public void setFirst(LinePart newFirst) {
+		this.first= newFirst;
+	}
+
+
+	public boolean isAtExtremity(Vector2 pos) {
+		boolean res = false;
+		if(first.getStartPos().equals(pos))
+			res=true;
+		if(first.getLast().getEndPos().equals(pos))
+			res=true;
 		return res;
 	}
 }

@@ -28,10 +28,20 @@ public class StationsView extends GridView{
      */
     public void addStationAt(Vector2 at) {
         StationView s = new StationView(gw,at);
-        this.getChildren().remove(this.getCellAt(at));
         stations.remove(this.getCellAt(at));
         stations.put(at,s);
         this.add(s,(int)at.getX(),(int)at.getY());
+    }
+
+    public void updateStations() {
+        this.stations.clear();
+        this.getChildren().clear();
+        this.getColumnConstraints().clear();
+        this.getRowConstraints().clear();
+        this.fill(CellView.class);
+        for(Vector2 v : Game.get().getStations()) {
+            addStationAt(v);
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.stonksco.minitramways.views.layers;
 
+import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
@@ -8,6 +9,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class LinesView extends Pane {
 
@@ -19,19 +22,35 @@ public class LinesView extends Pane {
         super();
         this.gw = gw;
         lines = new HashMap<>();
-
-
     }
 
-    public boolean createLine(Vector2 start, Vector2 end) {
-        this.lines.put(lines.size(),new LineView(gw,this,start,end,getColor(),getColorId()));
-        return true;
+
+    public Color getColorFor(int id){
+        Color c = gw.getColor(ColorEnum.values()[getColorId(id)]);
+        return c;
+    }
+    public int getColorId(int id) {
+        int res = id%8;
+        Game.Debug(3,"Found color "+res+" for line "+id);
+        return res;
     }
 
-    public Color getColor(){
-        return gw.getColor(ColorEnum.values()[getColorId()]);
+    public boolean addLine(int lineID) {
+        boolean res = false;
+        Set<Map.Entry<Vector2,Vector2>> parts = Game.get().getPartsVectorsOf(lineID);
+        if(parts.size()>0) {
+            this.lines.put(lineID,new LineView(gw,this,lineID));
+            res=true;
+        } else {
+            Game.Debug(1,"VIEW : Error when retrieving line parts of line "+lineID+" from Game !");
+        }
+        return res;
     }
-    public int getColorId() {
-        return lines.size()%8;
+
+    public void removeLine(int lineID) {
+        if(lines.get(lineID)!=null) {
+            lines.get(lineID).remove();
+            lines.remove(lineID);
+        }
     }
 }

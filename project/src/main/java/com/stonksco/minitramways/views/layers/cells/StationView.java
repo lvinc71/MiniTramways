@@ -7,6 +7,9 @@ import com.stonksco.minitramways.views.items.ImageGetter;
 import com.stonksco.minitramways.views.items.ImagesEnum;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 /**
  * Représente l'affichage d'une station
@@ -14,8 +17,6 @@ import javafx.scene.image.ImageView;
 public class StationView extends CellView {
 
     private ImageView sprite;
-
-    private int people = 0;
 
     public StationView(GameView gw, Vector2 gridPos) {
         super(gw,gridPos);
@@ -29,8 +30,15 @@ public class StationView extends CellView {
         sprite.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.95d));
         sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
         sprite.setImage(img);
-        Game.Debug(3,"Created station image :"+sprite.getBoundsInLocal());
         this.getChildren().add(sprite);
-        Game.Debug(3,"Created a station with a cell size of "+gw.getCellSizeX().get()+" * "+gw.getCellSizeY().get());
+
+        if(Game.get().getDebug()>2) {
+            Text t = new Text(gridPos.toString());
+            t.setFill(Color.RED);
+            t.wrappingWidthProperty().bind(gw.getCellSizeX());
+            t.autosize();
+            this.getChildren().add(t);
+        }
+
     }
 }
