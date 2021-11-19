@@ -116,21 +116,47 @@ public class Vector2 {
         double y3 = start2.getY();
         double y4 = end2.getY();
 
-        double a1 = (y2-y1)/(x2-x1);
-        double b1 = y1-(a1*x1);
-        double a2 = (y4-y3)/(x4-x3);
-        double b2 = y3 - a2*x3;
+        /*//from w w  w.ja  v  a2s  .  c om
+         * Copyright (c) JenSoft API
+         * This source file is part of JenSoft API, All rights reserved.
+         * JENSOFT PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+         */
+        //package com.java2s;
 
-        // Si les deux segments ne sont pas parallèles
-        if(a1!=a2) {
-            double x5 = -(b1-b2)/(a1-a2);
+        double bx = x2 - x1;
+        double by = y2 - y1;
+        double dx = x4 - x3;
+        double dy = y4 - y3;
 
-            if((Math.min(x1,x2) < x5) && (x5 < Math.max(x1,x2)) && ((Math.min(x3,x4) < x5) && (x5 < Math.max(x3,x5)))) {
-                double y5 = a1 * x5 + b1;
-                res = new Vector2(x5,y5);
+        double b_dot_d_perp = bx * dy - by * dx;
+
+        if (b_dot_d_perp != 0) {
+            double cx = x3 - x1;
+            double cy = y3 - y1;
+
+            double t = (cx * dy - cy * dx) / b_dot_d_perp;
+
+            if (t < 0 || t > 1) {
+                return null;
             }
+
+            double u = (cx * by - cy * bx) / b_dot_d_perp;
+
+            if (u < 0 || u > 1) {
+                return null;
+            } else {
+                double x = x1 + t * bx;
+                double y = y1 + t * by;
+                res = new Vector2(x,y);
+            }
+
         }
-        return res;
+
+    return res;
+    }
+
+    public static double Distance(Vector2 v1, Vector2 v2) {
+        return Math.sqrt(Math.pow(v2.x - v1.x,2) - Math.pow(v2.y - v1.y,2));
     }
 
     public Vector2 round() {

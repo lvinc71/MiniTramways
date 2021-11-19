@@ -76,27 +76,40 @@ public class Area {
 		return res;
 	}
 
+	private Cell getRandomCell() {
+		int rand = Math.round((float)Math.random()*(cells.size()-1));
+		if(rand<0)
+			rand=0;
+		return cells.get(rand);
+	}
+
 	/**
 	 * Demande � la zone de g�n�rer un nouveau b�timent
 	 */
 	public boolean generateBuilding() {
 		boolean res=false;
+
+		Cell c = getRandomCell();
+		while(c.getBuilding()!=null) {
+			c = getRandomCell();
+		}
+
 		switch (type){
 			case office:
-				Office o = new Office(cells.get(buildings.size()));
-				cells.get(buildings.size()).setBuilding(o);
+				Office o = new Office(c);
+				c.setBuilding(o);
 				addBuilding(o);
 				res=true;
 				break;
 			case shopping:
-				Shop s = new Shop(cells.get(buildings.size()));
-				cells.get(buildings.size()).setBuilding(s);
+				Shop s = new Shop(c);
+				c.setBuilding(s);
 				addBuilding(s);
 				res=true;
 				break;
 			case residential:
-				House h = new House(cells.get(buildings.size()));
-				cells.get(buildings.size()).setBuilding(h);
+				House h = new House(c);
+				c.setBuilding(h);
 				addBuilding(h);
 				res=true;
 				break;

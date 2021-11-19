@@ -17,62 +17,62 @@ public class ImageGetter {
             switch (img) {
                 case STATION:
                     imgPath = getClass().getResource("/assets/station.png");
-                    Game.Debug(3,"Found URL for STATION image : "+imgPath);
+                    Game.Debug(4,"Found URL for STATION image : "+imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case TRAMWAY_GOLD:
                     imgPath = getClass().getResource("/assets/tram_gold.png");
-                    Game.Debug(3,"Found URL for TRAMWAY_GOLD image : "+imgPath);
+                    Game.Debug(4,"Found URL for TRAMWAY_GOLD image : "+imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case TRAMWAY_BLUE:
                     imgPath = getClass().getResource("/assets/tram_blue@4x.png");
-                    Game.Debug(3,"found url for TRAMWAY_BLUE image : " +imgPath);
+                    Game.Debug(4,"found url for TRAMWAY_BLUE image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case TRAMWAY_RED:
                     imgPath = getClass().getResource("/assets/tram_red@4x.png");
-                    Game.Debug(3,"foud URL for TRAMWAY_RED image : " +imgPath);
+                    Game.Debug(4,"foud URL for TRAMWAY_RED image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case TRAMWAY_LIME:
                     imgPath = getClass().getResource("/assets/tram_lime@4x.png");
-                    Game.Debug(3,"found URL for TRAMWAY_LIME image : " +imgPath);
+                    Game.Debug(4,"found URL for TRAMWAY_LIME image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case TRAMWAY_PURPLE:
                     imgPath = getClass().getResource("/assets/tram_purple@4x.png");
-                    Game.Debug(3,"found URL for TRAMWAY_PURPLE image : " +imgPath);
+                    Game.Debug(4,"found URL for TRAMWAY_PURPLE image : " +imgPath);
                     image= new Image(imgPath.toString());
                     break;
                 case TRAMWAY_CYAN:
                     imgPath = getClass().getResource("/assets/tram_cyan@4x.png");
-                    Game.Debug(3,"found URL for TRAMWAY_CYAN image : " +imgPath);
+                    Game.Debug(4,"found URL for TRAMWAY_CYAN image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case TRAMWAY_YELLOW:
                     imgPath = getClass().getResource("/assets/tram_yellow@4x.png");
-                    Game.Debug(3,"found URl for TRAMWAY_YELLOW image : " +imgPath);
+                    Game.Debug(4,"found URl for TRAMWAY_YELLOW image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case TRAMWAY_ROSEGOLD:
                     imgPath = getClass().getResource("/assets/tram_rosegold@4x.png");
-                    Game.Debug(3,"found URL for TRAMWAY_ROSEGOLD image : " +imgPath);
+                    Game.Debug(4,"found URL for TRAMWAY_ROSEGOLD image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case HOUSE:
                     imgPath = getClass().getResource("/assets/house.png");
-                    Game.Debug(3,"found URL for House image : " +imgPath);
+                    Game.Debug(4,"found URL for House image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case SHOP:
                     imgPath = getClass().getResource("/assets/shop.png");
-                    Game.Debug(3,"found URL for SHOP image : " +imgPath);
+                    Game.Debug(4,"found URL for SHOP image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
                 case OFFICE:
                     imgPath = getClass().getResource("/assets/office.png");
-                    Game.Debug(3,"found URL for OFFICE image : " +imgPath);
+                    Game.Debug(4,"found URL for OFFICE image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
             }

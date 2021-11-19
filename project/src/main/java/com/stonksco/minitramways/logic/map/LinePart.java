@@ -97,22 +97,26 @@ public class LinePart {
      * @param start Point de départ du tronçon à diviser
      * @param end Point d'arrivée du tronçon à diviser
      * @param at Endroit où la station intermédiaire est construite
-     * @return true si la division a bien été effectuée
+     * @return le LinePart nouvellement créé, null si aucun créé
      */
-    public boolean divide(Vector2 start, Vector2 end ,Vector2 at) {
-        boolean res = false;
-        if(startStation.equals(start) && endStation.equals(end)) {
-            LinePart newPart = new LinePart(line,at,end,line.getFirstPart());
-            newPart.next = this.next;
-            newPart.prec = this;
-            this.next = newPart;
-            this.endStation = at;
-            this.next.setPos(this.end,this.end+100,1);
-            res=true;
-            Game.Debug(2,"Line part "+this+" divided at "+at);
+    public LinePart divide(Vector2 start, Vector2 end ,Vector2 at) {
+        LinePart res = null;
+        if(at!=null) {
+            if(startStation.equals(start) && endStation.equals(end)) {
+                LinePart newPart = new LinePart(line,at,end,line.getFirstPart());
+                newPart.next = this.next;
+                newPart.prec = this;
+                this.next = newPart;
+                this.endStation = at;
+                this.next.setPos(this.end,this.end+100,1);
+                res=newPart;
+                Game.Debug(2,"Line part "+this+" divided at "+at);
+            } else {
+                if (next!=null)
+                    res=next.divide(start,end,at);
+            }
         } else {
-            if (next!=null)
-                res=next.divide(start,end,at);
+            Game.Debug(1,"ERROR when trying to divide line part : intersection point is null");
         }
 
 
@@ -147,11 +151,11 @@ public class LinePart {
 
     @Override
     public String toString() {
-        return startStation+"----------"+endStation;
+        return startStation+"["+start+"]----------["+end+"]"+endStation;
     }
 
     public String toStringFull() {
-        String s = startStation+"----------";
+        String s = startStation+"["+start+"]----------["+end+"]";
         if(next != null)
             s = s+next.toStringFull();
         else
