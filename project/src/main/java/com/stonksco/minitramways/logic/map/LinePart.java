@@ -97,10 +97,10 @@ public class LinePart {
      * @param start Point de départ du tronçon à diviser
      * @param end Point d'arrivée du tronçon à diviser
      * @param at Endroit où la station intermédiaire est construite
-     * @return true si la division a bien été effectuée
+     * @return le LinePart nouvellement créé, null si aucun créé
      */
-    public boolean divide(Vector2 start, Vector2 end ,Vector2 at) {
-        boolean res = false;
+    public LinePart divide(Vector2 start, Vector2 end ,Vector2 at) {
+        LinePart res = null;
         if(at!=null) {
             if(startStation.equals(start) && endStation.equals(end)) {
                 LinePart newPart = new LinePart(line,at,end,line.getFirstPart());
@@ -109,7 +109,7 @@ public class LinePart {
                 this.next = newPart;
                 this.endStation = at;
                 this.next.setPos(this.end,this.end+100,1);
-                res=true;
+                res=newPart;
                 Game.Debug(2,"Line part "+this+" divided at "+at);
             } else {
                 if (next!=null)
@@ -151,11 +151,11 @@ public class LinePart {
 
     @Override
     public String toString() {
-        return startStation+"----------"+endStation;
+        return startStation+"["+start+"]----------["+end+"]"+endStation;
     }
 
     public String toStringFull() {
-        String s = startStation+"----------";
+        String s = startStation+"["+start+"]----------["+end+"]";
         if(next != null)
             s = s+next.toStringFull();
         else

@@ -48,8 +48,6 @@ public class GameView extends Scene implements Listener {
 
     // Couleurs
     private Map<ColorEnum,Color> colors = Map.ofEntries(
-            Map.entry(ColorEnum.BACKGROUND,Color.web("0xE9E9E9",1)),
-            Map.entry(ColorEnum.GRID_DOT,Color.web("0xC2C2C2",1)),
             Map.entry(ColorEnum.LINE_BLUE,Color.web("0x3333FF",1)),
             Map.entry(ColorEnum.LINE_CYAN,Color.web("0x0099CC",1)),
             Map.entry(ColorEnum.LINE_GOLD,Color.web("0xCCCC33",1)),
@@ -58,6 +56,8 @@ public class GameView extends Scene implements Listener {
             Map.entry(ColorEnum.LINE_PURPLE,Color.web("0xCC00CC",1)),
             Map.entry(ColorEnum.LINE_RED,Color.web("0xCC0000",1)),
             Map.entry(ColorEnum.LINE_YELLOW,Color.web("0xFFFF33",1)),
+            Map.entry(ColorEnum.BACKGROUND,Color.web("0xE9E9E9",1)),
+            Map.entry(ColorEnum.GRID_DOT,Color.web("0xC2C2C2",1)),
             Map.entry(ColorEnum.RESIDENTIAL_BACKGROUND,Color.web("0xD1DFBC",1)),
             Map.entry(ColorEnum.RESIDENTIAL_BORDER,Color.web("0xE9FFD6",1)),
             Map.entry(ColorEnum.COMMERCIAL_BACKGROUND,Color.web("0xEE6F66",1)),

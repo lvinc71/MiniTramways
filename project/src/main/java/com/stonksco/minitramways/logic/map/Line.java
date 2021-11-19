@@ -132,7 +132,7 @@ public class Line {
 	 * @param at Endroit où la station intermédiaire est construite
 	 * @return true si la division a bien été effectuée
 	 */
-	public boolean divide(Vector2 start, Vector2 end ,Vector2 at) {
+	public LinePart divide(Vector2 start, Vector2 end ,Vector2 at) {
 		return first.divide(start,end,at);
 	}
 
@@ -148,21 +148,33 @@ public class Line {
 
 	public LinePart extend(Vector2 from, Vector2 to) {
 		LinePart lp = null;
+		Vector2 fromPos = null;
+		Vector2 toPos = null;
+
+		if(from.equals(first.getStartPos())) {
+			fromPos = to;
+			toPos = from;
+		} else if (from.equals(first.getLast().getEndPos())) {
+			fromPos = from;
+			toPos = to;
+		}
+
+
 
 		// Si from est une extrémité
-		if(from.equals(first.getStartPos()) || from.equals(first.getLast().getEndPos())) {
+		if(fromPos != null && toPos != null) {
 			boolean needAdd = !(first==null);
-			lp=new LinePart(this,from,to,first);
+			lp=new LinePart(this,fromPos,toPos,first);
 
 			if(needAdd)
 				this.first.add(lp);
 
 			Station endStation = null;
 			// si la deuxième station existe déjà, alors on en crée pas et on ajoute la ligne
-			if(Game.get().getMap().getCellAt(to).getBuilding() instanceof Station) {
-				endStation = (Station)Game.get().getMap().getCellAt(to).getBuilding();
+			if(Game.get().getMap().getCellAt(toPos).getBuilding() instanceof Station) {
+				endStation = (Station)Game.get().getMap().getCellAt(toPos).getBuilding();
 			} else {
-				endStation = Game.get().getMap().addStation(to);
+				endStation = Game.get().getMap().addStation(toPos);
 			}
 
 			if(lp.getStartPos()==first.getStartPos())
@@ -171,7 +183,7 @@ public class Line {
 				stations.put(lp.getEnd(),endStation);
 
 			endStation.addLine(this);
-			((Station)Game.get().getMap().getCellAt(from).getBuilding()).addLine(this);
+			((Station)Game.get().getMap().getCellAt(fromPos).getBuilding()).addLine(this);
 
 			Game.Debug(1,"Line "+id+" extended from "+from+" to "+to);
 		}

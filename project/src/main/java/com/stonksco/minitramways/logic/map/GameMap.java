@@ -6,10 +6,8 @@ import com.stonksco.minitramways.logic.map.building.Building;
 import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 import com.stonksco.minitramways.logic.map.building.Station;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.ToDoubleFunction;
 
 public class GameMap {
 
@@ -138,22 +136,24 @@ public class GameMap {
                     Game.Debug(1,"Line "+l2.getID()+" extended from "+start+" to "+end);
                 }
 
+
                 break;
             default: // Autres cas, ne rien créer
         }
 
-
+        Game.Debug(2,"Updated lines : "+updatedLines);
         return updatedLines;
     }
 
 
     private void processIntersections(HashMap<LinePart,Vector2> intersections, LinePart with) {
+
         // Pour chaque ligne
         for(Line l : lines.values()) {
             // On lui donne chaque intersection, pour que le linepart concerné se divise
             for(Map.Entry e : intersections.entrySet()) {
-                if(l.divide(((LinePart)e.getKey()).getStartPos(),((LinePart)e.getKey()).getEndPos(),(Vector2)e.getValue())) {
-                    with.divide(with.getStartPos(),with.getEndPos(),getClosestEmpty((Vector2)e.getValue()));
+                if(l.divide(((LinePart)e.getKey()).getStartPos(),((LinePart)e.getKey()).getEndPos(),(Vector2)e.getValue())!=null) {
+                    //with.divide(with.getStartPos(),with.getEndPos(),(Vector2)e.getValue());
                     Station s = addStation((Vector2)e.getValue());
                     s.addLine(l);
                     s.addLine(with.getLine());
@@ -162,34 +162,83 @@ public class GameMap {
             }
         }
 
+
+        // On crée une liste de toutes les coordonnées d'intersections puis on les ordonne de la pluc proche à la plus éloignée du point de départ
+        List<Vector2> divisionsByDistance = new ArrayList<>(intersections.values());
+
+        Collections.sort(divisionsByDistance, Comparator.comparingDouble(new ToDoubleFunction<Vector2>() {
+            @Override
+            public double applyAsDouble(Vector2 v) {
+                return Vector2.Distance(v, with.getStartPos());
+            }
+        }));
+
+
+        if(divisionsByDistance.size()>0)
+            Game.Debug(1,"Divisions needed for "+with+" : "+divisionsByDistance);
+        else
+            Game.Debug(1,"No divisions needed for "+with);
+
+        Game.Debug(1,"");
+        LinePart partToDivide = with;
+        for(Vector2 v : divisionsByDistance) {
+            partToDivide = partToDivide.divide(partToDivide.getStartPos(),partToDivide.getEndPos(),v);
+        }
+
+
+
     }
 
     /**
      * Boucle 'en spirale' autour du point donné, jusqu'à trouver une case vide
      * @return position de la case vide la plus proche
      */
-    public Vector2 getClosestEmpty(Vector2 from) {
-        Game.Debug(2,"Searching for closest empty cell from "+from+"...");
+    public Vector2 getClosestEmptyOrStation(Vector2 from) {
+        Game.Debug(2,"Searching for closest linkable cell from "+from+"...");
         Vector2 res = null;
         from = from.round();
-        int x=(int)from.getX(), y=(int)from.getY(), dx = 0, dy = -1;
-        int t = Math.max(x,y);
-        int maxI = t*t;
 
-        for (int i=0; i < maxI; i++){
-            if ((-x/2 <= x) && (x <= x/2) && (-y/2 <= y) && (y <= y/2)) {
-                System.out.println(x+","+y);
-                if(getCellAt(new Vector2(x,y))!=null)
-                    if(getCellAt(new Vector2(x,y)).getBuilding()==null)
-                        res=new Vector2(x,y);
+        // (di, dj) is a vector - direction in which we move right now
+        int dx = 1;
+        int dy = 0;
+        // length of current segment
+        int segment_length = 1;
+
+        // current position (i, j) and how much of current segment we passed
+        int x = (int)from.getX();
+        int y = (int)from.getY();
+        int segment_passed = 0;
+        for (int k = 0; k < 15; ++k) {
+
+            Cell checkedCell = getCellAt(new Vector2(x,y));
+            if(checkedCell!=null) {
+                if(checkedCell.getBuilding()==null || checkedCell.getBuilding() instanceof Station)
+                    res = checkedCell.getCoordinates();
             }
 
-            if( (x == y) || ((x < 0) && (x == -y)) || ((x > 0) && (x == 1-y))) {
-                t=dx; dx=-dy; dy=t;
-            }
-            x+=dx; y+=dy;
             if(res!=null)
                 break;
+
+            // make a step, add 'direction' vector (di, dj) to current position (i, j)
+            x += dx;
+            y += dy;
+
+            ++segment_passed;
+
+            if (segment_passed == segment_length) {
+                // done with current segment
+                segment_passed = 0;
+
+                // 'rotate' directions
+                int buffer = dx;
+                dx = -dy;
+                dy = buffer;
+
+                // increase segment length if necessary
+                if (dy == 0) {
+                    ++segment_length;
+                }
+            }
         }
         Game.Debug(2,"Found "+res);
         return res;
@@ -220,10 +269,14 @@ public class GameMap {
         if(newPart!=null) {
             for (Line l : lines.values()) {
                 for (LinePart lp : l.getParts()) {
-                    if (newPart != null && newPart != lp) {
+                    if (newPart != null && newPart != lp &&
+                            !newPart.getStartPos().equals(lp.getEndPos()) &&
+                            !newPart.getStartPos().equals(lp.getStartPos()) &&
+                            !newPart.getEndPos().equals(lp.getStartPos()) &&
+                            !newPart.getEndPos().equals(lp.getEndPos())) {
                         Vector2 v = Vector2.getIntersectionOf(newPart.getStartPos(), newPart.getEndPos(), lp.getStartPos(), lp.getEndPos());
                         if (v != null)
-                            intersections.put(lp, v.round());
+                            intersections.put(lp, getClosestEmptyOrStation(v.round()));
                     }
                 }
                 alreadyChecked.add(newPart);
@@ -430,13 +483,7 @@ public class GameMap {
      * @return
      */
     public int getIdOf(Line l) {
-        int res = -1;
-        for(Map.Entry e : lines.entrySet()) {
-            if(e.getValue()==l)
-                res = (Integer)e.getKey();
-            break;
-        }
-        return res;
+        return l.getID();
     }
 
     public Area getAreas(int i ){
