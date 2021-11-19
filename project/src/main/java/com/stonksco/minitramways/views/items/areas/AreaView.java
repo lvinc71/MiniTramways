@@ -34,10 +34,10 @@ public class AreaView extends Region {
                 e.setStroke(gw.getColor(ColorEnum.OFFICE_BORDER));
                 e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));
 
-                e.scaleXProperty().bind(gw.getCellSizeX().divide(25));
-                e.scaleYProperty().bind(gw.getCellSizeY().divide(20));
-                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(6)));
-                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(28)));
+                e.scaleXProperty().bind(gw.getCellSizeX().divide(25d));
+                e.scaleYProperty().bind(gw.getCellSizeY().divide(20d));
+                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(0)));
+                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(0)));
 
 
                 break;

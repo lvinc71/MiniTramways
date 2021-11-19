@@ -76,15 +76,22 @@ public class Area {
 		return res;
 	}
 
+	private Cell getRandomCell() {
+		int rand = Math.round((float)Math.random()*(cells.size()-1));
+		if(rand<0)
+			rand=0;
+		return cells.get(rand);
+	}
+
 	/**
 	 * Demande � la zone de g�n�rer un nouveau b�timent
 	 */
 	public boolean generateBuilding() {
 		boolean res=false;
 
-		Cell c = this.cells.get(Math.round((float)Math.random()*(cells.size()-1)));
+		Cell c = getRandomCell();
 		while(c.getBuilding()!=null) {
-			c = this.cells.get(Math.round((float)Math.random()*cells.size()-1));
+			c = getRandomCell();
 		}
 
 		switch (type){
