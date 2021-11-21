@@ -75,7 +75,7 @@ public class LinePart {
                 partToAdd.setPos(this.end,this.end+100,1);
                 Game.Debug(3,"Line "+line.getID()+" extended from right.");
                 res=true;
-            } else if(partToAdd.startStation.equals(this.startStation) && prec==null){
+            } else if(partToAdd.endStation.equals(this.startStation) && prec==null){
                 // Cas où on est du côté gauche
                 this.prec = partToAdd;
                 partToAdd.next = this;
@@ -83,7 +83,7 @@ public class LinePart {
                 partToAdd.setPos(this.start-100,this.start,2);
                 if(partToAdd.start<0) {
                     // On inverse les positions départ et arrivée pour conserver l'ordre tout au long de la ligne
-                    partToAdd.reversePositions();
+                    //partToAdd.reversePositions();
                 }
                 Game.Debug(3,"Line "+line.getID()+" extended from left.");
                 res=true;

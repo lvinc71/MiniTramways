@@ -291,9 +291,8 @@ public class GameMap {
     }
 
 
-    public HashMap<Integer, HashMap<Vector2, com.stonksco.minitramways.logic.map.Cell>> getAreas() {
-
-        return null;
+    public HashMap<Integer, Area>  getAreas() {
+        return areas;
     }
 
     public void initAreas() {

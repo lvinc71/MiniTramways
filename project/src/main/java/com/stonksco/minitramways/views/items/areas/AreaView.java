@@ -1,5 +1,6 @@
 package com.stonksco.minitramways.views.items.areas;
 
+import com.stonksco.minitramways.logic.map.Area;
 import com.stonksco.minitramways.logic.map.AreaTypes;
 import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
@@ -13,11 +14,11 @@ public class AreaView extends Region {
 
     private AreaTypes type;
 
-    public AreaView(GameView gw, AreaTypes type, AreasLayer layer) {
+    public AreaView(GameView gw, AreasLayer layer, Area a) {
 
         super();
         this.gw = gw;
-        this.type = type;
+        this.type = a.getType();
 
         SVGPath e = new SVGPath();
         this.getChildren().add(e);

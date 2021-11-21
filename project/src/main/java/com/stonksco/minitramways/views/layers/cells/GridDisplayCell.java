@@ -10,6 +10,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
 public class GridDisplayCell extends CellView{
@@ -22,22 +23,41 @@ public class GridDisplayCell extends CellView{
         int i = (int)gridPos.getY();
         int j = (int)gridPos.getX();
 
+        Color c = gw.getColor(ColorEnum.GRID_DOT);
+
         if(i==0 || j==0) {
             e = new Ellipse(0,0,3,3);
             e.setTranslateX(-3);
             e.setTranslateY(-3);
-            e.setFill(gw.getColor(ColorEnum.GRID_DOT));
+            e.setFill(c);
             StackPane.setAlignment(e, Pos.TOP_LEFT);
             this.getChildren().add(e);
         }
 
+        if(j==Game.get().getMapSize().getX()-1 && i==0) {
             e = new Ellipse(0,0,3,3);
             e.setTranslateX(3);
-            e.setTranslateY(3);
-            e.setFill(gw.getColor(ColorEnum.GRID_DOT));
-            StackPane.setAlignment(e, Pos.BOTTOM_RIGHT);
+            e.setTranslateY(-3);
+            e.setFill(c);
+            StackPane.setAlignment(e, Pos.TOP_RIGHT);
             this.getChildren().add(e);
+        }
 
+        if(j==0 && i==Game.get().getMapSize().getY()-1) {
+            e = new Ellipse(0,0,3,3);
+            e.setTranslateX(-3);
+            e.setTranslateY(3);
+            e.setFill(c);
+            StackPane.setAlignment(e, Pos.BOTTOM_LEFT);
+            this.getChildren().add(e);
+        }
+
+        e = new Ellipse(0,0,3,3);
+        e.setTranslateX(3);
+        e.setTranslateY(3);
+        e.setFill(c);
+        StackPane.setAlignment(e, Pos.BOTTOM_RIGHT);
+        this.getChildren().add(e);
     }
 
     public ReadOnlyDoubleProperty getPixelsX() {

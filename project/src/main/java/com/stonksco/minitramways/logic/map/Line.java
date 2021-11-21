@@ -118,26 +118,30 @@ public class Line {
 
 		// Si from est une extrémité
 		if(fromPos != null && toPos != null) {
-			boolean needAdd = !(first==null);
 			lp=new LinePart(this,fromPos,toPos,first);
+			this.first.add(lp);
 
-			if(needAdd)
-				this.first.add(lp);
+			// On détermine si la station doit être située au début ou à la fin du tronçon
+			Vector2 stationPos = null;
+			if(from.equals(fromPos))
+				stationPos = toPos.clone();
+			else
+				stationPos = fromPos.clone();
 
-			Station endStation = null;
+			Station newStation = null;
 			// si la deuxième station existe déjà, alors on en crée pas et on ajoute la ligne
-			if(Game.get().getMap().getCellAt(toPos).getBuilding() instanceof Station) {
-				endStation = (Station)Game.get().getMap().getCellAt(toPos).getBuilding();
+			if(Game.get().getMap().getCellAt(stationPos).getBuilding() instanceof Station) {
+				newStation = (Station)Game.get().getMap().getCellAt(stationPos).getBuilding();
 			} else {
-				endStation = Game.get().getMap().addStation(toPos);
+				newStation = Game.get().getMap().addStation(stationPos);
 			}
 
 			if(lp.getStartPos()==first.getStartPos())
-				stations.put(lp.getStart(),endStation);
+				stations.put(lp.getStart(),newStation);
 			else
-				stations.put(lp.getEnd(),endStation);
+				stations.put(lp.getEnd(),newStation);
 
-			endStation.addLine(this);
+			newStation.addLine(this);
 			((Station)Game.get().getMap().getCellAt(from).getBuilding()).addLine(this);
 
 			Game.Debug(1,"Line "+id+" extended from "+from+" to "+to);
