@@ -546,7 +546,7 @@ public class GameMap {
     }
 
 
-    public Set<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
+    public List<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
         return lines.get(lineID).getPartsVectors();
     }
 
@@ -571,6 +571,25 @@ public class GameMap {
             if(res) break;
         }
         return res;
+    }
+
+    public void Update() {
+        // Déplacement des trams
+        for(Line l : lines.values()) {
+            l.Update();
+        }
+    }
+
+    public ArrayList<Tramway> getTramsOf(int lineID) {
+        return this.lines.get(lineID).getTrams();
+    }
+
+    public int getFirstIndexOf(int lineID) {
+        return this.lines.get(lineID).getFirstIndex();
+    }
+
+    public int getLastIndexOf(int lineID) {
+        return this.lines.get(lineID).getLastIndex();
     }
 
 

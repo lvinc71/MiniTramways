@@ -7,9 +7,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class PinsView extends GridView {
+public class PinsLayer extends GridView {
 
-    public PinsView(GameView gw, Vector2 size) {
+    public PinsLayer(GameView gw, Vector2 size) {
         super(gw,size);
         fill(PinView.class);
         this.addEventFilter(MouseEvent.MOUSE_CLICKED,gridClickEvent);

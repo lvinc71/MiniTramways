@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AreasView extends Pane {
+public class AreasLayer extends Pane {
 
     private GameView gw;
 
@@ -19,7 +19,7 @@ public class AreasView extends Pane {
 
     private AreaView area;
 
-    public AreasView(GameView gw) {
+    public AreasLayer(GameView gw) {
         super();
         this.gw = gw;
         areas = new ArrayList<AreaView>();

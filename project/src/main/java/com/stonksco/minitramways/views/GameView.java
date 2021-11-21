@@ -28,16 +28,25 @@ import java.util.Map;
 
 public class GameView extends Scene implements Listener {
 
+    public static void FrameUpdate() {
+        for(GameView gw : instances) {
+            gw.Update();
+        }
+    }
+
+    private static ArrayList<GameView> instances = new ArrayList<>();
+
+
     private Group root;
     private Stage primaryStage;
 
     // Calques et conteneurs
     private GridDisplay gridDisplay; // Points de la grille
-    private StationsView gridStations; // Stations
-    private BuildingsView gridBuildings; // Bâtiments (sauf stations)
-    private PinsView gridPins; // Épingles représentant le nombre de personnes
-    private AreasView areasPane; // Quartiers
-    private LinesView linesPane; // Lignes et trams
+    private StationsLayer gridStations; // Stations
+    private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
+    private PinsLayer gridPins; // Épingles représentant le nombre de personnes
+    private AreasLayer areasPane; // Quartiers
+    private LinesLayer linesPane; // Lignes et trams
 
     private StackPane mainPane; // Conteneur principal remplissant la fenêtre
     private Pane centerPane; // Conteneur central contenant la carte du jeu
@@ -83,6 +92,7 @@ public class GameView extends Scene implements Listener {
      */
     public GameView(Group parent, Stage primaryStage) {
         super(parent, 1600,900);
+        instances.add(this);
 
         this.root = parent;
         this.primaryStage = primaryStage;
@@ -98,6 +108,7 @@ public class GameView extends Scene implements Listener {
         initWindowLayout();
         initMapLayers();
         updateBuildings();
+        Clock.get().start();
     }
 
 
@@ -164,11 +175,11 @@ public class GameView extends Scene implements Listener {
         Vector2 s = Game.get().getMapSize();
 
         gridDisplay = new GridDisplay(this,s);
-        gridStations = new StationsView(this,s);
-        gridBuildings = new BuildingsView(this,s);
-        gridPins = new PinsView(this,s);
-        areasPane = new AreasView(this);
-        linesPane = new LinesView(this);
+        gridStations = new StationsLayer(this,s);
+        gridBuildings = new BuildingsLayer(this,s);
+        gridPins = new PinsLayer(this,s);
+        areasPane = new AreasLayer(this);
+        linesPane = new LinesLayer(this);
 
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
@@ -420,6 +431,13 @@ public class GameView extends Scene implements Listener {
 
     public GridDisplay getGridDisplay() {
         return gridDisplay;
+    }
+
+    /**
+     * Appelée à chaque frame
+     */
+    public void Update() {
+        linesPane.Update();
     }
 }
 
