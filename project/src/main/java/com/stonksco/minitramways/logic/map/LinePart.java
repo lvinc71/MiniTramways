@@ -3,8 +3,13 @@ package com.stonksco.minitramways.logic.map;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.building.Station;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LinePart {
 
@@ -177,4 +182,65 @@ public class LinePart {
         endStation=temp;
     }
 
+    /**
+     * Retourne les coordonnées sur le tronçon selon le pourcentage fourni en paramètre
+     * Si la position donnée ne correspond pas à ce tronçon, elle sera demandée au tronçon suivant
+     * 0% = Station de départ | 100% = Station d'arrivée
+     * @param at position sur la ligne
+     * @return coordonnées sur la grille
+     */
+    public Vector2 getPosAt(double at) {
+        Vector2 res = null;
+
+        if(start <= at && end > at) {
+            double x = 0;
+            double y =0;
+            if(at==0)
+                res = startStation;
+            else if(at==100)
+                res = endStation;
+            else
+            {
+                y = endStation.getY()-(startStation.getY())*(at/100d)+(startStation.getY());
+                x = endStation.getX()-(startStation.getX())*(at/100d)+(startStation.getX());
+            }
+
+            if(res==null)
+                res = new Vector2(x,y);
+        } else {
+            if(next!=null)
+                res = next.getPosAt(at);
+        }
+        return res;
+    }
+
+    public double getLength() {
+        return Vector2.Distance(startStation,endStation);
+    }
+
+
+    public LinePart getPartAt(double at) {
+        LinePart res = null;
+        if(start<=at && end>at)
+            res = this;
+        else
+            if(next!=null)
+                res = next.getPartAt(at);
+
+        return res;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LinePart linePart = (LinePart) o;
+        return start == linePart.start && end == linePart.end && startStation.equals(linePart.startStation) && endStation.equals(linePart.endStation) && line.equals(linePart.line);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startStation, endStation, line, start, end);
+    }
 }

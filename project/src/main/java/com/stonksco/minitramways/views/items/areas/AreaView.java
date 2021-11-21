@@ -1,15 +1,10 @@
 package com.stonksco.minitramways.views.items.areas;
 
-import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.map.AreaTypes;
 import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
-import com.stonksco.minitramways.views.layers.AreasView;
-import javafx.scene.Group;
+import com.stonksco.minitramways.views.layers.AreasLayer;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
 
 public class AreaView extends Region {
@@ -18,7 +13,7 @@ public class AreaView extends Region {
 
     private AreaTypes type;
 
-    public AreaView(GameView gw, AreaTypes type, AreasView layer) {
+    public AreaView(GameView gw, AreaTypes type, AreasLayer layer) {
 
         super();
         this.gw = gw;
