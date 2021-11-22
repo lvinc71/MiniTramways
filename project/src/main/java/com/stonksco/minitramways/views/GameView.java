@@ -256,6 +256,7 @@ public class GameView extends Scene implements Listener {
             {
                 Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
                 Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
+
                 Game.Debug(2, "Two cells selected.");
                 if(!mapController.createLine(firstPos,secondPos)) {
                     Game.Debug(1, "Line creation aborted.");
@@ -265,7 +266,6 @@ public class GameView extends Scene implements Listener {
                     firstCell=secondCell;
                     secondCell=null;
                 }
-
             }
     }
 
@@ -282,8 +282,9 @@ public class GameView extends Scene implements Listener {
      * @author Thomas Coulon
      */
     private void resetCellSelection() {
-        if(firstCell!=null)
+        if(firstCell!=null) {
             firstCell.getChildren().remove(tempStation);
+        }
         tempStation = null;
         firstCell = null;
         secondCell = null;
@@ -421,6 +422,17 @@ public class GameView extends Scene implements Listener {
     public GridDisplay getGridDisplay() {
         return gridDisplay;
     }
+
+    /**
+     * Appelée à chaque frame
+     */
+   // public void Update() {
+   //     linesPane.Update();
+   // }
+   // }
+
+
+
 }
 
 

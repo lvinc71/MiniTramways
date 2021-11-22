@@ -25,9 +25,7 @@ public class PinView extends CellView {
                     Game.Debug(2,"Clicked on cell at ( "+clicked.getGridPos().getX()+" , "+clicked.getGridPos().getY()+" )");
                     gw.cellClick(clicked);
                 }
-
             }
-
         };
 
     public PinView(GameView gw, Vector2 gridPos) {
