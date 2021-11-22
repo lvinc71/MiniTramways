@@ -1,5 +1,9 @@
 package com.stonksco.minitramways.logic;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
@@ -162,4 +166,17 @@ public class Vector2 {
     public Vector2 round() {
         return new Vector2(Math.round(x),Math.round(y));
     }
+
+    public static Vector2 getMidPoint(Vector2 v1, Vector2 v2) {
+        double x = (v1.x+v2.x)/2d;
+        double y = (v1.y+v2.y)/2d;
+        return new Vector2(x,y);
+    }
+
+    public static ReadOnlyDoubleProperty getMidPointProperty(ReadOnlyDoubleProperty x1, ReadOnlyDoubleProperty x2) {
+       SimpleDoubleProperty res =  new SimpleDoubleProperty();
+       res.bind((x1.add(x2)).divide(2d));
+       return res;
+    }
+
 }

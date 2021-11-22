@@ -70,14 +70,16 @@ public class AreaView extends Pane {
                 break;
         }
 
-
+        areaShape.getElements().add(new MoveTo());
         for(int i = 1; i<edgeCells.size(); i++) {
             MoveTo from = new MoveTo();
             from.xProperty().bind(gw.CellToPixelsX(edgeCells.get(i-1)));
             from.yProperty().bind(gw.CellToPixelsY(edgeCells.get(i-1)));
-            LineTo to = new LineTo();
+            QuadCurveTo to = new QuadCurveTo();
             to.xProperty().bind(gw.CellToPixelsX(edgeCells.get(i)));
             to.yProperty().bind(gw.CellToPixelsY(edgeCells.get(i)));
+            to.controlXProperty().bind(Vector2.getMidPointProperty(gw.CellToPixelsX(edgeCells.get(i-1)), gw.CellToPixelsX(edgeCells.get(i))));
+            to.controlYProperty().bind(Vector2.getMidPointProperty(gw.CellToPixelsY(edgeCells.get(i-1)), gw.CellToPixelsY(edgeCells.get(i))));
 
             areaShape.getElements().add(from);
             areaShape.getElements().add(to);
