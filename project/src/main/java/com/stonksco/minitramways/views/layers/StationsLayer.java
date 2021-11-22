@@ -8,11 +8,11 @@ import com.stonksco.minitramways.views.layers.cells.StationView;
 
 import java.util.HashMap;
 
-public class StationsView extends GridView{
+public class StationsLayer extends GridView{
 
     private HashMap<Vector2, StationView> stations;
 
-    public StationsView(GameView gw, Vector2 size) {
+    public StationsLayer(GameView gw, Vector2 size) {
         super(gw, size);
         stations = new HashMap<>();
         fill(CellView.class);

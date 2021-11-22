@@ -1,7 +1,9 @@
 package com.stonksco.minitramways.logic.map;
 
+import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.People;
 import com.stonksco.minitramways.logic.map.building.Station;
+import com.stonksco.minitramways.views.Clock;
 
 import java.util.ArrayList;
 
@@ -14,42 +16,32 @@ public class Tramway implements PlaceToBe {
 	 * Cette donn�e permet de savoir dans quelle direction le tram se dirige
 	 */
 	private Station lastVisitedStation;
+
+	public double getLinePos() {
+		return linePos;
+	}
+
 	/**
 	 * Position sur la ligne, par tranches de pourcentages
 	 * 
 	 * Par exemple, si le tram se trouve � mi-chemin entre la deuxi�me et la troisi�me station de la ligne, alors cette donn�e vaut 250
 	 */
-	private double linePartPos;
+	private double linePos;
 	private LinePart currentPart;
 	/**
 	 * Nombre maximal de personnes que peut accueillir ce tram
 	 */
 	private int capacity;
 
-	/**
-	 * 
-	 * @param s
-	 */
-	public boolean goTo(Station s) {
-		// TODO - implement Tramway.goTo
-		throw new UnsupportedOperationException();
-	}
 
-	/**
-	 * Retourne la station visit�e avant la station courante
-	 */
-	public Station getLastStation() {
-		// TODO - implement Tramway.getLastStation
-		throw new UnsupportedOperationException();
-	}
 
 	/**
 	 * 
 	 * @param line
 	 */
-	public Tramway() {
-		// TODO - implement Tramway.Tramway
-		throw new UnsupportedOperationException();
+	public Tramway(Line l) {
+		this.line = l;
+		linePos = 0;
 	}
 
 
@@ -84,6 +76,51 @@ public class Tramway implements PlaceToBe {
 
 	public int getPeopleAmount() {
 		return people.size();
+	}
+
+
+	// Direction du déplacement : true = avant, false = arrière
+	private boolean moveDirection = true;
+
+	private long timeSinceLastUpdateNs = 0;
+
+	public void Update() {
+
+		if(timeSinceLastUpdateNs > 30000000) {
+
+			if(currentPart==null)
+				currentPart=line.getPartAt(linePos);
+			// Déplacement du tram à une vitesse constante
+			double increment = 1/ currentPart.getLength()*line.getSpeed()*(timeSinceLastUpdateNs/Math.pow(10,9))*100;
+			if(!moveDirection)
+				increment *=-1;
+
+			double newpos = linePos + increment;
+
+			if(newpos<line.getFirstIndex()) {
+				newpos = line.getFirstIndex()+(line.getFirstIndex() - newpos);
+				moveDirection = !moveDirection;
+			} else if(newpos>=line.getLastIndex()) {
+				newpos = line.getLastIndex()-(newpos-line.getLastIndex());
+				moveDirection = !moveDirection;
+			}
+
+
+			Game.Debug(4,"Tramway moved from "+linePos+" to "+newpos+" on line "+line.getID());
+			linePos = newpos;
+			LinePart newPart = line.getPartAt(newpos);
+			if(!newPart.equals(currentPart))
+				Game.Debug(2,"Tramway changed of part from "+currentPart+" to "+newPart+" on line "+line.getID());
+
+			currentPart = newPart;
+			timeSinceLastUpdateNs=0;
+			
+			
+		} else {
+			timeSinceLastUpdateNs += Clock.get().GameDeltaTimeNs();
+		}
+
+		
 	}
 
 }

@@ -6,10 +6,7 @@ import com.stonksco.minitramways.logic.map.building.Station;
 import javafx.scene.paint.Color;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Représente une ligne de trams
@@ -23,13 +20,26 @@ public class Line {
 	private ArrayList<Tramway> tramways;
 	private LinePart first;
 
+	public float getSpeed() {
+		return speed;
+	}
+
+	private float speed = 1f;
+
 	public int getID() {
 		return id;
 	}
 
 	private final int id;
 
+	public Tramway addTram() {
+		if(tramways==null)
+			tramways= new ArrayList<>();
 
+		Tramway t = new Tramway(this);
+		this.tramways.add(t);
+		return t;
+	}
 
 	/**
 	 * Code couleur de la ligne
@@ -62,64 +72,10 @@ public class Line {
 		stations.put(100,endStation);
 		startStation.addLine(this);
 		endStation.addLine(this);
+
+		addTram();
 	}
 
-	/**
-	 * Ajoute une station au début ou é la fin de la ligne
-	 * @param place définit si on doit placer la station en début (true) ou en fin (false) de ligne
-	 * @param s
-	 * @return true si succés
-	 */
-	public boolean addStation(Station s, boolean place) {
-		// TODO - implement Line.addStation
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Retourne la valeur de position maximale possible sur cette ligne
-	 */
-	public int getMaxPos() {
-		// TODO - implement Line.getMaxPos
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Retourne la valeur de position minimale possible sur cette ligne
-	 */
-	public int getMinPos() {
-		// TODO - implement Line.getMinPos
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Retourne les coordonnées sur l'écran correspondant é une position sur la ligne
-	 * @param pos
-	 */
-	public Vector2 getPixelsAt(double pos) {
-		// TODO - implement Line.getPixelsAt
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Ajoute un tramway é la ligne
-	 * @param t
-	 */
-	public void addTramway(Tramway t) {
-		// TODO - implement Line.addTramway
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * étend une ligne
-	 * @from la station depuis laquelle la ligne doit étre étendue
-	 * @to la station vers laquelle la ligne doit étre étendue
-	 * @param from
-	 * @param to
-	 */
-	public boolean extend(Station from, Station to) {
-		// TODO - implement Line.expand
-		throw new UnsupportedOperationException();
-	}
 
 	public LinePart getFirstPart() {
 		return first;
@@ -160,37 +116,36 @@ public class Line {
 		}
 
 
-
 		// Si from est une extrémité
 		if(fromPos != null && toPos != null) {
-			boolean needAdd = !(first==null);
 			lp=new LinePart(this,fromPos,toPos,first);
+			this.first.add(lp);
 
-			if(needAdd)
-				this.first.add(lp);
+			// On détermine si la station doit être située au début ou à la fin du tronçon
+			Vector2 stationPos = null;
+			if(from.equals(fromPos))
+				stationPos = toPos.clone();
+			else
+				stationPos = fromPos.clone();
 
-			Station endStation = null;
+			Station newStation = null;
 			// si la deuxième station existe déjà, alors on en crée pas et on ajoute la ligne
-			if(Game.get().getMap().getCellAt(toPos).getBuilding() instanceof Station) {
-				endStation = (Station)Game.get().getMap().getCellAt(toPos).getBuilding();
+			if(Game.get().getMap().getCellAt(stationPos).getBuilding() instanceof Station) {
+				newStation = (Station)Game.get().getMap().getCellAt(stationPos).getBuilding();
 			} else {
-				endStation = Game.get().getMap().addStation(toPos);
+				newStation = Game.get().getMap().addStation(stationPos);
 			}
 
 			if(lp.getStartPos()==first.getStartPos())
-				stations.put(lp.getStart(),endStation);
+				stations.put(lp.getStart(),newStation);
 			else
-				stations.put(lp.getEnd(),endStation);
+				stations.put(lp.getEnd(),newStation);
 
-			endStation.addLine(this);
-			((Station)Game.get().getMap().getCellAt(fromPos).getBuilding()).addLine(this);
+			newStation.addLine(this);
+			((Station)Game.get().getMap().getCellAt(from).getBuilding()).addLine(this);
 
 			Game.Debug(1,"Line "+id+" extended from "+from+" to "+to);
 		}
-
-
-
-
 		return lp;
 	}
 
@@ -201,12 +156,12 @@ public class Line {
 		return res;
 	}
 
-	public Set<Map.Entry<Vector2,Vector2>> getPartsVectors() {
-		HashMap<Vector2,Vector2> res = new HashMap<>();
+	public List<Map.Entry<Vector2,Vector2>> getPartsVectors() {
+		ArrayList<Map.Entry<Vector2,Vector2>> res = new ArrayList<>();
 		for(LinePart p : first.getParts()) {
-			res.put(p.getStartPos(),p.getEndPos());
+			res.add(new AbstractMap.SimpleEntry<Vector2,Vector2>(p.getStartPos(),p.getEndPos()));
 		}
-		return res.entrySet();
+		return res;
 	}
 
 	public void setFirst(LinePart newFirst) {
@@ -221,5 +176,33 @@ public class Line {
 		if(first.getLast().getEndPos().equals(pos))
 			res=true;
 		return res;
+	}
+
+	public void Update() {
+		for(Tramway t : tramways) {
+			// Pour chaque tram, on le fait avancer d'une certaine distance
+			t.Update();
+		}
+	}
+
+	public Vector2 getPositionAt(double at) {
+		return first.getPosAt(at);
+	}
+
+
+	public LinePart getPartAt(double at) {
+		return first.getPartAt(at);
+	}
+
+	public ArrayList<Tramway> getTrams() {
+		return (ArrayList<Tramway>) this.tramways.clone();
+	}
+
+	public int getFirstIndex() {
+		return first.getStart();
+	}
+
+	public int getLastIndex() {
+		return first.getLast().getEnd();
 	}
 }

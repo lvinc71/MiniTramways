@@ -156,7 +156,7 @@ public class Vector2 {
     }
 
     public static double Distance(Vector2 v1, Vector2 v2) {
-        return Math.sqrt(Math.pow(v2.x - v1.x,2) - Math.pow(v2.y - v1.y,2));
+        return Math.sqrt(Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2));
     }
 
     public Vector2 round() {

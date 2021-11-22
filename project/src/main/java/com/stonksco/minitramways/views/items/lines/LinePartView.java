@@ -24,26 +24,40 @@ public class LinePartView extends Group {
     private ReadOnlyDoubleProperty  pxEndY;
 
     // Cellules correspondant aux deux extrémités du tronçon (stations)
-    private Vector2 start;
-    private Vector2 end;
+    private Vector2 startPos;
+    private Vector2 endPos;
+
+    public int getStart() {
+        return start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    // Mutliples de 100 décrivant la position du tronçon sur la ligne
+    private int start;
+    private int end;
 
     // Ligne graphique
     private Line lineShape;
     private Color color;
 
 
-    public LinePartView(GameView gw, LineView line, Vector2 start, Vector2 end, Color color) {
+    public LinePartView(GameView gw, LineView line, Vector2 startPos, Vector2 endPos, int start, int end, Color color) {
         super();
         this.gw = gw;
         this.line = line;
+        this.startPos = startPos;
+        this.endPos = endPos;
         this.start = start;
         this.end = end;
         this.color = color;
 
-        pxStartX = gw.CellToPixelsX(start);
-        pxStartY = gw.CellToPixelsY(start);
-        pxEndX = gw.CellToPixelsX(end);
-        pxEndY = gw.CellToPixelsY(end);
+        pxStartX = gw.CellToPixelsX(startPos);
+        pxStartY = gw.CellToPixelsY(startPos);
+        pxEndX = gw.CellToPixelsX(endPos);
+        pxEndY = gw.CellToPixelsY(endPos);
 
         DrawLine();
     }
@@ -74,8 +88,8 @@ public class LinePartView extends Group {
      * @author Léo Vincent
      */
     public double getOrientation() {
-        Vector2 startPos = start;
-        Vector2 endPos = end;
+        Vector2 startPos = this.startPos;
+        Vector2 endPos = this.endPos;
         Vector2 lineVector = endPos.sub(startPos);
 
         Vector2 normalizedLineVector = lineVector.normalize();
@@ -90,7 +104,6 @@ public class LinePartView extends Group {
         if(startPos.getY()>endPos.getY())
             angle = -angle;
 
-        Game.Debug(3,"Calculated tramway rotation for line "+lineVector+" (normalized : "+normalizedLineVector+" ) : "+angle+" degrees");
         return angle;
     }
 
@@ -101,6 +114,11 @@ public class LinePartView extends Group {
      * @return coordonnées en pixels
      */
     public ReadOnlyDoubleProperty getPosXAt(double at) {
+
+        at = at%100;
+        if(at<0)
+            at +=100;
+
         SimpleDoubleProperty res = new SimpleDoubleProperty(0);
         if(at==0)
             res.bind(pxStartX);
@@ -108,13 +126,18 @@ public class LinePartView extends Group {
             res.bind(pxEndX);
         else
         {
-            res.bind(pxEndX.subtract(pxStartX).multiply(at/100d).add(pxStartX));
+            res.bind(pxEndX.subtract(pxStartX).multiply((at/100d)).add(pxStartX));
         }
 
         return res;
     }
 
     public ReadOnlyDoubleProperty getPosYAt(double at) {
+
+        at = at%100;
+        if(at<0)
+            at +=100;
+
         SimpleDoubleProperty res = new SimpleDoubleProperty(0);
         if(at==0)
             res.bind(pxStartY);
@@ -122,7 +145,7 @@ public class LinePartView extends Group {
             res.bind(pxEndY);
         else
         {
-            res.bind(pxEndY.subtract(pxStartY).multiply(at/100d).add(pxStartY));
+            res.bind(pxEndY.subtract(pxStartY).multiply((at/100d)).add(pxStartY));
         }
 
         return res;

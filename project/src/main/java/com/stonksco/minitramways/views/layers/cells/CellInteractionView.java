@@ -7,7 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class PinView extends CellView {
+public class CellInteractionView extends CellView {
 
 
 
@@ -30,7 +30,7 @@ public class PinView extends CellView {
 
         };
 
-    public PinView(GameView gw, Vector2 gridPos) {
+    public CellInteractionView(GameView gw, Vector2 gridPos) {
         super(gw,gridPos);
         this.addEventFilter(MouseEvent.MOUSE_CLICKED,cellClickEvent);
     }
