@@ -6,6 +6,7 @@ import com.stonksco.minitramways.logic.map.AreaTypes;
 import com.stonksco.minitramways.logic.map.building.Shop;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.areas.AreaView;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
