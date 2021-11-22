@@ -19,8 +19,11 @@ public class PinView extends Group {
         } else {
             Image img = new ImageGetter().getImageOf(ImagesEnum.PIN);
             pinImage = new ImageView();
+
             pinImage.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.95d));
             pinImage.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
+            pinImage.setImage(img);
+            this.getChildren().add(pinImage);
         }
     }
 

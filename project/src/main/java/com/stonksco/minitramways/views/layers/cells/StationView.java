@@ -18,11 +18,13 @@ import javafx.scene.text.Text;
 public class StationView extends CellView {
 
     private ImageView sprite;
+    private PinView pv;
 
 
     public StationView(GameView gw, Vector2 gridPos) {
         super(gw,gridPos);
         enable();
+        this.pv = new PinView(gw,3);
     }
 
     private void enable() {
@@ -33,7 +35,6 @@ public class StationView extends CellView {
         sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
         sprite.setImage(img);
         this.getChildren().add(sprite);
-
 
         if(Game.get().getDebug()>2) {
             Text t = new Text(gridPos.toString());
