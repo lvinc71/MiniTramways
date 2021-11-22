@@ -1,10 +1,12 @@
 package com.stonksco.minitramways.views.layers;
 
 import com.stonksco.minitramways.logic.Game;
+import com.stonksco.minitramways.logic.map.Area;
 import com.stonksco.minitramways.logic.map.AreaTypes;
 import com.stonksco.minitramways.logic.map.building.Shop;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.areas.AreaView;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -24,16 +26,18 @@ public class AreasLayer extends Pane {
         this.gw = gw;
         areas = new ArrayList<AreaView>();
 
-        this.addArea(AreaTypes.residential);
-        this.addArea(AreaTypes.office);
-        this.addArea(AreaTypes.shopping);
+        for(Area a : Game.get().getAreas().values()) {
+            addArea(a);
+        }
 
         if(Game.get().getDebug()>2)
             this.setBorder(new Border(new BorderStroke(Color.PURPLE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+
+
     }
 
-    public void addArea(AreaTypes type){
-        area = new AreaView(gw,type,this);
+    public void addArea(Area a){
+        area = new AreaView(gw,this,a);
         this.getChildren().add(area);
         areas.add(area);
     }

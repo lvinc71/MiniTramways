@@ -44,7 +44,7 @@ public class GameView extends Scene implements Listener {
     private GridDisplay gridDisplay; // Points de la grille
     private StationsLayer gridStations; // Stations
     private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
-    private PinsLayer gridPins; // Épingles représentant le nombre de personnes
+    private CellInteractionsLayer gridPins; // Épingles représentant le nombre de personnes
     private AreasLayer areasPane; // Quartiers
     private LinesLayer linesPane; // Lignes et trams
 
@@ -177,7 +177,7 @@ public class GameView extends Scene implements Listener {
         gridDisplay = new GridDisplay(this,s);
         gridStations = new StationsLayer(this,s);
         gridBuildings = new BuildingsLayer(this,s);
-        gridPins = new PinsLayer(this,s);
+        gridPins = new CellInteractionsLayer(this,s);
         areasPane = new AreasLayer(this);
         linesPane = new LinesLayer(this);
 

@@ -32,7 +32,6 @@ public class BuildingView extends CellView {
             sprite.setImage(img);
             Game.Debug(3, "Created Building image HOUSE :" + sprite.getBoundsInLocal());
             this.getChildren().add(sprite);
-            Game.Debug(3, "Created a Building with a cell size of " + gw.getCellSizeX().get() + " * " + gw.getCellSizeY().get());
         }
         else if(this.type == BuildingEnum.SHOP) {
             Image img = new ImageGetter().getImageOf(ImagesEnum.SHOP);
@@ -43,7 +42,6 @@ public class BuildingView extends CellView {
             sprite.setImage(img);
             Game.Debug(3, "Created Building image SHOP :" + sprite.getBoundsInLocal());
             this.getChildren().add(sprite);
-            Game.Debug(3, "Created a Building with a cell size of " + gw.getCellSizeX().get() + " * " + gw.getCellSizeY().get());
         }
         else if(this.type == BuildingEnum.OFFICE) {
             Image img = new ImageGetter().getImageOf(ImagesEnum.OFFICE);
@@ -54,8 +52,12 @@ public class BuildingView extends CellView {
             sprite.setImage(img);
             Game.Debug(3, "Created Building image OFFICE :" + sprite.getBoundsInLocal());
             this.getChildren().add(sprite);
-            Game.Debug(3, "Created a Building with a cell size of " + gw.getCellSizeX().get() + " * " + gw.getCellSizeY().get());
         }
+
+        // Rotation variable 
+        int rotation = ((int)gridPos.getX() + (int)gridPos.getY())%4;
+        sprite.setRotate(rotation*90);
+
     }
 
 }

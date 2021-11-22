@@ -2,16 +2,16 @@ package com.stonksco.minitramways.views.layers;
 
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
-import com.stonksco.minitramways.views.layers.cells.PinView;
+import com.stonksco.minitramways.views.layers.cells.CellInteractionView;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class PinsLayer extends GridView {
+public class CellInteractionsLayer extends GridView {
 
-    public PinsLayer(GameView gw, Vector2 size) {
+    public CellInteractionsLayer(GameView gw, Vector2 size) {
         super(gw,size);
-        fill(PinView.class);
+        fill(CellInteractionView.class);
         this.addEventFilter(MouseEvent.MOUSE_CLICKED,gridClickEvent);
     }
 

@@ -82,32 +82,45 @@ public class Tramway implements PlaceToBe {
 	// Direction du déplacement : true = avant, false = arrière
 	private boolean moveDirection = true;
 
+	private long timeSinceLastUpdateNs = 0;
+
 	public void Update() {
-		if(currentPart==null)
-			currentPart=line.getPartAt(linePos);
-		// Déplacement du tram à une vitesse constante
-		double increment = 1/ currentPart.getLength()*line.getSpeed()*Clock.get().GameDeltaTime()*100;
-		if(!moveDirection)
-			increment *=-1;
 
-		double newpos = linePos + increment;
+		if(timeSinceLastUpdateNs > 30000000) {
 
-		if(newpos<line.getFirstIndex()) {
-			newpos = line.getFirstIndex()+(line.getFirstIndex() - newpos);
-			moveDirection = !moveDirection;
-		} else if(newpos>=line.getLastIndex()) {
-			newpos = line.getLastIndex()-(newpos-line.getLastIndex());
-			moveDirection = !moveDirection;
+			if(currentPart==null)
+				currentPart=line.getPartAt(linePos);
+			// Déplacement du tram à une vitesse constante
+			double increment = 1/ currentPart.getLength()*line.getSpeed()*(timeSinceLastUpdateNs/Math.pow(10,9))*100;
+			if(!moveDirection)
+				increment *=-1;
+
+			double newpos = linePos + increment;
+
+			if(newpos<line.getFirstIndex()) {
+				newpos = line.getFirstIndex()+(line.getFirstIndex() - newpos);
+				moveDirection = !moveDirection;
+			} else if(newpos>=line.getLastIndex()) {
+				newpos = line.getLastIndex()-(newpos-line.getLastIndex());
+				moveDirection = !moveDirection;
+			}
+
+
+			Game.Debug(4,"Tramway moved from "+linePos+" to "+newpos+" on line "+line.getID());
+			linePos = newpos;
+			LinePart newPart = line.getPartAt(newpos);
+			if(!newPart.equals(currentPart))
+				Game.Debug(2,"Tramway changed of part from "+currentPart+" to "+newPart+" on line "+line.getID());
+
+			currentPart = newPart;
+			timeSinceLastUpdateNs=0;
+			
+			
+		} else {
+			timeSinceLastUpdateNs += Clock.get().GameDeltaTimeNs();
 		}
 
-
-		Game.Debug(4,"Tramway moved from "+linePos+" to "+newpos+" on line "+line.getID());
-		linePos = newpos;
-		LinePart newPart = line.getPartAt(newpos);
-		if(!newPart.equals(currentPart))
-			Game.Debug(2,"Tramway changed of part from "+currentPart+" to "+newPart+" on line "+line.getID());
-
-		currentPart = newPart;
+		
 	}
 
 }

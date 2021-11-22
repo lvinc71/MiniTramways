@@ -103,7 +103,7 @@ public class LineView extends Group {
     private double timeSinceLastTramUpdate = 0;
 
     public void UpdateTrams() {
-        if(timeSinceLastTramUpdate > 0.04) {
+        if(timeSinceLastTramUpdate > 0.03) {
             if (trams == null)
                 trams = new HashMap<>();
 

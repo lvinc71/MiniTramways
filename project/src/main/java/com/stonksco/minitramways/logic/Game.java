@@ -1,9 +1,6 @@
 package com.stonksco.minitramways.logic;
 
-import com.stonksco.minitramways.logic.map.AreaTypes;
-import com.stonksco.minitramways.logic.map.Cell;
-import com.stonksco.minitramways.logic.map.GameMap;
-import com.stonksco.minitramways.logic.map.Tramway;
+import com.stonksco.minitramways.logic.map.*;
 import com.stonksco.minitramways.logic.map.building.Building;
 import com.stonksco.minitramways.logic.map.building.BuildingEnum;
 
@@ -62,7 +59,7 @@ public class Game {
         return map.getGridSize().clone();
     }
 
-    public HashMap<Integer, HashMap<Vector2, Cell>> getAreas(){
+    public HashMap<Integer, Area> getAreas(){
 
         return getMap().getAreas();
 
