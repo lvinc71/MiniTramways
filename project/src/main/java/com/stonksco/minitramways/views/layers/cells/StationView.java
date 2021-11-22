@@ -5,6 +5,7 @@ import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.ImageGetter;
 import com.stonksco.minitramways.views.items.ImagesEnum;
+import com.stonksco.minitramways.views.items.PinView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -17,6 +18,7 @@ import javafx.scene.text.Text;
 public class StationView extends CellView {
 
     private ImageView sprite;
+
 
     public StationView(GameView gw, Vector2 gridPos) {
         super(gw,gridPos);
@@ -31,6 +33,7 @@ public class StationView extends CellView {
         sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
         sprite.setImage(img);
         this.getChildren().add(sprite);
+
 
         if(Game.get().getDebug()>2) {
             Text t = new Text(gridPos.toString());
