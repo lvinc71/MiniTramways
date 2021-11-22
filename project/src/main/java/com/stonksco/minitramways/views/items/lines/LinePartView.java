@@ -74,12 +74,11 @@ public class LinePartView extends Group {
         lineShape.startYProperty().bind(pxStartY);
         lineShape.endXProperty().bind(pxEndX);
         lineShape.endYProperty().bind(pxEndY);
-        lineShape.setStrokeWidth(6);
+        lineShape.strokeWidthProperty().bind(gw.getCellSizeX().multiply(0.2d));
         lineShape.setStroke(color);
         lineShape.setStrokeLineCap(StrokeLineCap.ROUND);
         line.getChildren().add(this);
         this.getChildren().add(lineShape);
-        //Game.Debug(3,"Line drawn from "+pxStartX.get()+","+pxStartY.get()+" to "+pxEndX.get()+","+pxEndY.get());
     }
 
     /**

@@ -25,10 +25,15 @@ public class GridDisplayCell extends CellView{
 
         Color c = gw.getColor(ColorEnum.GRID_DOT);
 
+        SimpleDoubleProperty sizeU = new SimpleDoubleProperty();
+        sizeU.bind(gw.getCellSizeX().multiply(0.1));
+
         if(i==0 || j==0) {
             e = new Ellipse(0,0,3,3);
-            e.setTranslateX(-3);
-            e.setTranslateY(-3);
+            e.radiusYProperty().bind(sizeU);
+            e.radiusXProperty().bind(sizeU);
+            e.translateXProperty().bind(sizeU.multiply(-1));
+            e.translateYProperty().bind(sizeU.multiply(-1));
             e.setFill(c);
             StackPane.setAlignment(e, Pos.TOP_LEFT);
             this.getChildren().add(e);
@@ -36,8 +41,10 @@ public class GridDisplayCell extends CellView{
 
         if(j==Game.get().getMapSize().getX()-1 && i==0) {
             e = new Ellipse(0,0,3,3);
-            e.setTranslateX(3);
-            e.setTranslateY(-3);
+            e.radiusYProperty().bind(sizeU);
+            e.radiusXProperty().bind(sizeU);
+            e.translateXProperty().bind(sizeU);
+            e.translateYProperty().bind(sizeU.multiply(-1));
             e.setFill(c);
             StackPane.setAlignment(e, Pos.TOP_RIGHT);
             this.getChildren().add(e);
@@ -45,16 +52,20 @@ public class GridDisplayCell extends CellView{
 
         if(j==0 && i==Game.get().getMapSize().getY()-1) {
             e = new Ellipse(0,0,3,3);
-            e.setTranslateX(-3);
-            e.setTranslateY(3);
+            e.radiusYProperty().bind(sizeU);
+            e.radiusXProperty().bind(sizeU);
+            e.translateXProperty().bind(sizeU.multiply(-1));
+            e.translateYProperty().bind(sizeU);
             e.setFill(c);
             StackPane.setAlignment(e, Pos.BOTTOM_LEFT);
             this.getChildren().add(e);
         }
 
         e = new Ellipse(0,0,3,3);
-        e.setTranslateX(3);
-        e.setTranslateY(3);
+        e.radiusYProperty().bind(sizeU);
+        e.radiusXProperty().bind(sizeU);
+        e.translateXProperty().bind(sizeU);
+        e.translateYProperty().bind(sizeU);
         e.setFill(c);
         StackPane.setAlignment(e, Pos.BOTTOM_RIGHT);
         this.getChildren().add(e);
