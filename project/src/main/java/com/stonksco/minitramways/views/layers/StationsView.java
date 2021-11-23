@@ -27,11 +27,13 @@ public class StationsView extends GridView{
      * @param at
      */
     public void addStationAt(Vector2 at) {
-
+        CellView cell = gw.getGridDisplay().getCellAt(at);
         stations.remove(this.getCellAt(at));
         StationView s = new StationView(gw,at);
+        cell.getChildren().add(s);
         stations.put(at,s);
         this.add(s,(int)at.getX(),(int)at.getY());
+
     }
 
     public void updateStations() {

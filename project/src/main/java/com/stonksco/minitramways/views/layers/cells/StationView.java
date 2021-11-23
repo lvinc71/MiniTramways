@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -22,27 +23,26 @@ public class StationView extends CellView {
 
     private ImageView sprite;
     private Circle circle;
-    private Pane AreaStation = new Pane();;
+    private Pane areaStation;
 
     public StationView(GameView gw, Vector2 gridPos) {
         super(gw,gridPos);
-        this.getChildren().add(AreaStation);
-
+        this.areaStation = new Pane();
+        this.getChildren().add(areaStation);
         Circle();
         enable();
         this.setOnMouseEntered(new EventHandler<javafx.scene.input.MouseEvent>() { // Si la souris passe sur le sprite alors
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                getCircle().setFill(Color.BLUE); //changement de couleur blue
+                circle.setFill(Color.BLUE); //changement de couleur blue
             }
         });
        this.setOnMouseExited(new EventHandler<MouseEvent>() { //Si la souis n'est plus sur le sprite alors
             @Override
             public void handle(MouseEvent mouseEvent) {
-                getCircle().setFill(null); // changement de couleur
+                circle.setFill(null); // changement de couleur
             }
         });
-
     }
 
     private void enable() {
@@ -66,14 +66,13 @@ public class StationView extends CellView {
     private void Circle(){
         //création de la zone de la station
         this.circle = new Circle();
-        this.circle.radiusProperty().bind(gw.getCellSizeX().multiply(3));
-        this.circle.translateXProperty().bind(gw.getCellSizeX().multiply(0.5));
-        this.circle.translateYProperty().bind(gw.getCellSizeX().multiply(0.5));
-        this.circle.setFill(null);
-        this.circle.setOpacity(0.2);
-        this.AreaStation.getChildren().add(circle);
+        circle.radiusProperty().bind(gw.getCellSizeX().multiply(3));
+        circle.translateXProperty().bind(gw.getCellSizeX().multiply(0.5));
+        circle.translateYProperty().bind(gw.getCellSizeX().multiply(0.5));
+        circle.setFill(null);
+        circle.setOpacity(0.2);
+        this.areaStation.getChildren().add(circle);
         Game.Debug(2, "AreaStation on"+this.gridPos.toString() );
-
     }
 
     public Circle getCircle() {
@@ -84,7 +83,4 @@ public class StationView extends CellView {
         return sprite;
     }
 
-    public Pane getAreaStation() {
-        return AreaStation;
-    }
 }
