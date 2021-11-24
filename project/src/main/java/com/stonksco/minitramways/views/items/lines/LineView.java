@@ -57,11 +57,11 @@ public class LineView extends Group {
 
     }
 
-    private void addTram(double at) {
+    private void addTram(double at,int peopleAmount) {
         if(trams==null)
             trams = new HashMap<>();
 
-        TramView tv = new TramView(this,at,gw,colorId);
+        TramView tv = new TramView(this,at,gw,colorId,peopleAmount);
         trams.put(trams.size(),tv);
         this.getChildren().add(tv);
 
@@ -113,7 +113,7 @@ public class LineView extends Group {
             this.trams.clear();
 
             for (Tramway t : Game.get().getTramsOf(this.lineID)) {
-                addTram(t.getLinePos());
+                addTram(t.getLinePos(),t.Amount());
             }
             timeSinceLastTramUpdate = 0;
         } else {

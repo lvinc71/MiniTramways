@@ -19,13 +19,11 @@ public class PinView extends StackPane {
         super();
         this.nb = nb;
 
-
-        if(nb == 0){
-            return;
-        } else {
+        if(nb > 0){
             Image img = new ImageGetter().getImageOf(ImagesEnum.PIN);
             pinImage = new ImageView();
-            Text text = new Text("10");
+            Text text = new Text(String.valueOf(nb));
+            
 
 
             pinImage.fitHeightProperty().bind(gw.getCellSizeY());

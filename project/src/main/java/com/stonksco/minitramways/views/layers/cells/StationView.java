@@ -23,12 +23,7 @@ public class StationView extends CellView {
 
     public StationView(GameView gw, Vector2 gridPos) {
         super(gw,gridPos);
-        enable();
-        this.pv = new PinView(gw,3);
-        this.getChildren().add(pv);
-    }
 
-    private void enable() {
         Image img = new ImageGetter().getImageOf(ImagesEnum.STATION);
         sprite = new ImageView();
 
@@ -36,6 +31,13 @@ public class StationView extends CellView {
         sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
         sprite.setImage(img);
         this.getChildren().add(sprite);
+
+    }
+
+    public void enable() {
+
+        this.pv = new PinView(gw,Game.get().getAmountOf(gridPos));
+        this.getChildren().add(pv);
 
         if(Game.get().getDebug()>2) {
             Text t = new Text(gridPos.toString());

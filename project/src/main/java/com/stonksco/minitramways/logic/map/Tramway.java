@@ -11,6 +11,7 @@ public class Tramway implements PlaceToBe {
 
 	Line line;
 	ArrayList<People> people;
+	private int amount = (int)(Math.random()*5);
 	/**
 	 * Station visit�e avant la station courante
 	 * Cette donn�e permet de savoir dans quelle direction le tram se dirige
@@ -44,18 +45,12 @@ public class Tramway implements PlaceToBe {
 		linePos = 0;
 	}
 
-
-	public void moveTo(LinePart part, int pos) {
-
-	}
-
 	/**
 	 * Retourne le nombre de personnes actuellement � cet endroit
 	 * @return le nombre de personnes | -1 si le lieu ne "stocke" pas les personnes
 	 */
 	public int Amount() {
-		// TODO - implement Tramway.Amount
-		throw new UnsupportedOperationException();
+		return amount;
 	}
 
 	/**

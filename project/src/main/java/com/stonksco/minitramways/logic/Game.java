@@ -101,7 +101,14 @@ public class Game {
         return map.getTramsOf(lineID);
     }
 
-
+    /**
+     * Retourne le nombre de personnes à un endroit donné
+     * @param pos l'endroit en question
+     * @return nombre de personnes
+     */
+    public int getAmountOf(Vector2 pos) {
+        return map.getAmountOf(pos);
+    }
 
 
 }
