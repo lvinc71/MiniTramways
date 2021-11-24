@@ -25,6 +25,7 @@ public class StationView extends CellView {
         super(gw,gridPos);
         enable();
         this.pv = new PinView(gw,3);
+        this.getChildren().add(pv);
     }
 
     private void enable() {

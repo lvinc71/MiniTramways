@@ -14,6 +14,12 @@ public class Station extends Building {
 
 	HashMap<Integer,Line> lines;
 
+	
+	/**
+	 * Nombre personne dans la station
+	 */
+	private  int amount = 0;
+
 	/**
 	 * Nombre maximal de lignes qui peuvent désservir la station
 	 */
