@@ -28,6 +28,7 @@ public class StationsLayer extends GridView{
      */
     public void addStationAt(Vector2 at) {
         StationView s = new StationView(gw,at);
+        s.enable();
         stations.remove(this.getCellAt(at));
         stations.put(at,s);
         this.add(s,(int)at.getX(),(int)at.getY());

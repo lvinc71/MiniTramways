@@ -7,6 +7,7 @@ import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.ImageGetter;
 import com.stonksco.minitramways.views.items.ImagesEnum;
 import javafx.event.EventHandler;
+import com.stonksco.minitramways.views.items.PinView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -22,20 +23,25 @@ import javafx.scene.text.Text;
 public class StationView extends CellView {
 
     private ImageView sprite;
+    private PinView pv;
+
 
     public StationView(GameView gw, Vector2 gridPos) {
         super(gw,gridPos);
-        enable();
-    }
 
-    private void enable() {
         Image img = new ImageGetter().getImageOf(ImagesEnum.STATION);
         sprite = new ImageView();
 
         sprite.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.95d));
         sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
         sprite.setImage(img);
+        
+    }
 
+    public void enable() {
+
+        this.pv = new PinView(gw,Game.get().getAmountOf(gridPos));
+        this.getChildren().add(pv);
 
         // Affichage coordonnées
         if(Game.get().getDebug()>2) {
