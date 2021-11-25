@@ -14,6 +14,12 @@ public class Station extends Building {
 
 	HashMap<Integer,Line> lines;
 
+	
+	/**
+	 * Nombre personne dans la station
+	 */
+	private int amount = (int)(Math.random()*5);
+
 	/**
 	 * Nombre maximal de lignes qui peuvent désservir la station
 	 */
@@ -61,8 +67,7 @@ public class Station extends Building {
 	 * @return le nombre de personnes | -1 si le lieu ne "stocke" pas les personnes
 	 */
 	public int Amount() {
-		// TODO - implement Station.Amount
-		throw new UnsupportedOperationException();
+		return amount;
 	}
 
 	/**

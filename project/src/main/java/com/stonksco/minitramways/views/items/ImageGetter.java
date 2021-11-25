@@ -75,6 +75,11 @@ public class ImageGetter {
                     Game.Debug(4,"found URL for OFFICE image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
+                case PIN:
+                    imgPath = getClass().getResource("/assets/pin.png");
+                    Game.Debug(4,"found url for pin image : " +imgPath);
+                    image = new Image(imgPath.toString());
+                    break;
             }
         } catch(Exception e) {
             Game.Debug(1,"ERROR loading an asset : "+e.getMessage());

@@ -5,6 +5,7 @@ import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.ImageGetter;
 import com.stonksco.minitramways.views.items.ImagesEnum;
+import com.stonksco.minitramways.views.items.PinView;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,8 +23,9 @@ public class TramView extends Group {
 
 
     private ImageView sprite;
+    private PinView pv;
 
-    public TramView(LineView lv,double at, GameView gw, int colorID) {
+    public TramView(LineView lv,double at, GameView gw, int colorID, int peopleAmount) {
         super();
         this.lv = lv;
         this.gw = gw;
@@ -78,8 +80,17 @@ public class TramView extends Group {
         sprite.translateXProperty().bind(sprite.fitWidthProperty().divide(-2d));
         sprite.translateYProperty().bind(sprite.fitHeightProperty().divide(-2d));
 
-
         this.getChildren().add(sprite);
+
+
+        // Pin
+
+        if(peopleAmount>0) {
+            pv = new PinView(gw,peopleAmount);
+            this.getChildren().add(pv);
+            pv.translateXProperty().bind(sprite.fitWidthProperty().multiply(-0.5d));
+            pv.translateYProperty().bind(sprite.fitHeightProperty().multiply(-1d));
+        }
 
         positionAt(at);
 

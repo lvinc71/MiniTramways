@@ -591,5 +591,18 @@ public class GameMap {
         return this.lines.get(lineID).getLastIndex();
     }
 
+    /**
+     * Retourne le nombre de personnes à un endroit donné
+     * @param pos l'endroit en question
+     * @return nombre de personnes
+     */
+    public int getAmountOf(Vector2 pos) {
+        int res = -1;
+        if(this.getCellAt(pos).getBuilding() instanceof PlaceToBe) {
+            res = getCellAt(pos).getBuilding().Amount();
+            Game.Debug(1,"TEMP : PlaceToBe trouvée, amount retourné : "+res);
+        }
+        return res;
+    }
 
 }
