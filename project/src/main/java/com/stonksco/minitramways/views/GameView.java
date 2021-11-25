@@ -47,6 +47,7 @@ public class GameView extends Scene implements Listener {
     private CellInteractionsLayer gridPins; // Épingles représentant le nombre de personnes
     private AreasLayer areasPane; // Quartiers
     private LinesLayer linesPane; // Lignes et trams
+    private RadiusLayer radiusLayer; // Rayons des stations
 
     private StackPane mainPane; // Conteneur principal remplissant la fenêtre
     private Pane centerPane; // Conteneur central contenant la carte du jeu
@@ -180,11 +181,13 @@ public class GameView extends Scene implements Listener {
         gridPins = new CellInteractionsLayer(this,s);
         areasPane = new AreasLayer(this);
         linesPane = new LinesLayer(this);
+        radiusLayer = new RadiusLayer(this);
 
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
         centerPane.getChildren().add(gridBuildings);
         centerPane.getChildren().add(linesPane);
+        centerPane.getChildren().add(radiusLayer);
         centerPane.getChildren().add(gridStations);
         centerPane.getChildren().add(gridPins);
 
@@ -203,6 +206,7 @@ public class GameView extends Scene implements Listener {
         layersList.add(gridPins);
         layersList.add(areasPane);
         layersList.add(linesPane);
+        layersList.add(radiusLayer);
 
         for (Pane layer:layersList) {
             layer.prefWidthProperty().bind(gridDisplay.widthProperty());
@@ -287,6 +291,14 @@ public class GameView extends Scene implements Listener {
         resetCellSelection();
     }
 
+
+    public void CellEnter(Vector2 cell) {
+        this.gridStations.showRadiusOf(cell);
+    }
+
+    public void CellExit(Vector2 cell) {
+        this.gridStations.hideRadiusOf(cell);
+    }
 
     /**
      * Réinitialise les cellules actuellement sélectionnées
@@ -438,6 +450,10 @@ public class GameView extends Scene implements Listener {
      */
     public void Update() {
         linesPane.Update();
+    }
+
+    public RadiusLayer getRadiusLayer() {
+        return radiusLayer;
     }
 }
 
