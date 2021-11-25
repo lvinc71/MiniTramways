@@ -35,6 +35,7 @@ public class StationView extends CellView {
         sprite.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.95d));
         sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
         sprite.setImage(img);
+        this.getChildren().add(sprite);
         
     }
 
@@ -52,7 +53,7 @@ public class StationView extends CellView {
             this.getChildren().add(t);
         }
 
-        this.getChildren().add(sprite);
+
     }
 
     public void showRadius() {

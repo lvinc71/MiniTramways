@@ -73,7 +73,8 @@ public class GameView extends Scene implements Listener {
             Map.entry(ColorEnum.COMMERCIAL_BACKGROUND,Color.web("0xEE6F66",1)),
             Map.entry(ColorEnum.COMMERCIAL_BORDER,Color.web("0xFF8A6D",1)),
             Map.entry(ColorEnum.OFFICE_BACKGROUND,Color.web("0x53B0D1",1)),
-            Map.entry(ColorEnum.OFFICE_BORDER,Color.web("0x65D6FF",1))
+            Map.entry(ColorEnum.OFFICE_BORDER,Color.web("0x65D6FF",1)),
+            Map.entry(ColorEnum.PIN_COLOR,Color.web("0xED362E",1))
     );
 
     // Sélection de cellules
@@ -279,6 +280,8 @@ public class GameView extends Scene implements Listener {
                 else {
                     firstCell=secondCell;
                     secondCell=null;
+                    firstCell.getChildren().remove(tempStation);
+                    tempStation = null;
                 }
 
             }
