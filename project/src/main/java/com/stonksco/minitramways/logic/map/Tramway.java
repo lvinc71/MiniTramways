@@ -118,4 +118,9 @@ public class Tramway implements PlaceToBe {
 		
 	}
 
+	public void positionAt(double linePos) {
+		this.linePos = linePos;
+		currentPart = line.getPartAt(linePos);
+	}
+
 }

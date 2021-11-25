@@ -51,8 +51,6 @@ public class LinePart {
         this.endStation = end;
         if(first==null)
             this.setPos(0,100,0);
-
-
     }
 
     public LinePart getNext() {
@@ -68,6 +66,10 @@ public class LinePart {
 
     public boolean add(LinePart partToAdd) {
         boolean res = false;
+
+
+
+
             // Cas où on est du côté droit de la ligne
             if(partToAdd.startStation.equals(this.endStation) && next==null) {
                 this.next = partToAdd;
@@ -86,6 +88,7 @@ public class LinePart {
                     //partToAdd.reversePositions();
                 }
                 Game.Debug(3,"Line "+line.getID()+" extended from left.");
+
                 res=true;
             } else {
                 if(next!=null)
@@ -106,8 +109,24 @@ public class LinePart {
      */
     public LinePart divide(Vector2 start, Vector2 end ,Vector2 at) {
         LinePart res = null;
+
+
         if(at!=null) {
             if(startStation.equals(start) && endStation.equals(end)) {
+
+                // Calculs préliminaires pour l'ajustement de la position des trams
+                double oldLength = Vector2.Distance(startStation,endStation);
+
+                // On récupère tous les trams qui sont actuellement sur ce tronçon
+                ArrayList<Tramway> trams = new ArrayList<>();
+
+                for(Tramway t : line.getTrams()) {
+                    if(t.getLinePos()>=this.start && t.getLinePos()<this.end)
+                        trams.add(t);
+                }
+
+
+
                 LinePart newPart = new LinePart(line,at,end,line.getFirstPart());
                 newPart.next = this.next;
                 newPart.prec = this;
@@ -116,6 +135,32 @@ public class LinePart {
                 this.next.setPos(this.end,this.end+100,1);
                 res=newPart;
                 Game.Debug(2,"Line part "+this+" divided at "+at);
+
+
+                // Ajustement de la position des trams
+                // On calcule la nouvelle longueur de ce tronçon
+                double newLength = Vector2.Distance(this.startStation,this.endStation);
+                double intersectLinePos = 100d*(newLength/oldLength);
+
+                for(Tramway t : trams) {
+                    // On calcule la nouvelle position sur le tronçon de chaque tram
+                    double posInPercent = t.getLinePos()%100;
+                    double distanceToStart = oldLength*(posInPercent/100d);
+                    double newLinePos;
+                    if(distanceToStart<=newLength)
+                        // Cas où le tram se situe à gauche de la division
+                        newLinePos = this.start+(100*(distanceToStart/newLength));
+                    else
+                        // Droite de la division
+                        newLinePos = this.end+(100*((distanceToStart-newLength)/(oldLength-newLength)));
+
+                    Game.Debug(2,"Tramway moved from "+t.getLinePos()+" to "+newLinePos+" after line part division.");
+                    t.positionAt(newLinePos);
+
+                }
+
+
+
             } else {
                 if (next!=null)
                     res=next.divide(start,end,at);
