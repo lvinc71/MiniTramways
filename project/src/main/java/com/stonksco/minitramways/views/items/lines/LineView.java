@@ -2,8 +2,7 @@ package com.stonksco.minitramways.views.items.lines;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.LinePart;
-import com.stonksco.minitramways.logic.map.Tramway;
+import com.stonksco.minitramways.logic.map.lines.Tramway;
 import com.stonksco.minitramways.views.Clock;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.layers.LinesLayer;
@@ -11,25 +10,27 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Représente une ligne et les trams associés
  */
 public class LineView extends Group {
 
-    private GameView gw;
-    private LinesLayer layer;
+    private final GameView gw;
+    private final LinesLayer layer;
     // Liste des trams, stockés avec leur identifiant (1..n)
     private HashMap<Integer,TramView> trams;
 
-    private Color color;
-    private int colorId;
-    private int lineID;
+    private final Color color;
+    private final int colorId;
+    private final int lineID;
 
     // Stocke les différents tronçons de la ligne.
     // Pour chaque tronçon, le vecteur associé correspond aux positions de début (x) et fin (y) dans la ligne
-    private HashMap<Vector2, LinePartView> parts;
+    private final HashMap<Vector2, LinePartView> parts;
 
     public LineView(GameView gw, LinesLayer layer, int lineID) {
         super();
@@ -49,7 +50,7 @@ public class LineView extends Group {
 
             Vector2 posV = new Vector2(pos,pos+100);
             LinePartView lp = addPart(posV,(Vector2)v.getKey(),(Vector2)v.getValue());
-            Game.Debug(2,"VIEW : Drawn line part "+(Vector2)v.getKey()+"-----"+(Vector2)v.getValue()+"  at indexes "+posV);
+            Game.Debug(2,"VIEW : Drawn line part "+ v.getKey() +"-----"+ v.getValue() +"  at indexes "+posV);
             pos+=100;
         }
 

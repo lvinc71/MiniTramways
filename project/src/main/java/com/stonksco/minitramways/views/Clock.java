@@ -8,15 +8,17 @@ import javafx.animation.AnimationTimer;
  */
 public class Clock extends AnimationTimer {
 
-    private float gameTimeSpeedFactor = 1;
+    private final float gameTimeSpeedFactor = 1;
     private long lastUpdate = 0;
     private long now = 0;
+    private long elapsed = 0;
+    private long gameElapsed = 0;
 
     private Clock() {
 
     }
 
-    private static Clock instance = new Clock();
+    private static final Clock instance = new Clock();
 
     public static Clock get() {
         return instance;
@@ -28,6 +30,8 @@ public class Clock extends AnimationTimer {
         Game.get().Update();
         GameView.FrameUpdate();
         lastUpdate = now;
+        elapsed += DeltaTime();
+        gameElapsed += GameDeltaTimeNs();
     }
 
     public long DeltaTime() {
@@ -35,7 +39,7 @@ public class Clock extends AnimationTimer {
     }
 
     /**
-     * Retourne le delta en secondes
+     * Retourne le delta in-game en secondes
      * @return
      */
     public double GameDeltaTime() {
@@ -43,11 +47,19 @@ public class Clock extends AnimationTimer {
     }
 
     /**
-     * Retourne le delta en nanosecondes
+     * Retourne le delta in-game en nanosecondes
      * @return
      */
     public long GameDeltaTimeNs() {
         return (long)((now-lastUpdate)*gameTimeSpeedFactor);
+    }
+
+    /**
+     * Retourne le temps in-game écoulé depuis le début de la partie en ns
+     * @return
+     */
+    public long GameElapsed() {
+        return gameElapsed;
     }
 
 }

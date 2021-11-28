@@ -2,22 +2,18 @@ package com.stonksco.minitramways.views.layers;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.map.Area;
-import com.stonksco.minitramways.logic.map.AreaTypes;
-import com.stonksco.minitramways.logic.map.building.Shop;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.areas.AreaView;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AreasLayer extends Pane {
 
-    private GameView gw;
+    private final GameView gw;
 
-    private ArrayList<AreaView> areas;
+    private final ArrayList<AreaView> areas;
 
     private AreaView area;
 

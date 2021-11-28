@@ -1,9 +1,5 @@
 package com.stonksco.minitramways.views;
 
-import javafx.scene.paint.Color;
-
-import java.util.Map;
-
 public enum ColorEnum {
     LINE_GOLD,
     LINE_BLUE,

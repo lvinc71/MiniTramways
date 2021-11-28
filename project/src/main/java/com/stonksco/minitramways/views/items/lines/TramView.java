@@ -1,7 +1,6 @@
 package com.stonksco.minitramways.views.items.lines;
 
 import com.stonksco.minitramways.logic.Game;
-import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.ImageGetter;
 import com.stonksco.minitramways.views.items.ImagesEnum;
@@ -10,19 +9,17 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.util.HashMap;
-
 /**
  * Gère l'affichage d'un tram
  */
 public class TramView extends Group {
 
-    private LineView lv;
+    private final LineView lv;
     private LinePartView lp;
-    private GameView gw;
+    private final GameView gw;
 
 
-    private ImageView sprite;
+    private final ImageView sprite;
     private PinView pv;
 
     public TramView(LineView lv,double at, GameView gw, int colorID, int peopleAmount) {

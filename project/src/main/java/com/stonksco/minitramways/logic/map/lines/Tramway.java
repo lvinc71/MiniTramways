@@ -1,8 +1,9 @@
-package com.stonksco.minitramways.logic.map;
+package com.stonksco.minitramways.logic.map.lines;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.People;
-import com.stonksco.minitramways.logic.map.building.Station;
+import com.stonksco.minitramways.logic.map.PlaceToBe;
+import com.stonksco.minitramways.logic.map.buildings.Station;
 import com.stonksco.minitramways.views.Clock;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class Tramway implements PlaceToBe {
 
 	Line line;
 	ArrayList<People> people;
-	private int amount = (int)(Math.random()*5);
+	private final int amount = (int)(Math.random()*5);
 	/**
 	 * Station visit�e avant la station courante
 	 * Cette donn�e permet de savoir dans quelle direction le tram se dirige
@@ -54,7 +55,7 @@ public class Tramway implements PlaceToBe {
 	}
 
 	/**
-	 * D�place une personne dans l'endroit courant
+	 * Déplace une personne dans l'endroit courant
 	 * @param p
 	 */
 	public void Enter(People p) {

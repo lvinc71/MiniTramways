@@ -1,10 +1,14 @@
 package com.stonksco.minitramways.logic;
 
-import com.stonksco.minitramways.logic.map.*;
-import com.stonksco.minitramways.logic.map.building.Building;
-import com.stonksco.minitramways.logic.map.building.BuildingEnum;
+import com.stonksco.minitramways.logic.map.Area;
+import com.stonksco.minitramways.logic.map.GameMap;
+import com.stonksco.minitramways.logic.map.lines.Tramway;
+import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Game {
 

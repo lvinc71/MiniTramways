@@ -2,10 +2,11 @@ package com.stonksco.minitramways.views.layers.cells;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.BuildingEnum;
+import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.ImageGetter;
 import com.stonksco.minitramways.views.items.ImagesEnum;
+import com.stonksco.minitramways.views.items.PinView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -14,10 +15,9 @@ import javafx.scene.image.ImageView;
  */
 public class BuildingView extends CellView {
     private ImageView sprite;
+    private PinView pv;
 
-    private int people = 0;
-
-    private BuildingEnum type;
+    private final BuildingEnum type;
 
     public BuildingView(GameView gw, Vector2 gridPos, BuildingEnum type) {
         super(gw,gridPos);
@@ -58,6 +58,29 @@ public class BuildingView extends CellView {
         int rotation = ((int)gridPos.getX() + (int)gridPos.getY())%4;
         sprite.setRotate(rotation*90);
 
+    }
+
+    /**
+     * Définit le nombre de personnes à affficher
+     * @param nb
+     */
+    public void setAmount(int nb) {
+        if(pv!=null) {
+            if(pv.getNb()!=nb) {
+                this.getChildren().remove(pv);
+                pv=null;
+                createPin(nb);
+            }
+        }
+        else {
+            createPin(nb);
+        }
+
+    }
+
+    private void createPin(int nb) {
+        pv = new PinView(gw,nb);
+        this.getChildren().add(pv);
     }
 
 }

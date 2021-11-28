@@ -4,7 +4,7 @@ import com.stonksco.minitramways.control.MapController;
 import com.stonksco.minitramways.control.interfaces.Listener;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.BuildingEnum;
+import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
 import com.stonksco.minitramways.views.layers.*;
 import com.stonksco.minitramways.views.layers.cells.CellView;
 import com.stonksco.minitramways.views.layers.cells.GridDisplayCell;
@@ -28,36 +28,13 @@ import java.util.Map;
 
 public class GameView extends Scene implements Listener {
 
-    public static void FrameUpdate() {
-        for(GameView gw : instances) {
-            gw.Update();
-        }
-    }
-
-    private static ArrayList<GameView> instances = new ArrayList<>();
-
-
-    private Group root;
-    private Stage primaryStage;
-
-    // Calques et conteneurs
-    private GridDisplay gridDisplay; // Points de la grille
-    private StationsLayer gridStations; // Stations
-    private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
-    private CellInteractionsLayer gridPins; // Épingles représentant le nombre de personnes
-    private AreasLayer areasPane; // Quartiers
-    private LinesLayer linesPane; // Lignes et trams
-    private RadiusLayer radiusLayer; // Rayons des stations
-
-    private StackPane mainPane; // Conteneur principal remplissant la fenêtre
-    private Pane centerPane; // Conteneur central contenant la carte du jeu
-
+    private static final ArrayList<GameView> instances = new ArrayList<>();
+    private final Group root;
+    private final Stage primaryStage;
     // Contrôleurs
-    private MapController mapController;
-
-
+    private final MapController mapController;
     // Couleurs
-    private Map<ColorEnum,Color> colors = Map.ofEntries(
+    private final Map<ColorEnum,Color> colors = Map.ofEntries(
             Map.entry(ColorEnum.LINE_BLUE,Color.web("0x3333FF",1)),
             Map.entry(ColorEnum.LINE_CYAN,Color.web("0x0099CC",1)),
             Map.entry(ColorEnum.LINE_GOLD,Color.web("0xCCCC33",1)),
@@ -76,14 +53,24 @@ public class GameView extends Scene implements Listener {
             Map.entry(ColorEnum.OFFICE_BORDER,Color.web("0x65D6FF",1)),
             Map.entry(ColorEnum.PIN_COLOR,Color.web("0xED362E",1))
     );
-
-    // Sélection de cellules
-    private CellView firstCell = null;
-    private CellView secondCell = null;
-
     // Taille des cellules
     DoubleProperty cellSizeX;
     DoubleProperty cellSizeY;
+    // Calques et conteneurs
+    private GridDisplay gridDisplay; // Points de la grille
+    private StationsLayer gridStations; // Stations
+    private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
+    private CellInteractionsLayer gridPins; // Épingles représentant le nombre de personnes
+    private AreasLayer areasPane; // Quartiers
+    private LinesLayer linesPane; // Lignes et trams
+    private RadiusLayer radiusLayer; // Rayons des stations
+    private StackPane mainPane; // Conteneur principal remplissant la fenêtre
+    private Pane centerPane; // Conteneur central contenant la carte du jeu
+    // Sélection de cellules
+    private CellView firstCell = null;
+    private CellView secondCell = null;
+    // Station temporaire pour affichage ; aucun lien métier
+    private StationView tempStation;
 
 
     /**
@@ -106,13 +93,18 @@ public class GameView extends Scene implements Listener {
         this.setFill(getColor(ColorEnum.BACKGROUND));
     }
 
+    public static void FrameUpdate() {
+        for(GameView gw : instances) {
+            gw.Update();
+        }
+    }
+
     public void enable() {
         initWindowLayout();
         initMapLayers();
-        updateBuildings();
+        gridBuildings.updateBuildings();
         Clock.get().start();
     }
-
 
     /**
      * Initialise les zones de la fenêtre
@@ -167,7 +159,6 @@ public class GameView extends Scene implements Listener {
         Game.Debug(3,"Center container got width of "+centerPane.widthProperty().get()+" (wanted: "+centerPane.prefWidthProperty().get()+" ) pixels and height of "+centerPane.heightProperty().get()+" pixels (wanted: "+centerPane.prefHeightProperty().get()+" )");
 
     }
-
 
     /**
      * Initialise l'affichage de la grille
@@ -233,13 +224,6 @@ public class GameView extends Scene implements Listener {
         }
 
     }
-
-
-
-
-
-    // Station temporaire pour affichage ; aucun lien métier
-    private StationView tempStation;
 
     /**
      * Appelée au clic sur une cellule de la grille
@@ -385,31 +369,6 @@ public class GameView extends Scene implements Listener {
         return this.colors.get(c);
     }
 
-    public void updateBuildings(){
-        HashMap<BuildingEnum,ArrayList<Vector2>> buildings = Game.get().getBuildings();
-
-       ArrayList<Vector2> pos;
-       pos =buildings.get(BuildingEnum.HOUSE);
-       if(pos!=null){
-           for(int i=0; i<pos.size();i++){
-               addBuildingAt(pos.get(i),BuildingEnum.HOUSE);
-           }
-       }
-        pos =buildings.get(BuildingEnum.SHOP);
-        if(pos!=null) {
-            for (int i = 0; i < pos.size(); i++) {
-                addBuildingAt(pos.get(i),BuildingEnum.SHOP);
-            }
-        }
-        pos =buildings.get(BuildingEnum.OFFICE);
-        if(pos!=null) {
-            for (int i = 0; i < pos.size(); i++) {
-                addBuildingAt(pos.get(i),BuildingEnum.OFFICE);
-            }
-        }
-
-    }
-
 
     /**
      * Ajoute une batiment aux coordonnées passées en paramètres
@@ -453,6 +412,8 @@ public class GameView extends Scene implements Listener {
      */
     public void Update() {
         linesPane.Update();
+        gridBuildings.updateBuildings();
+        gridBuildings.updateBuildingsPins();
     }
 
     public RadiusLayer getRadiusLayer() {

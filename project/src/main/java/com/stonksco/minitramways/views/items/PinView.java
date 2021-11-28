@@ -2,16 +2,15 @@ package com.stonksco.minitramways.views.items;
 
 import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
-import javafx.scene.Group;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.*;
 
 public class PinView extends StackPane {
 
     private ImageView pinImage;
-    private int nb;
+    private final int nb;
 
 
     public PinView(GameView gw, int nb) {
@@ -26,7 +25,7 @@ public class PinView extends StackPane {
             text.setFont(Font.font("Helvetica", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 16));
             text.setFill(gw.getColor(ColorEnum.PIN_COLOR));
 
-            pinImage.fitHeightProperty().bind(gw.getCellSizeY());
+            pinImage.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.85d+(nb/15d)));
             pinImage.setPreserveRatio(true);
             pinImage.translateYProperty().bind(gw.getCellSizeY().multiply(-0.5d));
             pinImage.setImage(img);
@@ -41,6 +40,10 @@ public class PinView extends StackPane {
             this.getChildren().add(text);
 
         }
+    }
+
+    public int getNb() {
+        return nb;
     }
 
 }
