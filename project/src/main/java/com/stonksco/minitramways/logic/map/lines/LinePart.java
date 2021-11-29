@@ -1,10 +1,10 @@
-package com.stonksco.minitramways.logic.map;
+package com.stonksco.minitramways.logic.map.lines;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.Station;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LinePart {
 
@@ -18,7 +18,7 @@ public class LinePart {
         return line;
     }
 
-    private Line line;
+    private final Line line;
 
     public int getStart() {
         return start;
@@ -46,8 +46,6 @@ public class LinePart {
         this.endStation = end;
         if(first==null)
             this.setPos(0,100,0);
-
-
     }
 
     public LinePart getNext() {
@@ -63,6 +61,10 @@ public class LinePart {
 
     public boolean add(LinePart partToAdd) {
         boolean res = false;
+
+
+
+
             // Cas où on est du côté droit de la ligne
             if(partToAdd.startStation.equals(this.endStation) && next==null) {
                 this.next = partToAdd;
@@ -70,7 +72,7 @@ public class LinePart {
                 partToAdd.setPos(this.end,this.end+100,1);
                 Game.Debug(3,"Line "+line.getID()+" extended from right.");
                 res=true;
-            } else if(partToAdd.startStation.equals(this.startStation) && prec==null){
+            } else if(partToAdd.endStation.equals(this.startStation) && prec==null){
                 // Cas où on est du côté gauche
                 this.prec = partToAdd;
                 partToAdd.next = this;
@@ -78,9 +80,10 @@ public class LinePart {
                 partToAdd.setPos(this.start-100,this.start,2);
                 if(partToAdd.start<0) {
                     // On inverse les positions départ et arrivée pour conserver l'ordre tout au long de la ligne
-                    partToAdd.reversePositions();
+                    //partToAdd.reversePositions();
                 }
                 Game.Debug(3,"Line "+line.getID()+" extended from left.");
+
                 res=true;
             } else {
                 if(next!=null)
@@ -101,8 +104,24 @@ public class LinePart {
      */
     public LinePart divide(Vector2 start, Vector2 end ,Vector2 at) {
         LinePart res = null;
+
+
         if(at!=null) {
             if(startStation.equals(start) && endStation.equals(end)) {
+
+                // Calculs préliminaires pour l'ajustement de la position des trams
+                double oldLength = Vector2.Distance(startStation,endStation);
+
+                // On récupère tous les trams qui sont actuellement sur ce tronçon
+                ArrayList<Tramway> trams = new ArrayList<>();
+
+                for(Tramway t : line.getTrams()) {
+                    if(t.getLinePos()>=this.start && t.getLinePos()<this.end)
+                        trams.add(t);
+                }
+
+
+
                 LinePart newPart = new LinePart(line,at,end,line.getFirstPart());
                 newPart.next = this.next;
                 newPart.prec = this;
@@ -111,6 +130,32 @@ public class LinePart {
                 this.next.setPos(this.end,this.end+100,1);
                 res=newPart;
                 Game.Debug(2,"Line part "+this+" divided at "+at);
+
+
+                // Ajustement de la position des trams
+                // On calcule la nouvelle longueur de ce tronçon
+                double newLength = Vector2.Distance(this.startStation,this.endStation);
+                double intersectLinePos = 100d*(newLength/oldLength);
+
+                for(Tramway t : trams) {
+                    // On calcule la nouvelle position sur le tronçon de chaque tram
+                    double posInPercent = t.getLinePos()%100;
+                    double distanceToStart = oldLength*(posInPercent/100d);
+                    double newLinePos;
+                    if(distanceToStart<=newLength)
+                        // Cas où le tram se situe à gauche de la division
+                        newLinePos = this.start+(100*(distanceToStart/newLength));
+                    else
+                        // Droite de la division
+                        newLinePos = this.end+(100*((distanceToStart-newLength)/(oldLength-newLength)));
+
+                    Game.Debug(2,"Tramway moved from "+t.getLinePos()+" to "+newLinePos+" after line part division.");
+                    t.positionAt(newLinePos);
+
+                }
+
+
+
             } else {
                 if (next!=null)
                     res=next.divide(start,end,at);
@@ -177,4 +222,65 @@ public class LinePart {
         endStation=temp;
     }
 
+    /**
+     * Retourne les coordonnées sur le tronçon selon le pourcentage fourni en paramètre
+     * Si la position donnée ne correspond pas à ce tronçon, elle sera demandée au tronçon suivant
+     * 0% = Station de départ | 100% = Station d'arrivée
+     * @param at position sur la ligne
+     * @return coordonnées sur la grille
+     */
+    public Vector2 getPosAt(double at) {
+        Vector2 res = null;
+
+        if(start <= at && end > at) {
+            double x = 0;
+            double y =0;
+            if(at==0)
+                res = startStation;
+            else if(at==100)
+                res = endStation;
+            else
+            {
+                y = endStation.getY()-(startStation.getY())*(at/100d)+(startStation.getY());
+                x = endStation.getX()-(startStation.getX())*(at/100d)+(startStation.getX());
+            }
+
+            if(res==null)
+                res = new Vector2(x,y);
+        } else {
+            if(next!=null)
+                res = next.getPosAt(at);
+        }
+        return res;
+    }
+
+    public double getLength() {
+        return Vector2.Distance(startStation,endStation);
+    }
+
+
+    public LinePart getPartAt(double at) {
+        LinePart res = null;
+        if(start<=at && end>at)
+            res = this;
+        else
+            if(next!=null)
+                res = next.getPartAt(at);
+
+        return res;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LinePart linePart = (LinePart) o;
+        return start == linePart.start && end == linePart.end && startStation.equals(linePart.startStation) && endStation.equals(linePart.endStation) && line.equals(linePart.line);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startStation, endStation, line, start, end);
+    }
 }

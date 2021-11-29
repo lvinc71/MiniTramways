@@ -8,11 +8,11 @@ import com.stonksco.minitramways.views.layers.cells.StationView;
 
 import java.util.HashMap;
 
-public class StationsView extends GridView{
+public class StationsLayer extends GridView{
 
-    private HashMap<Vector2, StationView> stations;
+    private final HashMap<Vector2, StationView> stations;
 
-    public StationsView(GameView gw, Vector2 size) {
+    public StationsLayer(GameView gw, Vector2 size) {
         super(gw, size);
         stations = new HashMap<>();
         fill(CellView.class);
@@ -27,13 +27,11 @@ public class StationsView extends GridView{
      * @param at
      */
     public void addStationAt(Vector2 at) {
-        CellView cell = gw.getGridDisplay().getCellAt(at);
-        stations.remove(this.getCellAt(at));
         StationView s = new StationView(gw,at);
-        cell.getChildren().add(s);
+        s.enable();
+        stations.remove(this.getCellAt(at));
         stations.put(at,s);
         this.add(s,(int)at.getX(),(int)at.getY());
-
     }
 
     public void updateStations() {
@@ -43,8 +41,20 @@ public class StationsView extends GridView{
         this.getRowConstraints().clear();
         this.fill(CellView.class);
         for(Vector2 v : Game.get().getStations()) {
-            addStationAt(v);
+            addStationAt(v.round());
         }
+    }
+
+    public void showRadiusOf(Vector2 cell) {
+        StationView sv = stations.get(cell);
+        if(sv != null)
+            sv.showRadius();
+    }
+
+    public void hideRadiusOf(Vector2 cell) {
+        StationView sv = stations.get(cell);
+        if(sv != null)
+            sv.hideRadius();
     }
 
 }

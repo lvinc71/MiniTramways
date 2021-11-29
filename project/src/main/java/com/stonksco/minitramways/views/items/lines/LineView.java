@@ -2,54 +2,55 @@ package com.stonksco.minitramways.views.items.lines;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.views.ColorEnum;
+import com.stonksco.minitramways.logic.map.lines.Tramway;
+import com.stonksco.minitramways.views.Clock;
 import com.stonksco.minitramways.views.GameView;
-import com.stonksco.minitramways.views.layers.LinesView;
+import com.stonksco.minitramways.views.layers.LinesLayer;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Représente une ligne et les trams associés
  */
 public class LineView extends Group {
 
-    private GameView gw;
-    private LinesView layer;
+    private final GameView gw;
+    private final LinesLayer layer;
     // Liste des trams, stockés avec leur identifiant (1..n)
     private HashMap<Integer,TramView> trams;
 
-    private Color color;
-    private int colorId;
+    private final Color color;
+    private final int colorId;
+    private final int lineID;
 
     // Stocke les différents tronçons de la ligne.
     // Pour chaque tronçon, le vecteur associé correspond aux positions de début (x) et fin (y) dans la ligne
-    private HashMap<Vector2, LinePartView> parts;
+    private final HashMap<Vector2, LinePartView> parts;
 
-    public LineView(GameView gw, LinesView layer, int lineID) {
+    public LineView(GameView gw, LinesLayer layer, int lineID) {
         super();
         this.gw = gw;
         this.layer = layer;
         parts = new HashMap<>();
+        this.lineID = lineID;
 
         this.color = layer.getColorFor(lineID);
         this.colorId = layer.getColorId(lineID);
 
-        Set<Map.Entry<Vector2,Vector2>> partsVectors = Game.get().getPartsVectorsOf(lineID);
+        List<Map.Entry<Vector2,Vector2>> partsVectors = Game.get().getPartsVectorsOf(lineID);
 
-        int pos = 0;
+
+        int pos = Game.get().getFirstIndexOf(lineID);
         for(Map.Entry v : partsVectors) {
+
             Vector2 posV = new Vector2(pos,pos+100);
             LinePartView lp = addPart(posV,(Vector2)v.getKey(),(Vector2)v.getValue());
-
-            // Si ce LinePart est le linePart central
-            if(posV.equals(new Vector2(0,100))) {
-                addTram(lp,25);
-            }
-
+            Game.Debug(2,"VIEW : Drawn line part "+ v.getKey() +"-----"+ v.getValue() +"  at indexes "+posV);
             pos+=100;
         }
 
@@ -57,18 +58,18 @@ public class LineView extends Group {
 
     }
 
-    public void addTram(LinePartView lp, int pos) {
+    private void addTram(double at,int peopleAmount) {
         if(trams==null)
             trams = new HashMap<>();
-        if(trams.isEmpty()) {
-            TramView tv = new TramView(this,lp,pos,gw,colorId);
-            trams.put(0,tv);
-            this.getChildren().add(tv);
-        }
+
+        TramView tv = new TramView(this,at,gw,colorId,peopleAmount);
+        trams.put(trams.size(),tv);
+        this.getChildren().add(tv);
+
     }
 
     private LinePartView addPart(Vector2 position, Vector2 from, Vector2 to) {
-        LinePartView lp = new LinePartView(gw,this,from,to,color);
+        LinePartView lp = new LinePartView(gw,this,from,to,(int)position.getX(),(int)position.getY(),color);
         this.parts.put(position,lp);
         return lp;
     }
@@ -80,5 +81,51 @@ public class LineView extends Group {
         this.getChildren().clear();
         this.parts.clear();
     }
+
+    public ReadOnlyDoubleProperty getPosXAt(double at) {
+        return getPartAt(at).getPosXAt(at);
+    }
+
+    public ReadOnlyDoubleProperty getPoxYAt(double at) {
+        return getPartAt(at).getPosYAt(at);
+    }
+
+    public LinePartView getPartAt(double at) {
+        LinePartView res = null;
+        for(Map.Entry e : parts.entrySet()) {
+            if(((Vector2)e.getKey()).getX() <=at && ((Vector2)e.getKey()).getY()>at) {
+                res=(LinePartView)e.getValue();
+                break;
+            }
+        }
+        return res;
+    }
+
+    private double timeSinceLastTramUpdate = 0;
+
+    public void UpdateTrams() {
+        if(timeSinceLastTramUpdate > 0.03) {
+            if (trams == null)
+                trams = new HashMap<>();
+
+            for (TramView tv : trams.values()) {
+                this.getChildren().remove(tv);
+            }
+            this.trams.clear();
+
+            for (Tramway t : Game.get().getTramsOf(this.lineID)) {
+                addTram(t.getLinePos(),t.Amount());
+            }
+            timeSinceLastTramUpdate = 0;
+        } else {
+            timeSinceLastTramUpdate+= Clock.get().GameDeltaTime();
+        }
+
+
+
+    }
+
+
+
 
 }

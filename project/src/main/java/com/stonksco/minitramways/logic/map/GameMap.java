@@ -2,9 +2,10 @@ package com.stonksco.minitramways.logic.map;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.Building;
-import com.stonksco.minitramways.logic.map.building.BuildingEnum;
-import com.stonksco.minitramways.logic.map.building.Station;
+import com.stonksco.minitramways.logic.map.buildings.*;
+import com.stonksco.minitramways.logic.map.lines.Line;
+import com.stonksco.minitramways.logic.map.lines.LinePart;
+import com.stonksco.minitramways.logic.map.lines.Tramway;
 
 import java.util.*;
 import java.util.function.ToDoubleFunction;
@@ -16,13 +17,18 @@ public class GameMap {
     private Vector2 gridSize = null;
 
     // Elements de la map
-    private HashMap<Integer,Line> lines;
+    private HashMap<Integer, Line> lines;
     private HashMap<Integer, Area> areas;
     private HashMap<Vector2, Station> stations;
 
+    // générateurs
+    private BuildingsGenerator bg;
+    private PeopleGenerator pg;
+
 
     public GameMap() {
-
+        bg = new BuildingsGenerator(this);
+        pg = new PeopleGenerator(this);
     }
 
     /**
@@ -54,7 +60,7 @@ public class GameMap {
         initGrid(36,23);
         lines = new HashMap<>();
         initAreas();
-        initBuildings();
+        bg.initBuildings();
 
     }
 
@@ -157,7 +163,7 @@ public class GameMap {
                     Station s = addStation((Vector2)e.getValue());
                     s.addLine(l);
                     s.addLine(with.getLine());
-                    Game.Debug(2,"Intersection processed : Station created at "+(Vector2)e.getValue());
+                    Game.Debug(2,"Intersection processed : Station created at "+ e.getValue());
                 }
             }
         }
@@ -291,9 +297,8 @@ public class GameMap {
     }
 
 
-    public HashMap<Integer, HashMap<Vector2, com.stonksco.minitramways.logic.map.Cell>> getAreas() {
-
-        return null;
+    public HashMap<Integer, Area>  getAreas() {
+        return areas;
     }
 
     public void initAreas() {
@@ -453,17 +458,6 @@ public class GameMap {
 
     }
 
-    public void initBuildings() {
-        for(Area a : areas.values()) {
-            boolean exit=false;
-            while (a.getDensity()<0.2d && !exit) {
-                if(!a.generateBuilding())
-                    exit=true;
-            }
-            Game.Debug(1,"Generated "+a.getBuildings().size()+" buildings in "+a.getType()+" area.");
-        }
-    }
-
 
     public Area getAreaOf(Vector2 pos) {
         Area res = null;
@@ -546,7 +540,7 @@ public class GameMap {
     }
 
 
-    public Set<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
+    public List<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
         return lines.get(lineID).getPartsVectors();
     }
 
@@ -573,5 +567,55 @@ public class GameMap {
         return res;
     }
 
+    public void Update() {
+        // Déplacement des trams
+        for(Line l : lines.values()) {
+            l.Update();
+        }
+        // Génération des bâtiments
+        bg.buildingsGeneration();
+        pg.peopleGeneration();
+
+    }
+
+    public ArrayList<Tramway> getTramsOf(int lineID) {
+        return this.lines.get(lineID).getTrams();
+    }
+
+    public int getFirstIndexOf(int lineID) {
+        return this.lines.get(lineID).getFirstIndex();
+    }
+
+    public int getLastIndexOf(int lineID) {
+        return this.lines.get(lineID).getLastIndex();
+    }
+
+    /**
+     * Retourne le nombre de personnes à un endroit donné
+     * @param pos l'endroit en question
+     * @return nombre de personnes
+     */
+    public int getAmountOf(Vector2 pos) {
+        int res = -1;
+        if(this.getCellAt(pos).getBuilding() instanceof PlaceToBe) {
+            res = getCellAt(pos).getBuilding().Amount();
+        }
+        return res;
+    }
+
+    public House getRandomHouse() {
+        House res = null;
+
+        Area a = null;
+        while(a==null) {
+            int nb = (int)(Math.random()*areas.size());
+            a = areas.get(nb);
+            if(a.getType() != AreaTypes.residential)
+                a=null;
+        }
+
+        res = (House)a.getRandomBuilding();
+        return res;
+    }
 
 }

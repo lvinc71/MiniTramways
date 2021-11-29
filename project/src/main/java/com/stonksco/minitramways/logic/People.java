@@ -2,37 +2,40 @@ package com.stonksco.minitramways.logic;
 
 import com.stonksco.minitramways.logic.map.PlaceToBe;
 
+import java.util.ArrayList;
+
 public class People {
+
+	private static ArrayList<People> instances = new ArrayList<>();
+
+	public static ArrayList<People> getAll() {
+		return (ArrayList<People>)instances.clone();
+	}
 
 	PlaceToBe place;
 	/**
-	 * Temps en secondes depuis lequel la personne attend (n'est pas incrémenté si la personne n'a aucun target, et est réinitialisé é 0 dés que la personne se déplace)
+	 * Temps en secondes depuis lequel la personne attend (n'est pas incrémenté si la personne n'a aucun target, et est réinitialisé à 0 dès que la personne se déplace)
 	 */
 	private double waitingSince;
 
-	/**
-	 * Incrémente le temps depuis lequel la personne attend
-	 * @param time
-	 */
-	public void addWait(double time) {
-		// TODO - implement People.addWait
-		throw new UnsupportedOperationException();
+
+	public People(PlaceToBe place) {
+		instances.add(this);
+		this.place = place;
 	}
 
 	/**
 	 * Retourne le temps depuis lequel la personne attend
 	 */
 	public double getWait() {
-		// TODO - implement People.getWait
-		throw new UnsupportedOperationException();
+		return waitingSince;
 	}
 
 	/**
 	 * Réinitialise le temps depuis lequel la personne attend é 0.
 	 */
 	public void resetWait() {
-		// TODO - implement People.resetWait
-		throw new UnsupportedOperationException();
+		waitingSince=0;
 	}
 
 	public void moveTo(PlaceToBe place) {

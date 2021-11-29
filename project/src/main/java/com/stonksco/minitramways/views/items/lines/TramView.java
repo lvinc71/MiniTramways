@@ -1,38 +1,32 @@
 package com.stonksco.minitramways.views.items.lines;
 
 import com.stonksco.minitramways.logic.Game;
-import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.items.ImageGetter;
 import com.stonksco.minitramways.views.items.ImagesEnum;
-import com.stonksco.minitramways.views.layers.LinesView;
+import com.stonksco.minitramways.views.items.PinView;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-
-import java.util.HashMap;
 
 /**
  * Gère l'affichage d'un tram
  */
 public class TramView extends Group {
 
-    private LineView lv;
+    private final LineView lv;
     private LinePartView lp;
-    private GameView gw;
+    private final GameView gw;
 
 
-    private ImageView sprite;
-    private HashMap<Integer,LineView> lines;
+    private final ImageView sprite;
+    private PinView pv;
 
-    public TramView(LineView lv, LinePartView lp,int pos, GameView gw, int colorID) {
+    public TramView(LineView lv,double at, GameView gw, int colorID, int peopleAmount) {
         super();
-        this.lp = lp;
         this.lv = lv;
         this.gw = gw;
+        this.lp = lv.getPartAt(at);
 
 
         Image img = null;
@@ -76,9 +70,6 @@ public class TramView extends Group {
         double ratio = img.getWidth()/img.getHeight();
         sprite.fitWidthProperty().bind(sprite.fitHeightProperty().multiply(ratio));
         // Règle la rotation selon le tronçon courant
-        sprite.setRotate(lp.getOrientation());
-
-        positionAt(pos);
 
         sprite.setImage(img);
 
@@ -86,21 +77,29 @@ public class TramView extends Group {
         sprite.translateXProperty().bind(sprite.fitWidthProperty().divide(-2d));
         sprite.translateYProperty().bind(sprite.fitHeightProperty().divide(-2d));
 
-
         this.getChildren().add(sprite);
-        Game.Debug(3,"Tramway created at "+new Vector2(sprite.getX(),sprite.getY())+" in those bounds : "+sprite.getBoundsInLocal());
-    }
 
-    public void positionAt(int percentage) {
-        this.translateYProperty().bind(lp.getPosYAt(percentage));
-        this.translateXProperty().bind(lp.getPosXAt(percentage));
 
-        if(Game.get().getDebug()>2) {
-            Ellipse e = new Ellipse(0,0,3,3);
-            e.setFill(Color.RED);
-            this.getChildren().add(e);
+        // Pin
+
+        if(peopleAmount>0) {
+            pv = new PinView(gw,peopleAmount);
+            this.getChildren().add(pv);
+            pv.translateXProperty().bind(sprite.fitWidthProperty().multiply(-0.5d));
+            pv.translateYProperty().bind(sprite.fitHeightProperty().multiply(-1d));
         }
 
+        positionAt(at);
+
     }
+
+    private void positionAt(double at) {
+        this.layoutXProperty().bind(lv.getPosXAt(at));
+        this.layoutYProperty().bind(lv.getPoxYAt(at));
+        lp = lv.getPartAt(at);
+        this.sprite.setRotate(lp.getOrientation());
+    }
+
+
 
 }

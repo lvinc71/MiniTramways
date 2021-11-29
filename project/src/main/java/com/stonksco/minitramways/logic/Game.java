@@ -1,15 +1,14 @@
 package com.stonksco.minitramways.logic;
 
-import com.stonksco.minitramways.logic.map.AreaTypes;
-import com.stonksco.minitramways.logic.map.Cell;
+import com.stonksco.minitramways.logic.map.Area;
 import com.stonksco.minitramways.logic.map.GameMap;
-import com.stonksco.minitramways.logic.map.building.Building;
-import com.stonksco.minitramways.logic.map.building.BuildingEnum;
+import com.stonksco.minitramways.logic.map.lines.Tramway;
+import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Game {
 
@@ -64,7 +63,7 @@ public class Game {
         return map.getGridSize().clone();
     }
 
-    public HashMap<Integer, HashMap<Vector2, Cell>> getAreas(){
+    public HashMap<Integer, Area> getAreas(){
 
         return getMap().getAreas();
 
@@ -73,7 +72,7 @@ public class Game {
     public HashMap<BuildingEnum,ArrayList<Vector2>> getBuildings(){
         return this.getMap().getBuildings();
     }
-    public Set<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
+    public List<Map.Entry<Vector2,Vector2>> getPartsVectorsOf(int lineID) {
         return map.getPartsVectorsOf(lineID);
     }
 
@@ -90,7 +89,30 @@ public class Game {
         return map.isAtExtremity(pos);
     }
 
+    public void Update() {
+        map.Update();
+    }
 
+    public int getFirstIndexOf(int lineID) {
+        return map.getFirstIndexOf(lineID);
+    }
+
+    public int getLastIndexIOf(int lineID) {
+        return map.getLastIndexOf(lineID);
+    }
+
+    public ArrayList<Tramway> getTramsOf(int lineID) {
+        return map.getTramsOf(lineID);
+    }
+
+    /**
+     * Retourne le nombre de personnes à un endroit donné
+     * @param pos l'endroit en question
+     * @return nombre de personnes
+     */
+    public int getAmountOf(Vector2 pos) {
+        return map.getAmountOf(pos);
+    }
 
 
 }

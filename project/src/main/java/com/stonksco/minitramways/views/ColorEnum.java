@@ -1,9 +1,5 @@
 package com.stonksco.minitramways.views;
 
-import javafx.scene.paint.Color;
-
-import java.util.Map;
-
 public enum ColorEnum {
     LINE_GOLD,
     LINE_BLUE,
@@ -20,5 +16,6 @@ public enum ColorEnum {
     COMMERCIAL_BACKGROUND,
     COMMERCIAL_BORDER,
     OFFICE_BACKGROUND,
-    OFFICE_BORDER
+    OFFICE_BORDER,
+    PIN_COLOR
 }

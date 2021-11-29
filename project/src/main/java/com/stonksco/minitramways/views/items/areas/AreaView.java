@@ -1,70 +1,169 @@
 package com.stonksco.minitramways.views.items.areas;
 
-import com.stonksco.minitramways.logic.Game;
+import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.logic.map.Area;
 import com.stonksco.minitramways.logic.map.AreaTypes;
 import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
-import com.stonksco.minitramways.views.layers.AreasView;
-import javafx.scene.Group;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Paint;
+import com.stonksco.minitramways.views.layers.AreasLayer;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
 
-public class AreaView extends Region {
+import java.util.ArrayList;
 
-    private GameView gw;
+public class AreaView extends Pane {
 
-    private AreaTypes type;
+    private final GameView gw;
+    private final AreaTypes type;
 
-    public AreaView(GameView gw, AreaTypes type, AreasView layer) {
+    private final Path areaShape;
+
+    public AreaView(GameView gw, AreasLayer layer, Area a) {
 
         super();
         this.gw = gw;
-        this.type = type;
+        this.type = a.getType();
 
-        SVGPath e = new SVGPath();
-        this.getChildren().add(e);
+        areaShape = new Path();
+
+
+        ArrayList<Vector2> edgeCells = new ArrayList<Vector2>();
 
         switch(type) {
             case office:
-                e.setContent("M180.09,300.14a240.2,240.2,0,0,1-74.47-11.82l-.28-.09-69.22-5.52h0a51.55,51.55,0,0,1-15.33-8.31A46.37,46.37,0,0,1,3.44,242.58l-.8-7.9a27.32,27.32,0,0,1,1.91-13.17c5.06-12.18,7.86-40.2,7.32-49.57s-2.24-34-2.41-36.31v-.17l0-.17c-.05-.22-.09-.45-.12-.67A95.15,95.15,0,0,1,30.17,58.43l9-10.83a124.81,124.81,0,0,1,96.2-45.1H227V300.1l-46.9,0Z");
-                e.setFill(gw.getColor(ColorEnum.OFFICE_BACKGROUND));
-                e.setStroke(gw.getColor(ColorEnum.OFFICE_BORDER));
-                e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));
+                areaShape.setFill(gw.getColor(ColorEnum.OFFICE_BACKGROUND));
+                areaShape.setStroke(gw.getColor(ColorEnum.OFFICE_BORDER));
 
-                e.scaleXProperty().bind(gw.getCellSizeX().divide(25d));
-                e.scaleYProperty().bind(gw.getCellSizeY().divide(20d));
-                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(0)));
-                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(0)));
+                edgeCells.add(new Vector2(35,6));
+                edgeCells.add(new Vector2(34,6));
+                edgeCells.add(new Vector2(33,6));
+                edgeCells.add(new Vector2(32,6));
+                edgeCells.add(new Vector2(31,6));
+                edgeCells.add(new Vector2(30,6));
+                edgeCells.add(new Vector2(29,7));
+                edgeCells.add(new Vector2(28,7));
+                edgeCells.add(new Vector2(28,8));
+                edgeCells.add(new Vector2(28,9));
+                edgeCells.add(new Vector2(29,10));
+                edgeCells.add(new Vector2(29,11));
+                edgeCells.add(new Vector2(28,12));
+                edgeCells.add(new Vector2(28,13));
+                edgeCells.add(new Vector2(28,14));
+                edgeCells.add(new Vector2(29,15));
+                edgeCells.add(new Vector2(30,15));
+                edgeCells.add(new Vector2(31,16));
+                edgeCells.add(new Vector2(32,16));
+                edgeCells.add(new Vector2(33,16));
+                edgeCells.add(new Vector2(34,16));
+                edgeCells.add(new Vector2(35,16));
+
 
 
                 break;
             case residential:
-                e.setContent("M2.5,2.5H116.73a128.33,128.33,0,0,1,89.2,35.84l16.39,15.71a163.08,163.08,0,0,1,50,107.76l1.15,18.3a149.16,149.16,0,0,1-7,55.73l-1.37,4.25a148.77,148.77,0,0,0-5.66,67L264,338.22a187.16,187.16,0,0,0,9.51,37.5l28.15,76.64L2.5,452.41Z");
-                e.setFill(gw.getColor(ColorEnum.RESIDENTIAL_BACKGROUND));
-                e.setStroke(gw.getColor(ColorEnum.RESIDENTIAL_BORDER));
-                e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));
+                areaShape.setFill(gw.getColor(ColorEnum.RESIDENTIAL_BACKGROUND));
+                areaShape.setStroke(gw.getColor(ColorEnum.RESIDENTIAL_BORDER));
 
-                e.scaleXProperty().bind(gw.getCellSizeX().divide(25));
-                e.scaleYProperty().bind(gw.getCellSizeY().divide(25));
-                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(7.4d)));
-                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(1.5)));
+                edgeCells.add(new Vector2(0,5));
+                edgeCells.add(new Vector2(1,5));
+                edgeCells.add(new Vector2(3,5));
+                edgeCells.add(new Vector2(4,6));
+                edgeCells.add(new Vector2(5,6));
+                edgeCells.add(new Vector2(6,6));
+                edgeCells.add(new Vector2(7,7));
+                edgeCells.add(new Vector2(7,8));
+                edgeCells.add(new Vector2(7,9));
+                edgeCells.add(new Vector2(7,10));
+                edgeCells.add(new Vector2(6,11));
+                edgeCells.add(new Vector2(6,12));
+                edgeCells.add(new Vector2(6,13));
+                edgeCells.add(new Vector2(6,14));
+                edgeCells.add(new Vector2(6,15));
+                edgeCells.add(new Vector2(6,17));
+                edgeCells.add(new Vector2(7,18));
+                edgeCells.add(new Vector2(7,19));
+                edgeCells.add(new Vector2(7,20));
+                edgeCells.add(new Vector2(8,21));
+                edgeCells.add(new Vector2(8,22));
+                edgeCells.add(new Vector2(0,22));
 
                 break;
             case shopping:
-                e.setContent("M339.48,166.83c-5.94-.22-23.45-9.89-35.08-16.32-4.55-2.51-8.48-4.68-11.34-6.12-11.64-5.82-124.84-18.11-137.64-18.11a12.68,12.68,0,0,0-1.56.07,380.14,380.14,0,0,0-44.59,8.26,60.33,60.33,0,0,1-71.43-38L3.57,2.5H320.08L342,47.59a131,131,0,0,1,6.42,99.82C342.83,163.74,340.15,166.4,339.48,166.83Z");
-                e.setFill(gw.getColor(ColorEnum.COMMERCIAL_BACKGROUND));
-                e.setStroke(gw.getColor(ColorEnum.COMMERCIAL_BORDER));
-                e.strokeWidthProperty().bind(gw.getCellSizeX().divide(6));
+                areaShape.setFill(gw.getColor(ColorEnum.COMMERCIAL_BACKGROUND));
+                areaShape.setStroke(gw.getColor(ColorEnum.COMMERCIAL_BORDER));
 
-                e.scaleXProperty().bind(gw.getCellSizeX().divide(25));
-                e.scaleYProperty().bind(gw.getCellSizeY().divide(20));
-                e.layoutYProperty().bind(layer.layoutYProperty().add(gw.getCellSizeY().multiply(1.5d)));
-                e.layoutXProperty().bind(layer.layoutXProperty().add(gw.getCellSizeX().multiply(14)));
+
+                edgeCells.add(new Vector2(13,0));
+                edgeCells.add(new Vector2(13,1));
+                edgeCells.add(new Vector2(13,2));
+                edgeCells.add(new Vector2(14,3));
+                edgeCells.add(new Vector2(14,4));
+                edgeCells.add(new Vector2(14,5));
+                edgeCells.add(new Vector2(15,6));
+                edgeCells.add(new Vector2(16,5));
+                edgeCells.add(new Vector2(17,5));
+                edgeCells.add(new Vector2(18,4));
+                edgeCells.add(new Vector2(19,4));
+                edgeCells.add(new Vector2(20,4));
+                edgeCells.add(new Vector2(21,5));
+                edgeCells.add(new Vector2(22,5));
+                edgeCells.add(new Vector2(23,6));
+                edgeCells.add(new Vector2(24,5));
+                edgeCells.add(new Vector2(24,4));
+                edgeCells.add(new Vector2(24,3));
+                edgeCells.add(new Vector2(24,2));
+                edgeCells.add(new Vector2(23,1));
+                edgeCells.add(new Vector2(23,0));
+
+
                 break;
         }
+
+
+        Vector2 firstV = edgeCells.get(0);
+        int minX = (int)firstV.getX();
+        int maxX = (int)firstV.getX();
+        int minY = (int)firstV.getY();
+        int maxY = (int)firstV.getY();
+
+        for(int i = 1; i<edgeCells.size(); i++) {
+            if(i==1) {
+                MoveTo from = new MoveTo();
+                from.xProperty().bind(gw.CellToPixelsX(edgeCells.get(i-1)));
+                from.yProperty().bind(gw.CellToPixelsY(edgeCells.get(i-1)));
+                areaShape.getElements().add(from);
+            }
+
+            Vector2 v = edgeCells.get(i);
+            if(v.getX()<minX)
+                minX=(int)v.getX();
+            if(v.getX()>maxX)
+                maxX=(int)v.getX();
+            if(v.getY()<minY)
+                minY=(int)v.getY();
+            if(v.getY()>maxY)
+                maxY=(int)v.getY();
+
+            QuadCurveTo to = new QuadCurveTo();
+            to.xProperty().bind(gw.CellToPixelsX(edgeCells.get(i)));
+            to.yProperty().bind(gw.CellToPixelsY(edgeCells.get(i)));
+            to.controlXProperty().bind(Vector2.getMidPointProperty(gw.CellToPixelsX(edgeCells.get(i-1)), gw.CellToPixelsX(edgeCells.get(i))));
+            to.controlYProperty().bind(Vector2.getMidPointProperty(gw.CellToPixelsY(edgeCells.get(i-1)), gw.CellToPixelsY(edgeCells.get(i))));
+            areaShape.getElements().add(to);
+        }
+
+        int sizeX = maxX-minX;
+        int sizeY = maxY-minY;
+
+        areaShape.getElements().add(new ClosePath());
+        areaShape.fillRuleProperty().setValue(FillRule.NON_ZERO);
+        areaShape.setScaleX(1+(1d/sizeX));
+        areaShape.setScaleY(1+(1d/sizeY));
+        areaShape.strokeWidthProperty().bind(gw.getCellSizeX().multiply(0.25d));
+        areaShape.strokeTypeProperty().setValue(StrokeType.OUTSIDE);
+        areaShape.strokeLineCapProperty().setValue(StrokeLineCap.ROUND);
+
+        this.getChildren().add(areaShape);
 
 
     }

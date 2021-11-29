@@ -9,16 +9,16 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class LinesView extends Pane {
+public class LinesLayer extends Pane {
 
-    private GameView gw;
+    private final GameView gw;
 
-    private HashMap<Integer,LineView> lines;
+    private final HashMap<Integer,LineView> lines;
 
-    public LinesView(GameView gw) {
+    public LinesLayer(GameView gw) {
         super();
         this.gw = gw;
         lines = new HashMap<>();
@@ -37,7 +37,7 @@ public class LinesView extends Pane {
 
     public boolean addLine(int lineID) {
         boolean res = false;
-        Set<Map.Entry<Vector2,Vector2>> parts = Game.get().getPartsVectorsOf(lineID);
+        List<Map.Entry<Vector2,Vector2>> parts = Game.get().getPartsVectorsOf(lineID);
         if(parts.size()>0) {
             this.lines.put(lineID,new LineView(gw,this,lineID));
             res=true;
@@ -53,4 +53,14 @@ public class LinesView extends Pane {
             lines.remove(lineID);
         }
     }
+
+    /**
+     * Appelée  à chaque frame
+     */
+    public void Update() {
+        for(LineView l : lines.values()) {
+            l.UpdateTrams();
+        }
+    }
+
 }
