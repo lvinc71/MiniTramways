@@ -3,6 +3,8 @@ package com.stonksco.minitramways.logic.map;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.buildings.*;
+import com.stonksco.minitramways.logic.map.generation.BuildingsGenerator;
+import com.stonksco.minitramways.logic.map.generation.PeopleGenerator;
 import com.stonksco.minitramways.logic.map.lines.Line;
 import com.stonksco.minitramways.logic.map.lines.LinePart;
 import com.stonksco.minitramways.logic.map.lines.Tramway;
@@ -29,6 +31,9 @@ public class GameMap {
     public GameMap() {
         bg = new BuildingsGenerator(this);
         pg = new PeopleGenerator(this);
+        lines = new HashMap<>();
+        areas = new HashMap<>();
+        stations = new HashMap<>();
     }
 
     /**
@@ -603,12 +608,18 @@ public class GameMap {
         return res;
     }
 
+    private SplittableRandom randGen = new SplittableRandom();
+
+    /**
+     * Retourne une maison aléatoire
+     * @return
+     */
     public House getRandomHouse() {
         House res = null;
 
         Area a = null;
         while(a==null) {
-            int nb = (int)(Math.random()*areas.size());
+            int nb = (int)(randGen.nextInt(areas.size()));
             a = areas.get(nb);
             if(a.getType() != AreaTypes.residential)
                 a=null;
@@ -616,6 +627,51 @@ public class GameMap {
 
         res = (House)a.getRandomBuilding();
         return res;
+    }
+
+    /**
+     * Retourne un bâtiment commercial ou de bureaux aléatoire
+     * @return
+     */
+    public Building getRandomTarget() {
+        Building res = null;
+
+        Area a = null;
+        while(a==null) {
+            int nb = (int)(randGen.nextInt(areas.size()));
+            a = areas.get(nb);
+            if(a.getType() == AreaTypes.residential)
+                a=null;
+        }
+
+        res = a.getRandomBuilding();
+        return res;
+    }
+
+    public int linesCount() {
+        return lines.size();
+    }
+
+    /**
+     * Retourne la station la plus proche
+     * @param from
+     * @return
+     */
+    public Vector2 getClosestStation(Vector2 from) {
+        double min = Double.POSITIVE_INFINITY;
+        Vector2 res = null;
+        for(Vector2 s : stations.keySet()) {
+            double d = Vector2.Distance(from,s);
+            if(d<min) {
+                min = d;
+                res = s;
+            }
+        }
+        return res;
+    }
+
+    public PlaceToBe VectorToPlace(Vector2 v) {
+        return getCellAt(v).getBuilding();
     }
 
 }

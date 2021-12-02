@@ -187,7 +187,14 @@ public class Line {
 
 
 	public LinePart getPartAt(double at) {
-		return first.getPartAt(at);
+		LinePart res = null;
+		if(at>getLastIndex())
+			res = first.getPartAt(getLastIndex());
+		else if(at<getFirstIndex())
+			res = first.getPartAt(getFirstIndex());
+		else
+			res = first.getPartAt(at);
+		return res;
 	}
 
 	public ArrayList<Tramway> getTrams() {

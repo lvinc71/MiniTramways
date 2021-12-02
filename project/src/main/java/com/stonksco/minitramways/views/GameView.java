@@ -51,7 +51,9 @@ public class GameView extends Scene implements Listener {
             Map.entry(ColorEnum.COMMERCIAL_BORDER,Color.web("0xFF8A6D",1)),
             Map.entry(ColorEnum.OFFICE_BACKGROUND,Color.web("0x53B0D1",1)),
             Map.entry(ColorEnum.OFFICE_BORDER,Color.web("0x65D6FF",1)),
-            Map.entry(ColorEnum.PIN_COLOR,Color.web("0xED362E",1))
+            Map.entry(ColorEnum.PIN_COLOR,Color.web("0xED362E",1)),
+            Map.entry(ColorEnum.TARGET_COLOR,Color.web("0xE0BFB8",0.2d)),
+            Map.entry(ColorEnum.TARGET_OUTLINE_COLOR,Color.web("0xE0BFB8",0.6d))
     );
     // Taille des cellules
     DoubleProperty cellSizeX;
@@ -64,6 +66,7 @@ public class GameView extends Scene implements Listener {
     private AreasLayer areasPane; // Quartiers
     private LinesLayer linesPane; // Lignes et trams
     private RadiusLayer radiusLayer; // Rayons des stations
+    private TargetsLayer targetsLayer; // Objectifs des personnes
     private StackPane mainPane; // Conteneur principal remplissant la fenêtre
     private Pane centerPane; // Conteneur central contenant la carte du jeu
     // Sélection de cellules
@@ -174,6 +177,7 @@ public class GameView extends Scene implements Listener {
         areasPane = new AreasLayer(this);
         linesPane = new LinesLayer(this);
         radiusLayer = new RadiusLayer(this);
+        targetsLayer = new TargetsLayer(this);
 
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
@@ -181,6 +185,7 @@ public class GameView extends Scene implements Listener {
         centerPane.getChildren().add(linesPane);
         centerPane.getChildren().add(radiusLayer);
         centerPane.getChildren().add(gridStations);
+        centerPane.getChildren().add(targetsLayer);
         centerPane.getChildren().add(gridPins);
 
         centerPane.layout();
@@ -199,6 +204,7 @@ public class GameView extends Scene implements Listener {
         layersList.add(areasPane);
         layersList.add(linesPane);
         layersList.add(radiusLayer);
+        layersList.add(targetsLayer);
 
         for (Pane layer:layersList) {
             layer.prefWidthProperty().bind(gridDisplay.widthProperty());
@@ -213,15 +219,6 @@ public class GameView extends Scene implements Listener {
 
         Game.Debug(1,"Map layers initialized with a size of "+centerPane.widthProperty().get()+" * "+centerPane.heightProperty().get()+" pixels");
 
-        if(Game.get().getDebug()>2) {
-            Ellipse e = new Ellipse(15,15);
-            e.setFill(Color.BLUE);
-            e.translateXProperty().bind(gridPosX());
-            e.translateYProperty().bind(gridPosY());
-            e.radiusXProperty().bind(getCellSizeX().divide(3));
-            e.radiusYProperty().bind(getCellSizeY().divide(3));
-            gridPins.getChildren().add(e);
-        }
 
     }
 
@@ -281,10 +278,12 @@ public class GameView extends Scene implements Listener {
 
     public void CellEnter(Vector2 cell) {
         this.gridStations.showRadiusOf(cell);
+        targetsLayer.Enter(cell);
     }
 
     public void CellExit(Vector2 cell) {
         this.gridStations.hideRadiusOf(cell);
+        targetsLayer.Exit(cell);
     }
 
     /**
@@ -419,6 +418,8 @@ public class GameView extends Scene implements Listener {
     public RadiusLayer getRadiusLayer() {
         return radiusLayer;
     }
+
+    public TargetsLayer getTargetsLayer() { return targetsLayer;}
 }
 
 

@@ -61,7 +61,7 @@ public class BuildingView extends CellView {
     }
 
     /**
-     * Définit le nombre de personnes à affficher
+     * Définit le nombre de personnes à afficher
      * @param nb
      */
     public void setAmount(int nb) {

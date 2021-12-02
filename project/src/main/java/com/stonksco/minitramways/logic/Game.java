@@ -4,6 +4,7 @@ import com.stonksco.minitramways.logic.map.Area;
 import com.stonksco.minitramways.logic.map.GameMap;
 import com.stonksco.minitramways.logic.map.lines.Tramway;
 import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
+import com.stonksco.minitramways.logic.people.People;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,5 +115,17 @@ public class Game {
         return map.getAmountOf(pos);
     }
 
-
+    /**
+     * Retourne toutes les personnes se trouvant sur une case donnée
+     * @param at
+     * @return
+     */
+    public ArrayList<People> getPeopleAt(Vector2 at) {
+        ArrayList<People> res = new ArrayList<>();
+        for(People p : People.getAll()) {
+            if(p.getCurrentPlace().getCoordinates().equals(at))
+                res.add(p);
+        }
+        return res;
+    }
 }

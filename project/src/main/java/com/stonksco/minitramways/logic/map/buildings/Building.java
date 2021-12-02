@@ -1,6 +1,7 @@
 package com.stonksco.minitramways.logic.map.buildings;
 
-import com.stonksco.minitramways.logic.People;
+import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.logic.people.People;
 import com.stonksco.minitramways.logic.map.Cell;
 import com.stonksco.minitramways.logic.map.PlaceToBe;
 
@@ -36,14 +37,20 @@ public abstract class Building implements PlaceToBe {
 		return people.size();
 	}
 
+	@Override
 	public void Enter(People p){
 		this.people.add(p);
 	}
 
+	@Override
 	public void Exit(People p) {
 		this.people.remove(p);
 	}
 
+	@Override
+	public Vector2 getCoordinates() {
+		return this.cell.getCoordinates();
+	}
 
 
 

@@ -1,6 +1,6 @@
 package com.stonksco.minitramways.logic.map.buildings;
 
-import com.stonksco.minitramways.logic.People;
+import com.stonksco.minitramways.logic.people.People;
 import com.stonksco.minitramways.logic.map.Cell;
 import com.stonksco.minitramways.logic.map.lines.Line;
 

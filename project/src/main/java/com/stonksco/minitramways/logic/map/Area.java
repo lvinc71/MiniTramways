@@ -8,6 +8,8 @@ import com.stonksco.minitramways.logic.map.buildings.Office;
 import com.stonksco.minitramways.logic.map.buildings.Shop;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.SplittableRandom;
 
 /**
  * Repr�sente un quartier d'un type donn� (r�sidentiel, commercial ou d'affaires)
@@ -67,8 +69,10 @@ public class Area {
 		return res;
 	}
 
+	private SplittableRandom randGen = new SplittableRandom();
+
 	private Cell getRandomCell() {
-		int rand = Math.round((float)Math.random()*(cells.size()-1));
+		int rand = Math.round(randGen.nextInt(cells.size()-1));
 		if(rand<0)
 			rand=0;
 		return cells.get(rand);
@@ -84,7 +88,7 @@ public class Area {
 
 		int toGenerate = 1;
 		if(type==AreaTypes.residential)
-			toGenerate = 2+(int)(Math.random()*3d);
+			toGenerate = 2+(int)(randGen.nextInt(3));
 
 		for(int i = 0; i<500; i++) {
 			c = getRandomCell();
@@ -121,7 +125,7 @@ public class Area {
 	public Building getRandomBuilding() {
 		Building res = null;
 
-		int nb = (int)(Math.random()*buildings.size());
+		int nb = randGen.nextInt(buildings.size());
 		res = buildings.get(nb);
 		return res;
 	}

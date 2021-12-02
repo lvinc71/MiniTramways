@@ -1,7 +1,8 @@
 package com.stonksco.minitramways.logic.map.lines;
 
 import com.stonksco.minitramways.logic.Game;
-import com.stonksco.minitramways.logic.People;
+import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.logic.people.People;
 import com.stonksco.minitramways.logic.map.PlaceToBe;
 import com.stonksco.minitramways.logic.map.buildings.Station;
 import com.stonksco.minitramways.views.Clock;
@@ -30,6 +31,7 @@ public class Tramway implements PlaceToBe {
 	 */
 	private double linePos;
 	private LinePart currentPart;
+	private Vector2 realPos;
 	/**
 	 * Nombre maximal de personnes que peut accueillir ce tram
 	 */
@@ -68,6 +70,11 @@ public class Tramway implements PlaceToBe {
 	 */
 	public void Exit(People p) {
 		people.remove(p);
+	}
+
+	@Override
+	public Vector2 getCoordinates() {
+		return realPos.clone();
 	}
 
 	public int getPeopleAmount() {
@@ -110,7 +117,7 @@ public class Tramway implements PlaceToBe {
 
 			currentPart = newPart;
 			timeSinceLastUpdateNs=0;
-			
+			updateRealPos();
 			
 		} else {
 			timeSinceLastUpdateNs += Clock.get().GameDeltaTimeNs();
@@ -122,6 +129,12 @@ public class Tramway implements PlaceToBe {
 	public void positionAt(double linePos) {
 		this.linePos = linePos;
 		currentPart = line.getPartAt(linePos);
+		updateRealPos();
+	}
+
+	private void updateRealPos() {
+		Vector2 scaledPartPos = currentPart.getEndPos().sub(currentPart.getStartPos()).scale((linePos%100)/100d);
+		Vector2 pos = this.currentPart.getStartPos().add(scaledPartPos);
 	}
 
 }

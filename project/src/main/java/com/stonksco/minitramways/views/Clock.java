@@ -8,7 +8,7 @@ import javafx.animation.AnimationTimer;
  */
 public class Clock extends AnimationTimer {
 
-    private final float gameTimeSpeedFactor = 1;
+    private final float gameTimeSpeedFactor = 10;
     private long lastUpdate = 0;
     private long now = 0;
     private long elapsed = 0;

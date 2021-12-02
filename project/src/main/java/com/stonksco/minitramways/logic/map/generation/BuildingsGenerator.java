@@ -1,4 +1,4 @@
-package com.stonksco.minitramways.logic.map.buildings;
+package com.stonksco.minitramways.logic.map.generation;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.map.Area;
