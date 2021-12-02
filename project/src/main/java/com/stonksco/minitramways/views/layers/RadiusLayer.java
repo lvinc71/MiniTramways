@@ -10,9 +10,9 @@ import java.util.HashMap;
 
 public class RadiusLayer extends Pane {
 
-    private GameView gw;
+    private final GameView gw;
 
-    private HashMap<Vector2,Circle> circles;
+    private final HashMap<Vector2,Circle> circles;
 
     public RadiusLayer(GameView gw) {
         super();

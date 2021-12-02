@@ -1,5 +1,5 @@
 package com.stonksco.minitramways.views.items.lines;
-import com.stonksco.minitramways.logic.Game;
+
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -14,18 +14,18 @@ import javafx.scene.shape.StrokeLineCap;
  */
 public class LinePartView extends Group {
 
-    private GameView gw;
-    private LineView line;
+    private final GameView gw;
+    private final LineView line;
 
     // Coordonnées en pixels des deux points du tronçon
-    private ReadOnlyDoubleProperty  pxStartX;
-    private ReadOnlyDoubleProperty  pxStartY;
-    private ReadOnlyDoubleProperty  pxEndX;
-    private ReadOnlyDoubleProperty  pxEndY;
+    private final ReadOnlyDoubleProperty  pxStartX;
+    private final ReadOnlyDoubleProperty  pxStartY;
+    private final ReadOnlyDoubleProperty  pxEndX;
+    private final ReadOnlyDoubleProperty  pxEndY;
 
     // Cellules correspondant aux deux extrémités du tronçon (stations)
-    private Vector2 startPos;
-    private Vector2 endPos;
+    private final Vector2 startPos;
+    private final Vector2 endPos;
 
     public int getStart() {
         return start;
@@ -36,12 +36,12 @@ public class LinePartView extends Group {
     }
 
     // Mutliples de 100 décrivant la position du tronçon sur la ligne
-    private int start;
-    private int end;
+    private final int start;
+    private final int end;
 
     // Ligne graphique
     private Line lineShape;
-    private Color color;
+    private final Color color;
 
 
     public LinePartView(GameView gw, LineView line, Vector2 startPos, Vector2 endPos, int start, int end, Color color) {

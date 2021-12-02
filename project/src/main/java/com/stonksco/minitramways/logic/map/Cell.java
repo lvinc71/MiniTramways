@@ -2,14 +2,14 @@ package com.stonksco.minitramways.logic.map;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.Building;
+import com.stonksco.minitramways.logic.map.buildings.Building;
 
 /**
  * Représente une case de la grille
  */
 public class Cell {
 
-	private GameMap map;
+	private final GameMap map;
 
 	private Area area;
 	private Building building;

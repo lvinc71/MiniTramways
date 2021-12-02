@@ -11,13 +11,12 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class LinesLayer extends Pane {
 
-    private GameView gw;
+    private final GameView gw;
 
-    private HashMap<Integer,LineView> lines;
+    private final HashMap<Integer,LineView> lines;
 
     public LinesLayer(GameView gw) {
         super();

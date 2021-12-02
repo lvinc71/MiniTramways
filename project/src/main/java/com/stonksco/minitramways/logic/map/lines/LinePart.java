@@ -1,12 +1,7 @@
-package com.stonksco.minitramways.logic.map;
+package com.stonksco.minitramways.logic.map.lines;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.Station;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -23,7 +18,7 @@ public class LinePart {
         return line;
     }
 
-    private Line line;
+    private final Line line;
 
     public int getStart() {
         return start;

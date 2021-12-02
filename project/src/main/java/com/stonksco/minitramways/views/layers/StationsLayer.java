@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class StationsLayer extends GridView{
 
-    private HashMap<Vector2, StationView> stations;
+    private final HashMap<Vector2, StationView> stations;
 
     public StationsLayer(GameView gw, Vector2 size) {
         super(gw, size);
@@ -32,7 +32,6 @@ public class StationsLayer extends GridView{
         stations.remove(this.getCellAt(at));
         stations.put(at,s);
         this.add(s,(int)at.getX(),(int)at.getY());
-        System.out.println("STATIONS LIST : "+stations);
     }
 
     public void updateStations() {
@@ -50,7 +49,6 @@ public class StationsLayer extends GridView{
         StationView sv = stations.get(cell);
         if(sv != null)
             sv.showRadius();
-        System.out.println("Temp : STATION VIEW  = "+sv+cell);
     }
 
     public void hideRadiusOf(Vector2 cell) {

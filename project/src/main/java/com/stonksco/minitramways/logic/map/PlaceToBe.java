@@ -1,6 +1,7 @@
 package com.stonksco.minitramways.logic.map;
 
-import com.stonksco.minitramways.logic.People;
+import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.logic.people.People;
 
 /**
  * Repr�sente un endroit o� des personnes peuvent se trouver
@@ -25,4 +26,5 @@ public interface PlaceToBe {
 	 */
 	void Exit(People p);
 
+    Vector2 getCoordinates();
 }

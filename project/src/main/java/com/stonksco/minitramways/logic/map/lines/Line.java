@@ -1,11 +1,9 @@
-package com.stonksco.minitramways.logic.map;
+package com.stonksco.minitramways.logic.map.lines;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.Station;
-import javafx.scene.paint.Color;
+import com.stonksco.minitramways.logic.map.buildings.Station;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -16,7 +14,7 @@ public class Line {
 	/**
 	 * Table de hachage qui associe chaque station de la ligne à un entier multiple de 100 qui correspond é sa position sur la ligne
 	 */
-	private HashMap<Integer,Station> stations;
+	private final HashMap<Integer,Station> stations;
 	private ArrayList<Tramway> tramways;
 	private LinePart first;
 
@@ -24,7 +22,7 @@ public class Line {
 		return speed;
 	}
 
-	private float speed = 1f;
+	private final float speed = 1f;
 
 	public int getID() {
 		return id;
@@ -170,9 +168,7 @@ public class Line {
 
 
 	public boolean isAtExtremity(Vector2 pos) {
-		boolean res = false;
-		if(first.getStartPos().equals(pos))
-			res=true;
+		boolean res = first.getStartPos().equals(pos);
 		if(first.getLast().getEndPos().equals(pos))
 			res=true;
 		return res;
@@ -191,7 +187,14 @@ public class Line {
 
 
 	public LinePart getPartAt(double at) {
-		return first.getPartAt(at);
+		LinePart res = null;
+		if(at>getLastIndex())
+			res = first.getPartAt(getLastIndex());
+		else if(at<getFirstIndex())
+			res = first.getPartAt(getFirstIndex());
+		else
+			res = first.getPartAt(at);
+		return res;
 	}
 
 	public ArrayList<Tramway> getTrams() {

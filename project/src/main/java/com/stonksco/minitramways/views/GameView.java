@@ -4,7 +4,7 @@ import com.stonksco.minitramways.control.MapController;
 import com.stonksco.minitramways.control.interfaces.Listener;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.BuildingEnum;
+import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
 import com.stonksco.minitramways.views.layers.*;
 import com.stonksco.minitramways.views.layers.cells.CellView;
 import com.stonksco.minitramways.views.layers.cells.GridDisplayCell;
@@ -28,36 +28,13 @@ import java.util.Map;
 
 public class GameView extends Scene implements Listener {
 
-    public static void FrameUpdate() {
-        for(GameView gw : instances) {
-            gw.Update();
-        }
-    }
-
-    private static ArrayList<GameView> instances = new ArrayList<>();
-
-
-    private Group root;
-    private Stage primaryStage;
-
-    // Calques et conteneurs
-    private GridDisplay gridDisplay; // Points de la grille
-    private StationsLayer gridStations; // Stations
-    private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
-    private CellInteractionsLayer gridPins; // Épingles représentant le nombre de personnes
-    private AreasLayer areasPane; // Quartiers
-    private LinesLayer linesPane; // Lignes et trams
-    private RadiusLayer radiusLayer; // Rayons des stations
-
-    private StackPane mainPane; // Conteneur principal remplissant la fenêtre
-    private Pane centerPane; // Conteneur central contenant la carte du jeu
-
+    private static final ArrayList<GameView> instances = new ArrayList<>();
+    private final Group root;
+    private final Stage primaryStage;
     // Contrôleurs
-    private MapController mapController;
-
-
+    private final MapController mapController;
     // Couleurs
-    private Map<ColorEnum,Color> colors = Map.ofEntries(
+    private final Map<ColorEnum,Color> colors = Map.ofEntries(
             Map.entry(ColorEnum.LINE_BLUE,Color.web("0x3333FF",1)),
             Map.entry(ColorEnum.LINE_CYAN,Color.web("0x0099CC",1)),
             Map.entry(ColorEnum.LINE_GOLD,Color.web("0xCCCC33",1)),
@@ -74,16 +51,29 @@ public class GameView extends Scene implements Listener {
             Map.entry(ColorEnum.COMMERCIAL_BORDER,Color.web("0xFF8A6D",1)),
             Map.entry(ColorEnum.OFFICE_BACKGROUND,Color.web("0x53B0D1",1)),
             Map.entry(ColorEnum.OFFICE_BORDER,Color.web("0x65D6FF",1)),
-            Map.entry(ColorEnum.PIN_COLOR,Color.web("0xED362E",1))
+            Map.entry(ColorEnum.PIN_COLOR,Color.web("0xED362E",1)),
+            Map.entry(ColorEnum.TARGET_COLOR,Color.web("0xE0BFB8",0.2d)),
+            Map.entry(ColorEnum.TARGET_OUTLINE_COLOR,Color.web("0xE0BFB8",0.6d))
     );
-
-    // Sélection de cellules
-    private CellView firstCell = null;
-    private CellView secondCell = null;
-
     // Taille des cellules
     DoubleProperty cellSizeX;
     DoubleProperty cellSizeY;
+    // Calques et conteneurs
+    private GridDisplay gridDisplay; // Points de la grille
+    private StationsLayer gridStations; // Stations
+    private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
+    private CellInteractionsLayer gridPins; // Épingles représentant le nombre de personnes
+    private AreasLayer areasPane; // Quartiers
+    private LinesLayer linesPane; // Lignes et trams
+    private RadiusLayer radiusLayer; // Rayons des stations
+    private TargetsLayer targetsLayer; // Objectifs des personnes
+    private StackPane mainPane; // Conteneur principal remplissant la fenêtre
+    private Pane centerPane; // Conteneur central contenant la carte du jeu
+    // Sélection de cellules
+    private CellView firstCell = null;
+    private CellView secondCell = null;
+    // Station temporaire pour affichage ; aucun lien métier
+    private StationView tempStation;
 
 
     /**
@@ -106,13 +96,18 @@ public class GameView extends Scene implements Listener {
         this.setFill(getColor(ColorEnum.BACKGROUND));
     }
 
+    public static void FrameUpdate() {
+        for(GameView gw : instances) {
+            gw.Update();
+        }
+    }
+
     public void enable() {
         initWindowLayout();
         initMapLayers();
-        updateBuildings();
+        gridBuildings.updateBuildings();
         Clock.get().start();
     }
-
 
     /**
      * Initialise les zones de la fenêtre
@@ -168,7 +163,6 @@ public class GameView extends Scene implements Listener {
 
     }
 
-
     /**
      * Initialise l'affichage de la grille
      * @author Léo Vincent
@@ -183,6 +177,7 @@ public class GameView extends Scene implements Listener {
         areasPane = new AreasLayer(this);
         linesPane = new LinesLayer(this);
         radiusLayer = new RadiusLayer(this);
+        targetsLayer = new TargetsLayer(this);
 
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
@@ -190,6 +185,7 @@ public class GameView extends Scene implements Listener {
         centerPane.getChildren().add(linesPane);
         centerPane.getChildren().add(radiusLayer);
         centerPane.getChildren().add(gridStations);
+        centerPane.getChildren().add(targetsLayer);
         centerPane.getChildren().add(gridPins);
 
         centerPane.layout();
@@ -208,6 +204,7 @@ public class GameView extends Scene implements Listener {
         layersList.add(areasPane);
         layersList.add(linesPane);
         layersList.add(radiusLayer);
+        layersList.add(targetsLayer);
 
         for (Pane layer:layersList) {
             layer.prefWidthProperty().bind(gridDisplay.widthProperty());
@@ -222,24 +219,8 @@ public class GameView extends Scene implements Listener {
 
         Game.Debug(1,"Map layers initialized with a size of "+centerPane.widthProperty().get()+" * "+centerPane.heightProperty().get()+" pixels");
 
-        if(Game.get().getDebug()>2) {
-            Ellipse e = new Ellipse(15,15);
-            e.setFill(Color.BLUE);
-            e.translateXProperty().bind(gridPosX());
-            e.translateYProperty().bind(gridPosY());
-            e.radiusXProperty().bind(getCellSizeX().divide(3));
-            e.radiusYProperty().bind(getCellSizeY().divide(3));
-            gridPins.getChildren().add(e);
-        }
 
     }
-
-
-
-
-
-    // Station temporaire pour affichage ; aucun lien métier
-    private StationView tempStation;
 
     /**
      * Appelée au clic sur une cellule de la grille
@@ -297,10 +278,12 @@ public class GameView extends Scene implements Listener {
 
     public void CellEnter(Vector2 cell) {
         this.gridStations.showRadiusOf(cell);
+        targetsLayer.Enter(cell);
     }
 
     public void CellExit(Vector2 cell) {
         this.gridStations.hideRadiusOf(cell);
+        targetsLayer.Exit(cell);
     }
 
     /**
@@ -385,31 +368,6 @@ public class GameView extends Scene implements Listener {
         return this.colors.get(c);
     }
 
-    public void updateBuildings(){
-        HashMap<BuildingEnum,ArrayList<Vector2>> buildings = Game.get().getBuildings();
-
-       ArrayList<Vector2> pos;
-       pos =buildings.get(BuildingEnum.HOUSE);
-       if(pos!=null){
-           for(int i=0; i<pos.size();i++){
-               addBuildingAt(pos.get(i),BuildingEnum.HOUSE);
-           }
-       }
-        pos =buildings.get(BuildingEnum.SHOP);
-        if(pos!=null) {
-            for (int i = 0; i < pos.size(); i++) {
-                addBuildingAt(pos.get(i),BuildingEnum.SHOP);
-            }
-        }
-        pos =buildings.get(BuildingEnum.OFFICE);
-        if(pos!=null) {
-            for (int i = 0; i < pos.size(); i++) {
-                addBuildingAt(pos.get(i),BuildingEnum.OFFICE);
-            }
-        }
-
-    }
-
 
     /**
      * Ajoute une batiment aux coordonnées passées en paramètres
@@ -453,11 +411,15 @@ public class GameView extends Scene implements Listener {
      */
     public void Update() {
         linesPane.Update();
+        gridBuildings.updateBuildings();
+        gridBuildings.updateBuildingsPins();
     }
 
     public RadiusLayer getRadiusLayer() {
         return radiusLayer;
     }
+
+    public TargetsLayer getTargetsLayer() { return targetsLayer;}
 }
 
 

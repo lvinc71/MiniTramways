@@ -1,13 +1,10 @@
 package com.stonksco.minitramways;
 
 import com.stonksco.minitramways.logic.Game;
-import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.views.GameView;
 import javafx.application.Application;
 import javafx.scene.Group;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class MiniTramways extends Application {
 

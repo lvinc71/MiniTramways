@@ -1,8 +1,10 @@
-package com.stonksco.minitramways.logic.map;
+package com.stonksco.minitramways.logic.map.lines;
 
 import com.stonksco.minitramways.logic.Game;
-import com.stonksco.minitramways.logic.People;
-import com.stonksco.minitramways.logic.map.building.Station;
+import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.logic.people.People;
+import com.stonksco.minitramways.logic.map.PlaceToBe;
+import com.stonksco.minitramways.logic.map.buildings.Station;
 import com.stonksco.minitramways.views.Clock;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ public class Tramway implements PlaceToBe {
 
 	Line line;
 	ArrayList<People> people;
-	private int amount = (int)(Math.random()*5);
+	private final int amount = (int)(Math.random()*5);
 	/**
 	 * Station visit�e avant la station courante
 	 * Cette donn�e permet de savoir dans quelle direction le tram se dirige
@@ -29,6 +31,7 @@ public class Tramway implements PlaceToBe {
 	 */
 	private double linePos;
 	private LinePart currentPart;
+	private Vector2 realPos;
 	/**
 	 * Nombre maximal de personnes que peut accueillir ce tram
 	 */
@@ -54,7 +57,7 @@ public class Tramway implements PlaceToBe {
 	}
 
 	/**
-	 * D�place une personne dans l'endroit courant
+	 * Déplace une personne dans l'endroit courant
 	 * @param p
 	 */
 	public void Enter(People p) {
@@ -67,6 +70,11 @@ public class Tramway implements PlaceToBe {
 	 */
 	public void Exit(People p) {
 		people.remove(p);
+	}
+
+	@Override
+	public Vector2 getCoordinates() {
+		return realPos.clone();
 	}
 
 	public int getPeopleAmount() {
@@ -109,7 +117,7 @@ public class Tramway implements PlaceToBe {
 
 			currentPart = newPart;
 			timeSinceLastUpdateNs=0;
-			
+			updateRealPos();
 			
 		} else {
 			timeSinceLastUpdateNs += Clock.get().GameDeltaTimeNs();
@@ -121,6 +129,12 @@ public class Tramway implements PlaceToBe {
 	public void positionAt(double linePos) {
 		this.linePos = linePos;
 		currentPart = line.getPartAt(linePos);
+		updateRealPos();
+	}
+
+	private void updateRealPos() {
+		Vector2 scaledPartPos = currentPart.getEndPos().sub(currentPart.getStartPos()).scale((linePos%100)/100d);
+		Vector2 pos = this.currentPart.getStartPos().add(scaledPartPos);
 	}
 
 }

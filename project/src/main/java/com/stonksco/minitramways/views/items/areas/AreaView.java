@@ -6,17 +6,17 @@ import com.stonksco.minitramways.logic.map.AreaTypes;
 import com.stonksco.minitramways.views.ColorEnum;
 import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.layers.AreasLayer;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
 
 import java.util.ArrayList;
 
 public class AreaView extends Pane {
 
-    private GameView gw;
-    private AreaTypes type;
+    private final GameView gw;
+    private final AreaTypes type;
 
-    private Path areaShape;
+    private final Path areaShape;
 
     public AreaView(GameView gw, AreasLayer layer, Area a) {
 

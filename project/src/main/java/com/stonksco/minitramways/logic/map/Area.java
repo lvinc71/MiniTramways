@@ -2,12 +2,14 @@ package com.stonksco.minitramways.logic.map;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.Building;
-import com.stonksco.minitramways.logic.map.building.House;
-import com.stonksco.minitramways.logic.map.building.Office;
-import com.stonksco.minitramways.logic.map.building.Shop;
+import com.stonksco.minitramways.logic.map.buildings.Building;
+import com.stonksco.minitramways.logic.map.buildings.House;
+import com.stonksco.minitramways.logic.map.buildings.Office;
+import com.stonksco.minitramways.logic.map.buildings.Shop;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.SplittableRandom;
 
 /**
  * Repr�sente un quartier d'un type donn� (r�sidentiel, commercial ou d'affaires)
@@ -19,10 +21,10 @@ public class Area {
 	/**
 	 * Type de zone
 	 */
-	private AreaTypes type;
+	private final AreaTypes type;
 
 	// densité = nombre de building créé
-	private int densite = 3;
+	private final int densite = 3;
 
 	//Constructeur de la classe area qui prend en parametre une liste de cell et un type
 	public Area(ArrayList<Cell> area,AreaTypes areasType) {
@@ -32,38 +34,29 @@ public class Area {
 	}
 
 	/**
-	 * Ajoute une case de la grille � la zone
-	 * @param c
-	 */
-	public boolean addCell(Cell c) {
-		// TODO - implement Area.addCell
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Retire une case de la grille de la zone
-	 * @param c
-	 */
-	public boolean removeCell(Cell c) {
-		// TODO - implement Area.removeCell
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Envoie chaque personne pr�sente dans les maisons (House) de la zone dans la station accessible la moins congestionn�e
-	 */
-	public void sendToStation() {
-		// TODO - implement Area.sendToStation
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * Ajoute un b�timent � la table de hachage.
 	 * Cette m�thode ne g�n�re aucun b�timent, elle l'ajoute simplement � la table pour simplifier l'acc�s.
 	 * @param b
 	 */
-	private void addBuilding(Building b) {
-		buildings.add(b);
+	private void addBuilding(Cell at) {
+		switch (type){
+			case office:
+				Office o = new Office(at);
+				at.setBuilding(o);
+				buildings.add(o);
+				break;
+			case shopping:
+				Shop s = new Shop(at);
+				at.setBuilding(s);
+				buildings.add(s);
+				break;
+			case residential:
+				House h = new House(at);
+				at.setBuilding(h);
+				buildings.add(h);
+				break;
+		}
+
 	}
 
 	/**
@@ -76,8 +69,10 @@ public class Area {
 		return res;
 	}
 
+	private SplittableRandom randGen = new SplittableRandom();
+
 	private Cell getRandomCell() {
-		int rand = Math.round((float)Math.random()*(cells.size()-1));
+		int rand = Math.round(randGen.nextInt(cells.size()-1));
 		if(rand<0)
 			rand=0;
 		return cells.get(rand);
@@ -89,31 +84,24 @@ public class Area {
 	public boolean generateBuilding() {
 		boolean res=false;
 
-		Cell c = getRandomCell();
-		while(c.getBuilding()!=null) {
+		Cell c = null;
+
+		int toGenerate = 1;
+		if(type==AreaTypes.residential)
+			toGenerate = 2+(int)(randGen.nextInt(3));
+
+		for(int i = 0; i<500; i++) {
 			c = getRandomCell();
+			if(c!=null) {
+				addBuilding(c);
+				toGenerate--;
+				res=true;
+			}
+
+			if(toGenerate==0)
+				break;
 		}
 
-		switch (type){
-			case office:
-				Office o = new Office(c);
-				c.setBuilding(o);
-				addBuilding(o);
-				res=true;
-				break;
-			case shopping:
-				Shop s = new Shop(c);
-				c.setBuilding(s);
-				addBuilding(s);
-				res=true;
-				break;
-			case residential:
-				House h = new House(c);
-				c.setBuilding(h);
-				addBuilding(h);
-				res=true;
-				break;
-		}
 		return res;
 
 	}
@@ -133,4 +121,14 @@ public class Area {
 	public ArrayList<Cell> getCells() {
 		return cells;
 	}
+
+	public Building getRandomBuilding() {
+		Building res = null;
+
+		int nb = randGen.nextInt(buildings.size());
+		res = buildings.get(nb);
+		return res;
+	}
+
+
 }

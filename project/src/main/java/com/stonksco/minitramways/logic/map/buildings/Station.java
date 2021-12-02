@@ -1,10 +1,9 @@
-package com.stonksco.minitramways.logic.map.building;
+package com.stonksco.minitramways.logic.map.buildings;
 
-import com.stonksco.minitramways.logic.People;
+import com.stonksco.minitramways.logic.people.People;
 import com.stonksco.minitramways.logic.map.Cell;
-import com.stonksco.minitramways.logic.map.Line;
+import com.stonksco.minitramways.logic.map.lines.Line;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -18,17 +17,17 @@ public class Station extends Building {
 	/**
 	 * Nombre personne dans la station
 	 */
-	private int amount = (int)(Math.random()*5);
+	private final int amount = (int)(Math.random()*5);
 
 	/**
 	 * Nombre maximal de lignes qui peuvent désservir la station
 	 */
-	private int maxLines;
+	private final int maxLines;
 
 	/**
 	 * Rayon dans lequel la station est en mesure de désservir les bâtiments
 	 */
-	private double radius;
+	private final double radius;
 
 	/**
 	 * @param c

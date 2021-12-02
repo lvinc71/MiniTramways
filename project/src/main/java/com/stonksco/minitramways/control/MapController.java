@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class MapController implements Controler {
 
-    private GameMap map;
-    private GameView gameview;
+    private final GameMap map;
+    private final GameView gameview;
 
     public MapController(GameMap map, GameView view) {
         this.map = map;

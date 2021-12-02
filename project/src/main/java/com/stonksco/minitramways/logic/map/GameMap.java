@@ -2,9 +2,12 @@ package com.stonksco.minitramways.logic.map;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
-import com.stonksco.minitramways.logic.map.building.Building;
-import com.stonksco.minitramways.logic.map.building.BuildingEnum;
-import com.stonksco.minitramways.logic.map.building.Station;
+import com.stonksco.minitramways.logic.map.buildings.*;
+import com.stonksco.minitramways.logic.map.generation.BuildingsGenerator;
+import com.stonksco.minitramways.logic.map.generation.PeopleGenerator;
+import com.stonksco.minitramways.logic.map.lines.Line;
+import com.stonksco.minitramways.logic.map.lines.LinePart;
+import com.stonksco.minitramways.logic.map.lines.Tramway;
 
 import java.util.*;
 import java.util.function.ToDoubleFunction;
@@ -16,13 +19,21 @@ public class GameMap {
     private Vector2 gridSize = null;
 
     // Elements de la map
-    private HashMap<Integer,Line> lines;
+    private HashMap<Integer, Line> lines;
     private HashMap<Integer, Area> areas;
     private HashMap<Vector2, Station> stations;
 
+    // générateurs
+    private BuildingsGenerator bg;
+    private PeopleGenerator pg;
+
 
     public GameMap() {
-
+        bg = new BuildingsGenerator(this);
+        pg = new PeopleGenerator(this);
+        lines = new HashMap<>();
+        areas = new HashMap<>();
+        stations = new HashMap<>();
     }
 
     /**
@@ -54,7 +65,7 @@ public class GameMap {
         initGrid(36,23);
         lines = new HashMap<>();
         initAreas();
-        initBuildings();
+        bg.initBuildings();
 
     }
 
@@ -157,7 +168,7 @@ public class GameMap {
                     Station s = addStation((Vector2)e.getValue());
                     s.addLine(l);
                     s.addLine(with.getLine());
-                    Game.Debug(2,"Intersection processed : Station created at "+(Vector2)e.getValue());
+                    Game.Debug(2,"Intersection processed : Station created at "+ e.getValue());
                 }
             }
         }
@@ -452,17 +463,6 @@ public class GameMap {
 
     }
 
-    public void initBuildings() {
-        for(Area a : areas.values()) {
-            boolean exit=false;
-            while (a.getDensity()<0.2d && !exit) {
-                if(!a.generateBuilding())
-                    exit=true;
-            }
-            Game.Debug(1,"Generated "+a.getBuildings().size()+" buildings in "+a.getType()+" area.");
-        }
-    }
-
 
     public Area getAreaOf(Vector2 pos) {
         Area res = null;
@@ -577,6 +577,10 @@ public class GameMap {
         for(Line l : lines.values()) {
             l.Update();
         }
+        // Génération des bâtiments
+        bg.buildingsGeneration();
+        pg.peopleGeneration();
+
     }
 
     public ArrayList<Tramway> getTramsOf(int lineID) {
@@ -600,9 +604,74 @@ public class GameMap {
         int res = -1;
         if(this.getCellAt(pos).getBuilding() instanceof PlaceToBe) {
             res = getCellAt(pos).getBuilding().Amount();
-            Game.Debug(1,"TEMP : PlaceToBe trouvée, amount retourné : "+res);
         }
         return res;
+    }
+
+    private SplittableRandom randGen = new SplittableRandom();
+
+    /**
+     * Retourne une maison aléatoire
+     * @return
+     */
+    public House getRandomHouse() {
+        House res = null;
+
+        Area a = null;
+        while(a==null) {
+            int nb = (int)(randGen.nextInt(areas.size()));
+            a = areas.get(nb);
+            if(a.getType() != AreaTypes.residential)
+                a=null;
+        }
+
+        res = (House)a.getRandomBuilding();
+        return res;
+    }
+
+    /**
+     * Retourne un bâtiment commercial ou de bureaux aléatoire
+     * @return
+     */
+    public Building getRandomTarget() {
+        Building res = null;
+
+        Area a = null;
+        while(a==null) {
+            int nb = (int)(randGen.nextInt(areas.size()));
+            a = areas.get(nb);
+            if(a.getType() == AreaTypes.residential)
+                a=null;
+        }
+
+        res = a.getRandomBuilding();
+        return res;
+    }
+
+    public int linesCount() {
+        return lines.size();
+    }
+
+    /**
+     * Retourne la station la plus proche
+     * @param from
+     * @return
+     */
+    public Vector2 getClosestStation(Vector2 from) {
+        double min = Double.POSITIVE_INFINITY;
+        Vector2 res = null;
+        for(Vector2 s : stations.keySet()) {
+            double d = Vector2.Distance(from,s);
+            if(d<min) {
+                min = d;
+                res = s;
+            }
+        }
+        return res;
+    }
+
+    public PlaceToBe VectorToPlace(Vector2 v) {
+        return getCellAt(v).getBuilding();
     }
 
 }
