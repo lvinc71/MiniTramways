@@ -576,6 +576,7 @@ public class GameMap {
         bg.buildingsGeneration();
         pg.peopleGeneration();
 
+
     }
 
     public ArrayList<Tramway> getTramsOf(int lineID) {

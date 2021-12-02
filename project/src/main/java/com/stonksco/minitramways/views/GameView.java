@@ -57,6 +57,7 @@ public class GameView extends Scene implements Listener {
     DoubleProperty cellSizeX;
     DoubleProperty cellSizeY;
     // Calques et conteneurs
+    private TextLayer textlayer; //afficahge de l'horloge et le score
     private GridDisplay gridDisplay; // Points de la grille
     private StationsLayer gridStations; // Stations
     private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
@@ -174,6 +175,7 @@ public class GameView extends Scene implements Listener {
         areasPane = new AreasLayer(this);
         linesPane = new LinesLayer(this);
         radiusLayer = new RadiusLayer(this);
+        textlayer = new TextLayer(this);
 
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
@@ -182,6 +184,10 @@ public class GameView extends Scene implements Listener {
         centerPane.getChildren().add(radiusLayer);
         centerPane.getChildren().add(gridStations);
         centerPane.getChildren().add(gridPins);
+
+        textlayer.setViewOrder(10);
+
+        mainPane.getChildren().add(textlayer);
 
         centerPane.layout();
 
@@ -414,6 +420,7 @@ public class GameView extends Scene implements Listener {
         linesPane.Update();
         gridBuildings.updateBuildings();
         gridBuildings.updateBuildingsPins();
+        textlayer.update();
     }
 
     public RadiusLayer getRadiusLayer() {
