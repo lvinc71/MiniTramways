@@ -13,7 +13,7 @@ public class People {
 
 	private static ArrayList<People> instances = new ArrayList<>();
 
-	private static PathFinder pf = new PathFinder(Game.get().getMap());
+	private static final PathFinder pf = new PathFinder(Game.get().getMap());
 
 	public static ArrayList<People> getAll() {
 		return (ArrayList<People>)instances.clone();
@@ -40,14 +40,18 @@ public class People {
 		// La station la plus proche du lieu actuel devient la première étape du chemin à parcourir
 		Vector2 closestStationStart = Game.get().getMap().getClosestStation(place.getCoordinates());
 		Vector2 closestStationTarget = Game.get().getMap().getClosestStation(target.getCoordinates());
-		if(closestStationStart!=null) {
-			Station startStation = (Station)Game.get().getMap().getCellAt(closestStationStart).getBuilding();
-			pf.changeStart(startStation.getCoordinates());
-			pf.changeTarget(target.getCoordinates());
-			for(Vector2 v : pf.getPath()) {
-				pathToFollow.add(Game.get().getMap().VectorToPlace(v));
+		if(closestStationStart!=null && closestStationTarget!=null) {
+			pf.changeStart(closestStationStart);
+			pf.changeTarget(closestStationTarget);
+			ArrayList<Vector2> foundPath = pf.getPath();
+			if(foundPath!=null) {
+				for(Vector2 v : foundPath) {
+					pathToFollow.add(Game.get().getMap().VectorToPlace(v));
+				}
+				Game.Debug(2,"Chemin trouvé pour "+this+" : Départ = "+closestStationStart+"  -   Chemin = "+pathToFollow);
 			}
-			Game.Debug(2,"Chemin trouvé : Départ = "+startStation+"  -   Chemin = "+pathToFollow);
+
+
 		}
 	}
 
@@ -77,7 +81,7 @@ public class People {
 	public Vector2 getTargetPos() {
 		Vector2 res = null;
 		if(this.target!=null)
-			res = ((Building)target).getCell().getCoordinates();
+			res = target.getCoordinates();
 		return res;
 	}
 
@@ -91,4 +95,10 @@ public class People {
 		return place;
 	}
 
+	/**
+	 * Met à jour le graphe du äthFinder pour prendre en compte les dernières modifications de lignes
+	 */
+	public static void UpdateGraph() {
+		pf.updateGraph();
+	}
 }

@@ -162,6 +162,17 @@ public class Vector2 {
         return Math.sqrt(Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2));
     }
 
+    /**
+     * Retourne une valeur abstraire représentant la distance entre deux vecteurs
+     * Utile pour la comparaison
+     * @param v1
+     * @param v2
+     * @return
+     */
+    public static double AbstractDistance(Vector2 v1, Vector2 v2) {
+        return Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2);
+    }
+
     public Vector2 round() {
         return new Vector2(Math.round(x),Math.round(y));
     }

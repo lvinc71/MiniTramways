@@ -87,4 +87,9 @@ public class Station extends Building {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public String toString() {
+		return "Building:"+getCoordinates();
+	}
+
 }

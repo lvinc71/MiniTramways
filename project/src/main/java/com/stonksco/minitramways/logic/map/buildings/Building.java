@@ -52,7 +52,10 @@ public abstract class Building implements PlaceToBe {
 		return this.cell.getCoordinates();
 	}
 
-
+	@Override
+	public String toString() {
+		return "Building:"+getCoordinates();
+	}
 
 
 }

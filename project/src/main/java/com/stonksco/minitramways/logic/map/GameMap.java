@@ -8,6 +8,7 @@ import com.stonksco.minitramways.logic.map.generation.PeopleGenerator;
 import com.stonksco.minitramways.logic.map.lines.Line;
 import com.stonksco.minitramways.logic.map.lines.LinePart;
 import com.stonksco.minitramways.logic.map.lines.Tramway;
+import com.stonksco.minitramways.logic.people.People;
 
 import java.util.*;
 import java.util.function.ToDoubleFunction;
@@ -153,6 +154,10 @@ public class GameMap {
         }
 
         Game.Debug(2,"Updated lines : "+updatedLines);
+
+        if(updatedLines.size()>0)
+            People.UpdateGraph();
+
         return updatedLines;
     }
 
@@ -661,7 +666,7 @@ public class GameMap {
         double min = Double.POSITIVE_INFINITY;
         Vector2 res = null;
         for(Vector2 s : stations.keySet()) {
-            double d = Vector2.Distance(from,s);
+            double d = Vector2.AbstractDistance(from,s);
             if(d<min) {
                 min = d;
                 res = s;

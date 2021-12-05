@@ -92,6 +92,9 @@ public class Game {
 
     public void Update() {
         map.Update();
+        for(People p : People.getAll()) {
+            p.Update();
+        }
     }
 
     public int getFirstIndexOf(int lineID) {

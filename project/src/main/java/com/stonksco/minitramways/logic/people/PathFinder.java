@@ -126,8 +126,8 @@ public class PathFinder {
     }
 
     private void updateDistance(Vector2 v1,Vector2 v2) {
-        if(distances.get(v2) > distances.get(v1) + Vector2.Distance(v1,v2)) {
-            distances.put(v2,distances.get(v1) + Vector2.Distance(v1,v2));
+        if(distances.get(v2) > distances.get(v1) + Vector2.AbstractDistance(v1,v2)) {
+            distances.put(v2,distances.get(v1) + Vector2.AbstractDistance(v1,v2));
             preds.put(v2,v1);
         }
     }
@@ -137,21 +137,24 @@ public class PathFinder {
      * @return
      */
     public ArrayList<Vector2> getPath() {
-        if(distances.size()==0)
-            resetDistances();
-
         ArrayList<Vector2> res = null;
-        if(stationsOfPath.size() == 0) { // Si le chemin n'est pas déjà calculé
-            Vector2 v = to;
-            while(!v.equals(from)) {
-                stationsOfPath.add(v);
-                v = preds.get(v);
-            }
-            stationsOfPath.add(from);
-        }
+        if(stations.size()>0) {
 
-        Collections.reverse(stationsOfPath);
-        res = (ArrayList<Vector2>)stationsOfPath.clone();
+            if(distances.size()==0)
+                resetDistances();
+
+            if(stationsOfPath.size() == 0) { // Si le chemin n'est pas déjà calculé
+                Vector2 v = to;
+                while(!v.equals(from)) {
+                    stationsOfPath.add(v);
+                    v = preds.get(v);
+                }
+                stationsOfPath.add(from);
+            }
+
+            Collections.reverse(stationsOfPath);
+            res = (ArrayList<Vector2>)stationsOfPath.clone();
+        }
 
         return res;
     }

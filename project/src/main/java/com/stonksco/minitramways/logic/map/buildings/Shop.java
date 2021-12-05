@@ -15,5 +15,9 @@ public class Shop extends Building {
 	}
 
 
+	@Override
+	public String toString() {
+		return "Shop:"+getCoordinates();
+	}
 
 }
