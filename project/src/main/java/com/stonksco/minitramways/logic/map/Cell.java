@@ -4,6 +4,8 @@ import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.buildings.Building;
 
+import java.util.Objects;
+
 /**
  * Représente une case de la grille
  */
@@ -59,4 +61,16 @@ public class Cell {
 		return coordinates.clone();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Cell cell = (Cell) o;
+		return coordinates.equals(cell.coordinates);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(coordinates);
+	}
 }

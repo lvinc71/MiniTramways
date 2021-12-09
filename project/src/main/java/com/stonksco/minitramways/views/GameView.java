@@ -66,6 +66,7 @@ public class GameView extends Scene implements Listener {
     private RadiusLayer radiusLayer; // Rayons des stations
     private TargetsLayer targetsLayer; // Objectifs des personnes
     private PinsLayer pinsLayer; // Nombre de personnes dans bâtiments
+    private UILayer uiLayer; // Interface
 
     private StackPane mainPane; // Conteneur principal remplissant la fenêtre
     private Pane centerPane; // Conteneur central contenant la carte du jeu
@@ -117,6 +118,7 @@ public class GameView extends Scene implements Listener {
 
         centerPane = new Pane();
         mainPane = new StackPane();
+        uiLayer = new UILayer();
 
         mainPane.prefWidthProperty().bind(this.widthProperty());
         mainPane.prefHeightProperty().bind(this.heightProperty());
@@ -137,6 +139,7 @@ public class GameView extends Scene implements Listener {
 
 
         mainPane.paddingProperty().bind(Bindings.createObjectBinding(() -> new Insets(mainPane.heightProperty().multiply(0.05d).get())));
+        mainPane.getChildren().add(uiLayer);
         mainPane.getChildren().add(centerPane);
         root.getChildren().add(mainPane);
 
@@ -405,17 +408,18 @@ public class GameView extends Scene implements Listener {
         gridStations.updateStations();
     }
 
-    public GridDisplay getGridDisplay() {
-        return gridDisplay;
-    }
-
     /**
      * Appelée à chaque frame
      */
     public void Update() {
+        if(Game.get().needPinsUpdate())
+            pinsLayer.reset();
+
         linesPane.Update();
         gridBuildings.updateBuildings();
         gridBuildings.updateBuildingsPins();
+        gridStations.updateStationsPins();
+        uiLayer.Update();
     }
 
     public RadiusLayer getRadiusLayer() {
@@ -440,6 +444,10 @@ public class GameView extends Scene implements Listener {
 
     public int getPinNumber(int id) {
         return pinsLayer.getNbOf(id);
+    }
+
+    public boolean doesPinExists(int id) {
+        return pinsLayer.doesPinExists(id);
     }
 
     /** Fin Pins */

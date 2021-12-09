@@ -57,4 +57,14 @@ public class StationsLayer extends GridView{
             sv.hideRadius();
     }
 
+    /**
+     * Met à jour les pins affichant le nombre de personnes dans chaque bâtiment
+     */
+    public void updateStationsPins() {
+        for(Vector2 v : stations.keySet()) {
+            int nb = Game.get().getAmountOf(v);
+            stations.get(v).setAmount(nb);
+        }
+    }
+
 }

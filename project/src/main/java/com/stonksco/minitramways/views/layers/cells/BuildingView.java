@@ -67,7 +67,7 @@ public class BuildingView extends CellView {
      */
     public void setAmount(int nb) {
         if(pv!=-1) {
-            if(gw.getPinNumber(pv)!=nb) {
+            if(gw.getPinNumber(pv)!=nb || !gw.doesPinExists(pv)) {
                 gw.removePin(pv);
                 pv=-1;
                 createPin(nb);

@@ -59,5 +59,9 @@ public class PinsLayer extends Pane {
         return res;
     }
 
+    public boolean doesPinExists(int pinID) {
+        return this.pins.get(pinID)!=null;
+    }
+
 
 }

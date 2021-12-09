@@ -6,6 +6,7 @@ import com.stonksco.minitramways.logic.map.Cell;
 import com.stonksco.minitramways.logic.map.PlaceToBe;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Représente un bâtiment
@@ -39,7 +40,9 @@ public abstract class Building implements PlaceToBe {
 
 	@Override
 	public void Enter(People p){
-		this.people.add(p);
+		people.add(p);
+		p.getCurrentPlace().Exit(p);
+		p.setCurrentPlace(this);
 	}
 
 	@Override
@@ -58,4 +61,16 @@ public abstract class Building implements PlaceToBe {
 	}
 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Building building = (Building) o;
+		return cell.equals(building.cell) && people.equals(building.people);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cell, people);
+	}
 }

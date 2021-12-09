@@ -2,21 +2,21 @@ package com.stonksco.minitramways.views;
 
 import com.stonksco.minitramways.logic.Game;
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.ReadOnlyLongProperty;
+import javafx.beans.property.SimpleLongProperty;
 
 /**
  * Gère le déroulement du temps du jeu
  */
 public class Clock extends AnimationTimer {
 
-    private final float gameTimeSpeedFactor = 10;
+    private long startedAt = -1;
+    private final float gameTimeSpeedFactor = 1;
     private long lastUpdate = 0;
     private long now = 0;
     private long elapsed = 0;
-    private long gameElapsed = 0;
+    private long gameElapsed;
 
-    private Clock() {
-
-    }
 
     private static final Clock instance = new Clock();
 
@@ -26,12 +26,15 @@ public class Clock extends AnimationTimer {
 
     @Override
     public void handle(long l) {
-        now = l;
+        if(startedAt==-1)
+            startedAt=l;
+        now = l-startedAt;
         Game.get().Update();
         GameView.FrameUpdate();
-        lastUpdate = now;
         elapsed += DeltaTime();
         gameElapsed += GameDeltaTimeNs();
+
+        lastUpdate = now;
     }
 
     public long DeltaTime() {
@@ -61,5 +64,6 @@ public class Clock extends AnimationTimer {
     public long GameElapsed() {
         return gameElapsed;
     }
+
 
 }

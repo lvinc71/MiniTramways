@@ -32,12 +32,14 @@ public class PeopleGenerator {
         if(remainingTimeUntilGen<=0) {
             // On génère un nombre aléatoire de personnes dans des maisons aléatoires
 
+
             int nbToGen = 2+((int)(Math.random()*2d));
+            //int nbToGen = 1;
             for(int i = 0; i<nbToGen; i++) {
                 gm.getRandomHouse().spawn();
             }
 
-            remainingTimeUntilGen = 8 + (Math.random()*10d);
+            remainingTimeUntilGen = 15 + (Math.random()*10d);
             Game.Debug(1,"New people spawned.");
         } else {
             // Cas où on ne génère pas

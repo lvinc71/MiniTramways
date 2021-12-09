@@ -22,7 +22,7 @@ public class Line {
 		return speed;
 	}
 
-	private final float speed = 1f;
+	private final float speed = 3.5f;
 
 	public int getID() {
 		return id;
