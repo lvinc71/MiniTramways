@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
 public class StationView extends CellView {
 
     private final ImageView sprite;
-    private PinView pv;
+    private int pv =-1;
 
 
     public StationView(GameView gw, Vector2 gridPos) {
@@ -34,9 +34,6 @@ public class StationView extends CellView {
     }
 
     public void enable() {
-
-        this.pv = new PinView(gw,Game.get().getAmountOf(gridPos));
-        this.getChildren().add(pv);
 
         // Affichage coordonnées
         if(Game.get().getDebug()>2) {
@@ -56,6 +53,28 @@ public class StationView extends CellView {
 
     public void hideRadius() {
         gw.getRadiusLayer().hideRadiusAt(gridPos);
+    }
+
+    /**
+     * Définit le nombre de personnes à afficher
+     * @param nb
+     */
+    public void setAmount(int nb) {
+        if(pv!=-1) {
+            if(gw.getPinNumber(pv)!=nb) {
+                gw.removePin(pv);
+                pv=-1;
+                createPin(nb);
+            }
+        }
+        else {
+            createPin(nb);
+        }
+
+    }
+
+    private void createPin(int nb) {
+        pv = gw.addPin(this.gridPos,nb);
     }
 
 

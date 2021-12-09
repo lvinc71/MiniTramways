@@ -8,6 +8,7 @@ import com.stonksco.minitramways.logic.map.generation.PeopleGenerator;
 import com.stonksco.minitramways.logic.map.lines.Line;
 import com.stonksco.minitramways.logic.map.lines.LinePart;
 import com.stonksco.minitramways.logic.map.lines.Tramway;
+import com.stonksco.minitramways.logic.people.People;
 
 import java.util.*;
 import java.util.function.ToDoubleFunction;
@@ -153,6 +154,10 @@ public class GameMap {
         }
 
         Game.Debug(2,"Updated lines : "+updatedLines);
+
+        if(updatedLines.size()>0)
+            People.UpdateGraph();
+
         return updatedLines;
     }
 
@@ -662,7 +667,7 @@ public class GameMap {
         Vector2 res = null;
         for(Vector2 s : stations.keySet()) {
             double d = Vector2.Distance(from,s);
-            if(d<min) {
+            if(d<min && d<((Station)getBuildingAt(s)).radius()) {
                 min = d;
                 res = s;
             }
@@ -672,6 +677,36 @@ public class GameMap {
 
     public PlaceToBe VectorToPlace(Vector2 v) {
         return getCellAt(v).getBuilding();
+    }
+
+    public boolean isOnLine(Vector2 station, int lineID) {
+        boolean res = false;
+        Station s = stations.get(station);
+
+        if(s!=null) {
+            for(Line l : s.getLines()) {
+                if (l.getID() == lineID) {
+                    res = true;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+
+    public LinePart getPartBetween(Vector2 pos1, Vector2 pos2) {
+        LinePart res = null;
+        for(Line l : lines.values()) {
+            for(LinePart lp : l.getParts()) {
+                if( (lp.getStartPos().equals(pos1) || lp.getEndPos().equals(pos1)) && (lp.getStartPos().equals(pos2) || lp.getEndPos().equals(pos2))) {
+                    res=lp;
+                    break;
+                }
+            }
+            if(res!=null)
+                break;
+        }
+        return res;
     }
 
 }

@@ -4,6 +4,7 @@ import com.stonksco.minitramways.logic.people.People;
 import com.stonksco.minitramways.logic.map.Cell;
 import com.stonksco.minitramways.logic.map.lines.Line;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -15,14 +16,18 @@ public class Station extends Building {
 
 	
 	/**
-	 * Nombre personne dans la station
+	 * Personnes dans la station
 	 */
-	private final int amount = (int)(Math.random()*5);
+	private ArrayList<People> people;
+
+	public int getCapacity() {
+		return capacity;
+	}
 
 	/**
 	 * Nombre maximal de lignes qui peuvent désservir la station
 	 */
-	private final int maxLines;
+	private int capacity;
 
 	/**
 	 * Rayon dans lequel la station est en mesure de désservir les bâtiments
@@ -34,7 +39,8 @@ public class Station extends Building {
 	 */
 	public Station(Cell c) {
 		super(c);
-		maxLines = 4;
+		people = new ArrayList<>();
+		capacity = 14;
 		radius = 4;
 	}
 
@@ -61,30 +67,14 @@ public class Station extends Building {
 		return res;
 	}
 
-	/**
-	 * Retourne le nombre de personnes actuellement é cet endroit
-	 * @return le nombre de personnes | -1 si le lieu ne "stocke" pas les personnes
-	 */
-	public int Amount() {
-		return amount;
+
+	@Override
+	public String toString() {
+		return "Building:"+getCoordinates();
 	}
 
-	/**
-	 * Déplace une personne dans l'endroit courant
-	 * @param p
-	 */
-	public void Enter(People p) {
-		// TODO - implement Station.Enter
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Retire une personne de l'endroit courant
-	 * @param p
-	 */
-	public void Exit(People p) {
-		// TODO - implement Station.Exit
-		throw new UnsupportedOperationException();
+	public double radius() {
+		return radius;
 	}
 
 }

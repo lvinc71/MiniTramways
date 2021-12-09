@@ -15,13 +15,14 @@ import javafx.scene.image.ImageView;
  */
 public class BuildingView extends CellView {
     private ImageView sprite;
-    private PinView pv;
+    private int pv;
 
     private final BuildingEnum type;
 
     public BuildingView(GameView gw, Vector2 gridPos, BuildingEnum type) {
         super(gw,gridPos);
         this.type = type;
+        pv=-1;
 
         if (this.type == BuildingEnum.HOUSE) {
             Image img = new ImageGetter().getImageOf(ImagesEnum.HOUSE);
@@ -65,10 +66,10 @@ public class BuildingView extends CellView {
      * @param nb
      */
     public void setAmount(int nb) {
-        if(pv!=null) {
-            if(pv.getNb()!=nb) {
-                this.getChildren().remove(pv);
-                pv=null;
+        if(pv!=-1) {
+            if(gw.getPinNumber(pv)!=nb || !gw.doesPinExists(pv)) {
+                gw.removePin(pv);
+                pv=-1;
                 createPin(nb);
             }
         }
@@ -79,8 +80,7 @@ public class BuildingView extends CellView {
     }
 
     private void createPin(int nb) {
-        pv = new PinView(gw,nb);
-        this.getChildren().add(pv);
+        pv = gw.addPin(this.gridPos,nb);
     }
 
 }

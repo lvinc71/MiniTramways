@@ -24,5 +24,10 @@ public class House extends Building {
 		return p;
 	}
 
+	@Override
+	public String toString() {
+		return "House:"+getCoordinates();
+	}
+
 
 }

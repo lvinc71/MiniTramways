@@ -19,11 +19,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class GameView extends Scene implements Listener {
@@ -62,11 +60,14 @@ public class GameView extends Scene implements Listener {
     private GridDisplay gridDisplay; // Points de la grille
     private StationsLayer gridStations; // Stations
     private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
-    private CellInteractionsLayer gridPins; // Épingles représentant le nombre de personnes
+    private CellInteractionsLayer interactionLayer; // Épingles représentant le nombre de personnes
     private AreasLayer areasPane; // Quartiers
     private LinesLayer linesPane; // Lignes et trams
     private RadiusLayer radiusLayer; // Rayons des stations
     private TargetsLayer targetsLayer; // Objectifs des personnes
+    private PinsLayer pinsLayer; // Nombre de personnes dans bâtiments
+    private UILayer uiLayer; // Interface
+
     private StackPane mainPane; // Conteneur principal remplissant la fenêtre
     private Pane centerPane; // Conteneur central contenant la carte du jeu
     // Sélection de cellules
@@ -117,6 +118,7 @@ public class GameView extends Scene implements Listener {
 
         centerPane = new Pane();
         mainPane = new StackPane();
+        uiLayer = new UILayer();
 
         mainPane.prefWidthProperty().bind(this.widthProperty());
         mainPane.prefHeightProperty().bind(this.heightProperty());
@@ -137,6 +139,7 @@ public class GameView extends Scene implements Listener {
 
 
         mainPane.paddingProperty().bind(Bindings.createObjectBinding(() -> new Insets(mainPane.heightProperty().multiply(0.05d).get())));
+        mainPane.getChildren().add(uiLayer);
         mainPane.getChildren().add(centerPane);
         root.getChildren().add(mainPane);
 
@@ -173,11 +176,12 @@ public class GameView extends Scene implements Listener {
         gridDisplay = new GridDisplay(this,s);
         gridStations = new StationsLayer(this,s);
         gridBuildings = new BuildingsLayer(this,s);
-        gridPins = new CellInteractionsLayer(this,s);
+        interactionLayer = new CellInteractionsLayer(this,s);
         areasPane = new AreasLayer(this);
         linesPane = new LinesLayer(this);
         radiusLayer = new RadiusLayer(this);
         targetsLayer = new TargetsLayer(this);
+        pinsLayer = new PinsLayer(this);
 
         centerPane.getChildren().add(areasPane);
         centerPane.getChildren().add(gridDisplay);
@@ -185,8 +189,9 @@ public class GameView extends Scene implements Listener {
         centerPane.getChildren().add(linesPane);
         centerPane.getChildren().add(radiusLayer);
         centerPane.getChildren().add(gridStations);
+        centerPane.getChildren().add(pinsLayer);
         centerPane.getChildren().add(targetsLayer);
-        centerPane.getChildren().add(gridPins);
+        centerPane.getChildren().add(interactionLayer);
 
         centerPane.layout();
 
@@ -200,11 +205,12 @@ public class GameView extends Scene implements Listener {
         //layersList.add(gridDisplay);
         layersList.add(gridStations);
         layersList.add(gridBuildings);
-        layersList.add(gridPins);
+        layersList.add(interactionLayer);
         layersList.add(areasPane);
         layersList.add(linesPane);
         layersList.add(radiusLayer);
         layersList.add(targetsLayer);
+        layersList.add(pinsLayer);
 
         for (Pane layer:layersList) {
             layer.prefWidthProperty().bind(gridDisplay.widthProperty());
@@ -402,17 +408,18 @@ public class GameView extends Scene implements Listener {
         gridStations.updateStations();
     }
 
-    public GridDisplay getGridDisplay() {
-        return gridDisplay;
-    }
-
     /**
      * Appelée à chaque frame
      */
     public void Update() {
+        if(Game.get().needPinsUpdate())
+            pinsLayer.reset();
+
         linesPane.Update();
         gridBuildings.updateBuildings();
         gridBuildings.updateBuildingsPins();
+        gridStations.updateStationsPins();
+        uiLayer.Update();
     }
 
     public RadiusLayer getRadiusLayer() {
@@ -420,6 +427,33 @@ public class GameView extends Scene implements Listener {
     }
 
     public TargetsLayer getTargetsLayer() { return targetsLayer;}
+
+    /**  ------ Pins ------ */
+
+    public int addPin(Vector2 at, int nb) {
+        return pinsLayer.addPin(at,nb);
+    }
+
+    public void removePin(int id) {
+        pinsLayer.removePin(id);
+    }
+
+    public void resetPins() {
+        pinsLayer.reset();
+    }
+
+    public int getPinNumber(int id) {
+        return pinsLayer.getNbOf(id);
+    }
+
+    public boolean doesPinExists(int id) {
+        return pinsLayer.doesPinExists(id);
+    }
+
+    /** Fin Pins */
+
+
+
 }
 
 

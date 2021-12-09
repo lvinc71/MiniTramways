@@ -33,6 +33,8 @@ public class Game {
 
     private GameMap map;
 
+    private boolean needPinsUpdate = false;
+
     public GameMap getMap() {
         return map;
     }
@@ -92,6 +94,9 @@ public class Game {
 
     public void Update() {
         map.Update();
+        for(People p : People.getAll()) {
+            p.Update();
+        }
     }
 
     public int getFirstIndexOf(int lineID) {
@@ -127,5 +132,15 @@ public class Game {
                 res.add(p);
         }
         return res;
+    }
+
+    public boolean needPinsUpdate() {
+        boolean res = needPinsUpdate;
+        needPinsUpdate = false;
+        return res;
+    }
+
+    public void requestPinsUpdate() {
+        needPinsUpdate = true;
     }
 }

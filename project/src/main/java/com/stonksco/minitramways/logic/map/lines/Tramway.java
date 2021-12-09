@@ -13,7 +13,7 @@ public class Tramway implements PlaceToBe {
 
 	Line line;
 	ArrayList<People> people;
-	private final int amount = (int)(Math.random()*5);
+
 	/**
 	 * Station visit�e avant la station courante
 	 * Cette donn�e permet de savoir dans quelle direction le tram se dirige
@@ -32,10 +32,15 @@ public class Tramway implements PlaceToBe {
 	private double linePos;
 	private LinePart currentPart;
 	private Vector2 realPos;
+
+	public int getCapacity() {
+		return capacity;
+	}
+
 	/**
 	 * Nombre maximal de personnes que peut accueillir ce tram
 	 */
-	private int capacity;
+	private int capacity = 8;
 
 
 
@@ -46,6 +51,7 @@ public class Tramway implements PlaceToBe {
 	public Tramway(Line l) {
 		this.line = l;
 		linePos = 0;
+		people = new ArrayList<>();
 	}
 
 	/**
@@ -53,7 +59,7 @@ public class Tramway implements PlaceToBe {
 	 * @return le nombre de personnes | -1 si le lieu ne "stocke" pas les personnes
 	 */
 	public int Amount() {
-		return amount;
+		return people.size();
 	}
 
 	/**
@@ -62,6 +68,8 @@ public class Tramway implements PlaceToBe {
 	 */
 	public void Enter(People p) {
 		people.add(p);
+		p.getCurrentPlace().Exit(p);
+		p.setCurrentPlace(this);
 	}
 
 	/**
@@ -77,11 +85,6 @@ public class Tramway implements PlaceToBe {
 		return realPos.clone();
 	}
 
-	public int getPeopleAmount() {
-		return people.size();
-	}
-
-
 	// Direction du déplacement : true = avant, false = arrière
 	private boolean moveDirection = true;
 
@@ -89,7 +92,7 @@ public class Tramway implements PlaceToBe {
 
 	public void Update() {
 
-		if(timeSinceLastUpdateNs > 30000000) {
+		if(timeSinceLastUpdateNs > 20000000) {
 
 			if(currentPart==null)
 				currentPart=line.getPartAt(linePos);
@@ -109,16 +112,21 @@ public class Tramway implements PlaceToBe {
 			}
 
 
-			Game.Debug(4,"Tramway moved from "+linePos+" to "+newpos+" on line "+line.getID());
-			linePos = newpos;
-			LinePart newPart = line.getPartAt(newpos);
-			if(!newPart.equals(currentPart))
-				Game.Debug(2,"Tramway changed of part from "+currentPart+" to "+newPart+" on line "+line.getID());
 
-			currentPart = newPart;
-			timeSinceLastUpdateNs=0;
-			updateRealPos();
-			
+
+			LinePart newPart = line.getPartAt(newpos);
+			if(newPart!=null) {
+				if (!newPart.equals(currentPart))
+					Game.Debug(2, "Tramway changed of part from " + currentPart + " to " + newPart + " on line " + line.getID());
+
+				Game.Debug(4, "Tramway moved from " + linePos + " to " + newpos + " on line " + line.getID());
+
+				linePos = newpos;
+				currentPart = newPart;
+				timeSinceLastUpdateNs = 0;
+
+				updateRealPos();
+			}
 		} else {
 			timeSinceLastUpdateNs += Clock.get().GameDeltaTimeNs();
 		}
@@ -135,6 +143,20 @@ public class Tramway implements PlaceToBe {
 	private void updateRealPos() {
 		Vector2 scaledPartPos = currentPart.getEndPos().sub(currentPart.getStartPos()).scale((linePos%100)/100d);
 		Vector2 pos = this.currentPart.getStartPos().add(scaledPartPos);
+		realPos = pos;
+	}
+
+	public int lineID() {
+		return line.getID();
+	}
+
+	public Vector2 getTarget() {
+		Vector2 res = null;
+		if(moveDirection)
+			res = currentPart.getEndPos();
+		else
+			res = currentPart.getStartPos();
+		return res;
 	}
 
 }
