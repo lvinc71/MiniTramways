@@ -11,6 +11,7 @@ import com.stonksco.minitramways.logic.map.lines.Tramway;
 import com.stonksco.minitramways.views.Clock;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class People {
 
@@ -30,6 +31,8 @@ public class People {
 	 */
 	private double waitingSince;
 
+	private int satisfaction = 0;
+
 
 	public People(PlaceToBe place) {
 		instances.add(this);
@@ -40,21 +43,17 @@ public class People {
 	}
 
 	private void getPath() {
-		// La station la plus proche du lieu actuel devient la première étape du chemin à parcourir
-		Vector2 closestStationStart = Game.get().getMap().getClosestStation(place.getCoordinates());
-		Vector2 closestStationTarget = Game.get().getMap().getClosestStation(target.getCoordinates());
-		if(closestStationStart!=null && closestStationTarget!=null) {
-			pf.changeStart(closestStationStart);
-			pf.changeTarget(closestStationTarget);
+		if(Game.get().getMap().getStations().size()>1) {
+			pf.changeStart(place.getCoordinates());
+			pf.changeTarget(target.getCoordinates());
 			ArrayList<Vector2> foundPath = pf.getPath();
-			if(foundPath!=null) {
+			if(foundPath.size()>0) {
 				for(Vector2 v : foundPath) {
 					pathToFollow.add(Game.get().getMap().VectorToPlace(v));
 				}
-				Game.Debug(2,"Chemin trouvé pour "+this+" : Départ = "+closestStationStart+"  -   Chemin = "+pathToFollow);
-			} else System.out.println("AUCUN CHEMIN OBTENU de "+place.getCoordinates()+" vers "+target.getCoordinates());
-		} else System.out.println("AUCUNE STATION TROUVEE POUR REJOINDRE CIBLE");
-		System.out.println("STATIONS : "+Game.get().getMap().getStations());
+				Game.Debug(2,"Chemin trouvé pour "+this+" :  -   Chemin = "+pathToFollow);
+			}
+		}
 	}
 
 	/**
@@ -65,7 +64,7 @@ public class People {
 	}
 
 	/**
-	 * Réinitialise le temps depuis lequel la personne attend é 0.
+	 * Réinitialise le temps depuis lequel la personne attend à 0.
 	 */
 	public void resetWait() {
 		waitingSince=0;
@@ -109,6 +108,7 @@ public class People {
 	/**
 	 * Méthode qui détermine si un déplacement doit se faire et, le cas échéant, lequel
 	 */
+
 	private void chooseMove() {
 		if(pathToFollow.size()>0) {
 			//System.out.println("TEMP searching for move from "+place.getCoordinates()+" to "+pathToFollow.get(0).getCoordinates());
@@ -137,33 +137,37 @@ public class People {
 			} else if(place instanceof Station){
 				// On attend un tram
 
-				// On incrémente le compteur d'attente
-				waitingSince+= Clock.get().GameDeltaTime();
+					// On incrémente le compteur d'attente
+					waitingSince+= Clock.get().GameDeltaTime();
 
 
-				// On récupère la ligne correspondant au tronçon visé
-				LinePart part = Game.get().getMap().getPartBetween(place.getCoordinates(),pathToFollow.get(0).getCoordinates());
+					// On récupère la ligne correspondant au tronçon visé
+					LinePart part = Game.get().getMap().getPartBetween(place.getCoordinates(),pathToFollow.get(0).getCoordinates());
 
-				Tramway closestTram = null;
-				double closestTramDistance = Double.POSITIVE_INFINITY;
+					if(part!=null) {
+						Tramway closestTram = null;
+						double closestTramDistance = Double.POSITIVE_INFINITY;
 
 
-				for(Tramway t : part.getLine().getTrams()) {
-					double tramDistance = Vector2.AbstractDistance(t.getCoordinates(),place.getCoordinates());
-					if(tramDistance<closestTramDistance) {
-						closestTramDistance = tramDistance;
-						closestTram = t;
+						for(Tramway t : part.getLine().getTrams()) {
+							double tramDistance = Vector2.AbstractDistance(t.getCoordinates(),place.getCoordinates());
+							if(tramDistance<closestTramDistance) {
+								closestTramDistance = tramDistance;
+								closestTram = t;
+							}
+						}
+
+						//System.out.println("TEMP closest tram is at "+closestTramDistance);
+
+						// Si un des trams de la ligne est "sur" la station et s'il se dirige vers la cible
+						if(closestTramDistance<0.15d && closestTram.getTarget().equals(pathToFollow.get(0).getCoordinates()))
+							// Si le tram a de la place
+							if(closestTram.Amount()<closestTram.getCapacity())
+								// On bouge
+								move(closestTram);
+					} else {
+						//System.out.println("TEMP : PART NULL");
 					}
-				}
-
-				//System.out.println("TEMP closest tram is at "+closestTramDistance);
-
-				// Si un des trams de la ligne est "sur" la station et s'il se dirige vers la cible
-				if(closestTramDistance<0.15d && closestTram.getTarget().equals(pathToFollow.get(0).getCoordinates()))
-					// Si le tram a de la place
-					if(closestTram.Amount()<closestTram.getCapacity())
-						// On bouge
-						move(closestTram);
 
 			} else {
 				// On est au point de départ
@@ -197,14 +201,79 @@ public class People {
 		}
 
 		Game.get().requestPinsUpdate();
-
-		//// Dispawn/score si arrivée
 	}
 
 	private void dispawn() {
+		computeSatisfaction();
+		addMoney();
+
 		People.instances.remove(this);
 		this.place=null;
 		this.target=null;
 		this.pathToFollow=null;
+	}
+
+    public int computeSatisfaction() {
+
+		return satisfaction;
+    }
+
+    private void addMoney() {
+		if(satisfaction > -10)
+			Game.get().addMoney(5);
+		if(satisfaction>50)
+			Game.get().addMoney(8);
+    }
+
+	/**
+	 * Ajoute une nouvelle station sur le chemin si une intersection a été créée
+	 * @param intersection Point où l'intersection a été créée
+	 * @param abstractDistanceToPartStart distance à l'extrémité START de l'intersection
+	 * @param v1 premier délimiteur du tronçon
+	 * @param v2 deuxième délimiteur du tronçon
+	 */
+	public void addIntersectionBetween(Vector2 intersection, Vector2 v1, Vector2 v2) {
+
+		if(pathToFollow.size()>0){
+			if(place instanceof Tramway) {
+				// Cas 1 : on est actuellement sur le tronçon concerné
+				// Autrement dit, le tram dans lequel on est est sur le tronçon concerné
+				LinePart currentTramPart = ((Tramway)place).getCurrentPart();
+				// On vérifie que le tram se trouve bien sur le tronçon concerné
+				if((currentTramPart.getStartPos().equals(v1) && currentTramPart.getEndPos().equals(v2)) || (currentTramPart.getStartPos().equals(v2) && currentTramPart.getEndPos().equals(v1))) {
+					// On doit ajouter l'intersection avant l'élément [0] de pathToFollow
+					pathToFollow.add(0,Game.get().getMap().getBuildingAt(intersection));
+				}
+
+			} else {
+				// Cas 2 : le tronçon concerné est parmi les suivants
+				if(pathToFollow.size()==1) {
+					// si le chemin n'est composé que d'un tronçon
+					pathToFollow.add(0,Game.get().getMap().getBuildingAt(intersection)); // On ajoute l'intersection au début du chemin
+				} else {
+					// Si plusieurs tronçons (2+ stations)
+
+					if(pathToFollow.get(0).getCoordinates().equals(v1) || pathToFollow.get(0).getCoordinates().equals(v2)) {
+						// Si la station suivante correspond à une des extrémités du tronçon concerné
+						pathToFollow.add(0,Game.get().getMap().getBuildingAt(intersection));
+					} else {
+						// Sinon, il faut ajouter l'intersection juste avant la station
+						for(int i = 0; i<pathToFollow.size()-1; i++) {
+							Vector2 p1 = pathToFollow.get(i).getCoordinates();
+							Vector2 p2 = pathToFollow.get(i+1).getCoordinates();
+							if((p1.equals(v1) && p2.equals(v2)) || (p1.equals(v2) && p2.equals(v1))) {
+								pathToFollow.add(i+1,Game.get().getMap().getBuildingAt(intersection));
+								break;
+							}
+							// Si on a plusieurs tronçons dans le chemin mais que l'intersection se trouve sur le premier, dont on est déjà sur une extrémité
+							if((p1.equals(place.getCoordinates()) && p2.equals(pathToFollow.get(0))) || (p2.equals(place.getCoordinates()) && p1.equals(pathToFollow.get(0)))) {
+								pathToFollow.add(0,Game.get().getMap().getBuildingAt(intersection));
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

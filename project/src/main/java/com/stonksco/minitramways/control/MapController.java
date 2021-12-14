@@ -31,17 +31,9 @@ public class MapController implements Controler {
            res=true;
            if(listeDeLignes.size()==0)
                res=false;
-           else {
-               gameview.updateLines(listeDeLignes);
-               for (int i : listeDeLignes) {
-                   Game.Debug(1, "Updated line " + i + " : " + Game.get().getMap().getLineString(i));
-               }
-           }
-       }
+       } else res = false;
 
-       else
-           res = false;
-
+       gameview.updateLines();
        return res;
    }
 

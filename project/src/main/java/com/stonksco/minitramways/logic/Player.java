@@ -5,19 +5,19 @@ package com.stonksco.minitramways.logic;
  */
 public class Player {
 
-	private double satisfaction;
-	private int money;
+	private double satisfactionAvg;
+	private int money = 0;
 
-	public double getSatisfaction() {
-		return this.satisfaction;
+	public double getSatisfactionAvg() {
+		return this.satisfactionAvg;
 	}
 
 	/**
 	 * 
-	 * @param satisfaction
+	 * @param satisfactionAvg
 	 */
-	public void setSatisfaction(double satisfaction) {
-		this.satisfaction = satisfaction;
+	public void setSatisfactionAvg(double satisfactionAvg) {
+		this.satisfactionAvg = satisfactionAvg;
 	}
 
 	public int getMoney() {
@@ -32,4 +32,8 @@ public class Player {
 		this.money = money;
 	}
 
+
+	public void addMoney(int nb) {
+		money+=nb;
+	}
 }

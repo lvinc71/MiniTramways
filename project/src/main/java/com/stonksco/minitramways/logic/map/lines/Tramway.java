@@ -159,4 +159,8 @@ public class Tramway implements PlaceToBe {
 		return res;
 	}
 
+	public LinePart getCurrentPart() {
+		return currentPart;
+	}
+
 }

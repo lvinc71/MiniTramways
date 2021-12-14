@@ -49,6 +49,7 @@ public class PinsLayer extends Pane {
     public void reset() {
         this.getChildren().clear();
         this.pins.clear();
+        gw.updatePins();
     }
 
     public int getNbOf(int id) {

@@ -159,7 +159,10 @@ public class Vector2 {
     }
 
     public static double Distance(Vector2 v1, Vector2 v2) {
-        return Math.sqrt(Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2));
+        double dist = Math.sqrt(Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2));
+        if(dist<0)
+            dist*=-1;
+        return dist;
     }
 
     /**
@@ -170,7 +173,10 @@ public class Vector2 {
      * @return
      */
     public static double AbstractDistance(Vector2 v1, Vector2 v2) {
-        return Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2);
+        double dist = Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2);
+        if(dist<0)
+            dist*=-1;
+        return dist;
     }
 
     public Vector2 round() {

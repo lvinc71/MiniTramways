@@ -199,8 +199,12 @@ public class GameMap {
         LinePart partToDivide = with;
         for(Vector2 v : divisionsByDistance) {
             partToDivide = partToDivide.divide(partToDivide.getStartPos(),partToDivide.getEndPos(),v);
+            for(People p : People.getAll()) {
+                p.addIntersectionBetween(v,partToDivide.getStartPos(),partToDivide.getEndPos());
+            }
         }
 
+        People.UpdateGraph();
 
 
     }
@@ -698,7 +702,7 @@ public class GameMap {
         LinePart res = null;
         for(Line l : lines.values()) {
             for(LinePart lp : l.getParts()) {
-                if( (lp.getStartPos().equals(pos1) || lp.getEndPos().equals(pos1)) && (lp.getStartPos().equals(pos2) || lp.getEndPos().equals(pos2))) {
+                if( (lp.getStartPos().equals(pos1) && lp.getEndPos().equals(pos2)) || (lp.getStartPos().equals(pos2) && lp.getEndPos().equals(pos1))) {
                     res=lp;
                     break;
                 }
@@ -707,6 +711,12 @@ public class GameMap {
                 break;
         }
         return res;
+    }
+
+    public Integer[] getLinesID() {
+        ArrayList<Integer> ids = new ArrayList<>();
+        ids.addAll(lines.keySet());
+        return ids.toArray(new Integer[0]);
     }
 
 }

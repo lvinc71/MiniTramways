@@ -14,6 +14,7 @@ import java.util.Map;
 public class Game {
 
     private int debug = 0;
+    private int satisfaction = 0; // Satisfaction entre -100 et 100
 
     private static final Game g = new Game();
 
@@ -32,6 +33,7 @@ public class Game {
     }
 
     private GameMap map;
+    private Player player;
 
     private boolean needPinsUpdate = false;
 
@@ -46,6 +48,7 @@ public class Game {
 
     public void initGame() {
         map = new GameMap();
+        player = new Player();
         map.init();
     }
 
@@ -142,5 +145,17 @@ public class Game {
 
     public void requestPinsUpdate() {
         needPinsUpdate = true;
+    }
+
+    public void addMoney(int nb) {
+            player.addMoney(5);
+    }
+
+    public int getMoney() {
+        return player.getMoney();
+    }
+
+    public Integer[] getLinesID() {
+        return map.getLinesID();
     }
 }
