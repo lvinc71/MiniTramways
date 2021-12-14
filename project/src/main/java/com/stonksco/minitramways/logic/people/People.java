@@ -47,14 +47,13 @@ public class People {
 			pf.changeStart(place.getCoordinates());
 			pf.changeTarget(target.getCoordinates());
 			ArrayList<Vector2> foundPath = pf.getPath();
-			if(foundPath!=null) {
+			if(foundPath.size()>0) {
 				for(Vector2 v : foundPath) {
 					pathToFollow.add(Game.get().getMap().VectorToPlace(v));
 				}
 				Game.Debug(2,"Chemin trouvé pour "+this+" :  -   Chemin = "+pathToFollow);
-			} else System.out.println("AUCUN CHEMIN OBTENU de "+place.getCoordinates()+" vers "+target.getCoordinates());
-		} else System.out.println("AUCUNE STATION TROUVÉE POUR REJOINDRE CIBLE");
-		System.out.println("STATIONS : "+Game.get().getMap().getStations());
+			}
+		}
 	}
 
 	/**
@@ -167,7 +166,7 @@ public class People {
 								// On bouge
 								move(closestTram);
 					} else {
-						System.out.println("TEMP : PART NULL");
+						//System.out.println("TEMP : PART NULL");
 					}
 
 			} else {
@@ -259,11 +258,16 @@ public class People {
 						pathToFollow.add(0,Game.get().getMap().getBuildingAt(intersection));
 					} else {
 						// Sinon, il faut ajouter l'intersection juste avant la station
-						for(int i = 0; i<pathToFollow.size(); i++) {
+						for(int i = 0; i<pathToFollow.size()-1; i++) {
 							Vector2 p1 = pathToFollow.get(i).getCoordinates();
 							Vector2 p2 = pathToFollow.get(i+1).getCoordinates();
 							if((p1.equals(v1) && p2.equals(v2)) || (p1.equals(v2) && p2.equals(v1))) {
 								pathToFollow.add(i+1,Game.get().getMap().getBuildingAt(intersection));
+								break;
+							}
+							// Si on a plusieurs tronçons dans le chemin mais que l'intersection se trouve sur le premier, dont on est déjà sur une extrémité
+							if((p1.equals(place.getCoordinates()) && p2.equals(pathToFollow.get(0))) || (p2.equals(place.getCoordinates()) && p1.equals(pathToFollow.get(0)))) {
+								pathToFollow.add(0,Game.get().getMap().getBuildingAt(intersection));
 								break;
 							}
 						}

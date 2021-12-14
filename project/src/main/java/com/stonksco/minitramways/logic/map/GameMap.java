@@ -709,8 +709,6 @@ public class GameMap {
             }
             if(res!=null)
                 break;
-            else
-                System.out.println("TEMP NULL");
         }
         return res;
     }

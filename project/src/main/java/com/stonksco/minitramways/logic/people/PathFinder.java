@@ -18,6 +18,7 @@ public class PathFinder {
     public PathFinder(GameMap gm) {
         this.gm = gm;
         updateGraph();
+        stationsOfPath=new ArrayList<>();
     }
 
     // Données de départ
@@ -162,7 +163,6 @@ public class PathFinder {
             stationsOfPath.remove(from);
             stationsOfPath.remove(to);
         }
-        Game.Debug(2,"Found path from "+from+" to "+to+" : "+stationsOfPath);
         return stationsOfPath;
     }
 

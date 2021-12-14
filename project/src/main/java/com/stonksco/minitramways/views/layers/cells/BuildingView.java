@@ -31,7 +31,7 @@ public class BuildingView extends CellView {
             sprite.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.95d));
             sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
             sprite.setImage(img);
-            Game.Debug(3, "Created Building image HOUSE :" + sprite.getBoundsInLocal());
+            Game.Debug(4, "Created Building image HOUSE :" + sprite.getBoundsInLocal());
             this.getChildren().add(sprite);
         }
         else if(this.type == BuildingEnum.SHOP) {
@@ -41,7 +41,7 @@ public class BuildingView extends CellView {
             sprite.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.95d));
             sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
             sprite.setImage(img);
-            Game.Debug(3, "Created Building image SHOP :" + sprite.getBoundsInLocal());
+            Game.Debug(4, "Created Building image SHOP :" + sprite.getBoundsInLocal());
             this.getChildren().add(sprite);
         }
         else if(this.type == BuildingEnum.OFFICE) {
@@ -51,7 +51,7 @@ public class BuildingView extends CellView {
             sprite.fitHeightProperty().bind(gw.getCellSizeY().multiply(0.95d));
             sprite.fitWidthProperty().bind(gw.getCellSizeX().multiply(0.95d));
             sprite.setImage(img);
-            Game.Debug(3, "Created Building image OFFICE :" + sprite.getBoundsInLocal());
+            Game.Debug(4, "Created Building image OFFICE :" + sprite.getBoundsInLocal());
             this.getChildren().add(sprite);
         }
 
