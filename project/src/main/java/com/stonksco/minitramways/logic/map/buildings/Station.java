@@ -70,7 +70,7 @@ public class Station extends Building {
 
 	@Override
 	public String toString() {
-		return "Building:"+getCoordinates();
+		return "Station:"+getCoordinates();
 	}
 
 	public double radius() {

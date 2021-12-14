@@ -70,23 +70,6 @@ public class UILayer extends BorderPane {
         moneyCounter.add(m3,2,0);
         moneyCounter.add(m4,3,0);
 
-        int money = 1548;
-
-        String moneyStr = String.valueOf(money);
-        if(money<1000)
-            moneyStr = "0"+moneyStr;
-        if(money<100)
-            moneyStr = "0"+moneyStr;
-        if(money<10)
-            moneyStr = "0"+moneyStr;
-
-        char[] moneyChars = moneyStr.toCharArray();
-
-        m1.setText(String.valueOf(moneyChars[0]));
-        m2.setText(String.valueOf(moneyChars[1]));
-        m3.setText(String.valueOf(moneyChars[2]));
-        m4.setText(String.valueOf(moneyChars[3]));
-
     }
 
     public void setupTime() {
@@ -161,8 +144,28 @@ public class UILayer extends BorderPane {
 
     }
 
+    private void updateMoney() {
+        int money = Game.get().getMoney();
+
+        String moneyStr = String.valueOf(money);
+        if(money<1000)
+            moneyStr = "0"+moneyStr;
+        if(money<100)
+            moneyStr = "0"+moneyStr;
+        if(money<10)
+            moneyStr = "0"+moneyStr;
+
+        char[] moneyChars = moneyStr.toCharArray();
+
+        m1.setText(String.valueOf(moneyChars[0]));
+        m2.setText(String.valueOf(moneyChars[1]));
+        m3.setText(String.valueOf(moneyChars[2]));
+        m4.setText(String.valueOf(moneyChars[3]));
+    }
+
     public void Update() {
         updateTimer();
+        updateMoney();
     }
 
 

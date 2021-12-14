@@ -32,7 +32,7 @@ public class MapController implements Controler {
            if(listeDeLignes.size()==0)
                res=false;
            else {
-               gameview.updateLines(listeDeLignes);
+               gameview.updateLines();
                for (int i : listeDeLignes) {
                    Game.Debug(1, "Updated line " + i + " : " + Game.get().getMap().getLineString(i));
                }

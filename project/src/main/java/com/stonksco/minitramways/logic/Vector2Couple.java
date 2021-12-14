@@ -39,4 +39,12 @@ public class Vector2Couple {
     public int hashCode() {
         return Objects.hash(v1, v2);
     }
+
+    @Override
+    public String toString() {
+        return "Vector2Couple{" +
+                "v1=" + v1 +
+                ", v2=" + v2 +
+                '}';
+    }
 }

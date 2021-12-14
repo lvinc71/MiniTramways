@@ -43,6 +43,7 @@ public class StationView extends CellView {
             t.autosize();
             this.getChildren().add(t);
         }
+        this.opacityProperty().setValue(1);
 
 
     }

@@ -260,17 +260,15 @@ public class GameView extends Scene implements Listener {
                 Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
                 Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
                 Game.Debug(2, "Two cells selected.");
-                if(!mapController.createLine(firstPos,secondPos)) {
-                    Game.Debug(1, "Line creation aborted.");
-                    secondCell = null;
-                }
-                else {
-                    firstCell=secondCell;
-                    secondCell=null;
+                if (mapController.createLine(firstPos, secondPos)) {
                     firstCell.getChildren().remove(tempStation);
                     tempStation = null;
-                }
+                    firstCell=secondCell;
 
+                } else {
+                    Game.Debug(1, "Line creation aborted.");
+                }
+                secondCell = null;
             }
     }
 
@@ -395,7 +393,8 @@ public class GameView extends Scene implements Listener {
         return p;
     }
 
-    public void updateLines(ArrayList<Integer> lines) {
+    public void updateLines() {
+        Integer[] lines = Game.get().getLinesID();
         for(int l : lines) {
             Game.Debug(2,"VIEW : Refreshing line "+l);
             linesPane.removeLine(l);
@@ -448,6 +447,11 @@ public class GameView extends Scene implements Listener {
 
     public boolean doesPinExists(int id) {
         return pinsLayer.doesPinExists(id);
+    }
+
+    public void updatePins() {
+        gridStations.updateStationsPins();
+        gridBuildings.updateBuildingsPins();
     }
 
     /** Fin Pins */
