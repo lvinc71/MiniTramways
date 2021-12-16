@@ -5,6 +5,7 @@ import com.stonksco.minitramways.views.Clock;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -20,6 +21,7 @@ public class UILayer extends BorderPane {
     // elements top-right
     private Group money;
     private Group time;
+    private Group satisfaction;
 
     // Time
     private GridPane timeCounter;
@@ -37,17 +39,21 @@ public class UILayer extends BorderPane {
     private Text m3;
     private Text m4;
 
+    // Satisfaction
+    private ProgressBar satisfactionBar;
 
     public UILayer() {
         topRight = new HBox(15);
         time = new Group();
         money = new Group();
-        topRight.setAlignment(Pos.TOP_RIGHT);
-        topRight.setPadding(new Insets(30));
+        topRight.setAlignment(Pos.CENTER_RIGHT);
+        topRight.setPadding(new Insets(15));
         this.setTop(topRight);
 
+        setupSatisfaction();
         setupMoney();
         setupTime();
+
     }
 
     public void setupMoney() {
@@ -166,8 +172,18 @@ public class UILayer extends BorderPane {
     public void Update() {
         updateTimer();
         updateMoney();
+        updateSatisfaction();
     }
 
+    private void setupSatisfaction() {
+        satisfactionBar = new ProgressBar();
+        topRight.getChildren().add(satisfactionBar);
+        updateSatisfaction();
+    }
+
+    private void updateSatisfaction() {
+        satisfactionBar.progressProperty().setValue(Game.get().getSatisfaction()/100d);
+    }
 
 
 
