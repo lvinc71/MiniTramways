@@ -23,6 +23,7 @@ public class People {
 		return (ArrayList<People>)instances.clone();
 	}
 
+	Vector2 spawnedAt;
 	PlaceToBe place;
 	PlaceToBe target;
 	ArrayList<PlaceToBe> pathToFollow;
@@ -37,6 +38,7 @@ public class People {
 	public People(PlaceToBe place) {
 		instances.add(this);
 		this.place = place;
+		spawnedAt = place.getCoordinates();
 		pathToFollow = new ArrayList<>();
 
 		getTarget();
@@ -213,22 +215,25 @@ public class People {
 		this.pathToFollow=null;
 	}
 
+	/**
+	 * Calcule la satisfaction de cette personne à la fin de son voyage et l'envoie à Game pour le calcul de moyenne
+	 * @return
+	 */
     public int computeSatisfaction() {
-
-		return satisfaction;
+		int val = (int) (100-(waitingSince/Vector2.Distance(place.getCoordinates(),spawnedAt)*10d));
+		if(val<0)
+			val=0;
+		Game.get().sendSatisfaction(this,val);
+		return val;
     }
 
     private void addMoney() {
-		if(satisfaction > -10)
-			Game.get().addMoney(5);
-		if(satisfaction>50)
-			Game.get().addMoney(8);
+		Game.get().addMoney(5);
     }
 
 	/**
 	 * Ajoute une nouvelle station sur le chemin si une intersection a été créée
 	 * @param intersection Point où l'intersection a été créée
-	 * @param abstractDistanceToPartStart distance à l'extrémité START de l'intersection
 	 * @param v1 premier délimiteur du tronçon
 	 * @param v2 deuxième délimiteur du tronçon
 	 */
@@ -275,5 +280,10 @@ public class People {
 				}
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "People:["+place.toString()+"]";
 	}
 }

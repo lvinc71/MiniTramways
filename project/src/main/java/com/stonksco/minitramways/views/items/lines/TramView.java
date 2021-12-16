@@ -72,6 +72,7 @@ public class TramView extends Group {
         // Règle la rotation selon le tronçon courant
 
         sprite.setImage(img);
+        sprite.smoothProperty().set(true);
 
 
         sprite.translateXProperty().bind(sprite.fitWidthProperty().divide(-2d));

@@ -5,21 +5,26 @@ import com.stonksco.minitramways.logic.map.GameMap;
 import com.stonksco.minitramways.logic.map.lines.Tramway;
 import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
 import com.stonksco.minitramways.logic.people.People;
+import com.stonksco.minitramways.views.Clock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
 
     private int debug = 0;
-    private int satisfaction = 0; // Satisfaction entre -100 et 100
+    private int satisfaction = 0; // Moyenne de la satisfaction entre 0 et 100
+    private LinkedHashMap<People,Integer> satisfactions;
 
     private static final Game g = new Game();
 
     private Game() {
-
+        satisfactions = new LinkedHashMap<People, Integer>() {
+            @Override
+            protected boolean removeEldestEntry(final Map.Entry eldest) {
+                return size() > 40;
+            }
+        };
+        computeSatisfaction();
     }
 
     public static Game get() {
@@ -50,6 +55,7 @@ public class Game {
         map = new GameMap();
         player = new Player();
         map.init();
+        satisfactions.put(null,60);
     }
 
     public int getDebug() {
@@ -100,6 +106,7 @@ public class Game {
         for(People p : People.getAll()) {
             p.Update();
         }
+        computeSatisfaction();
     }
 
     public int getFirstIndexOf(int lineID) {
@@ -157,5 +164,29 @@ public class Game {
 
     public Integer[] getLinesID() {
         return map.getLinesID();
+    }
+
+    public void sendSatisfaction(People people, int val) {
+        satisfactions.put(people,val);
+    }
+
+    private long lastSatisfactionUpdate = 0;
+
+    private void computeSatisfaction() {
+        if(lastSatisfactionUpdate>5000000000l) {
+            double s = 0;
+            for(Map.Entry e : satisfactions.entrySet()) {
+                s+=(Integer)e.getValue();
+            }
+            satisfaction = (int) (s/satisfactions.size());
+            Game.Debug(2,"Satisfaction updated to "+satisfaction);
+            lastSatisfactionUpdate=0;
+        } else {
+            lastSatisfactionUpdate+= Clock.get().DeltaTime();
+        }
+    }
+
+    public int getSatisfaction() {
+        return satisfaction;
     }
 }

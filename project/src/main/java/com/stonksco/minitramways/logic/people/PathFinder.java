@@ -157,6 +157,10 @@ public class PathFinder {
             while(!current.equals(from)) {
                 path.add(current);
                 current=parents.get(current);
+                if(current==null) {
+                    path.clear();
+                    break;
+                }
             }
             Collections.reverse(path);
             stationsOfPath=path;

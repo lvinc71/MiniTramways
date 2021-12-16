@@ -168,19 +168,24 @@ public class GameMap {
         for(Line l : lines.values()) {
             // On lui donne chaque intersection, pour que le linepart concerné se divise
             for(Map.Entry e : intersections.entrySet()) {
-                if(l.divide(((LinePart)e.getKey()).getStartPos(),((LinePart)e.getKey()).getEndPos(),(Vector2)e.getValue())!=null) {
-                    //with.divide(with.getStartPos(),with.getEndPos(),(Vector2)e.getValue());
-                    Station s = addStation((Vector2)e.getValue());
-                    s.addLine(l);
-                    s.addLine(with.getLine());
-                    Game.Debug(2,"Intersection processed : Station created at "+ e.getValue());
+                if(getBuildingAt((Vector2)e.getValue())==null) {
+                    if (l.divide(((LinePart) e.getKey()).getStartPos(), ((LinePart) e.getKey()).getEndPos(), (Vector2) e.getValue()) != null) {
+                        //with.divide(with.getStartPos(),with.getEndPos(),(Vector2)e.getValue());
+                        Station s = addStation((Vector2) e.getValue());
+                        s.addLine(l);
+                        Game.Debug(2, "Intersection processed : Station created at " + e.getValue());
+                    }
                 }
             }
         }
 
 
-        // On crée une liste de toutes les coordonnées d'intersections puis on les ordonne de la pluc proche à la plus éloignée du point de départ
-        List<Vector2> divisionsByDistance = new ArrayList<>(intersections.values());
+        // On crée une liste de toutes les coordonnées d'intersections puis on les ordonne de la plus proche à la plus éloignée du point de départ
+        List<Vector2> divisionsByDistance = new ArrayList<>();
+        for(Vector2 v : intersections.values()) {
+            if(!divisionsByDistance.contains(v))
+                divisionsByDistance.add(v);
+        }
 
         Collections.sort(divisionsByDistance, Comparator.comparingDouble(new ToDoubleFunction<Vector2>() {
             @Override
@@ -195,10 +200,11 @@ public class GameMap {
         else
             Game.Debug(1,"No divisions needed for "+with);
 
-        Game.Debug(1,"");
+
         LinePart partToDivide = with;
         for(Vector2 v : divisionsByDistance) {
             partToDivide = partToDivide.divide(partToDivide.getStartPos(),partToDivide.getEndPos(),v);
+            ((Station)getBuildingAt(v)).addLine(with.getLine());
             for(People p : People.getAll()) {
                 p.addIntersectionBetween(v,partToDivide.getStartPos(),partToDivide.getEndPos());
             }

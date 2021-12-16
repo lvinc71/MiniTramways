@@ -95,6 +95,9 @@ public class GameView extends Scene implements Listener {
         Game.get().initGame();
 
         this.setFill(getColor(ColorEnum.BACKGROUND));
+        String stylesheetpath = getClass().getResource("/style.css").toExternalForm();
+        this.getStylesheets().clear();
+        this.getStylesheets().add(stylesheetpath);
     }
 
     public static void FrameUpdate() {
