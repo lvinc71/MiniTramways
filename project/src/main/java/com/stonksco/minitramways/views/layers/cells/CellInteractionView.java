@@ -10,8 +10,6 @@ import javafx.scene.layout.GridPane;
 
 public class CellInteractionView extends CellView {
 
-
-
     /**
      * Évènement de clic sur la cellule
      * @author Léo Vincent
@@ -19,16 +17,14 @@ public class CellInteractionView extends CellView {
     EventHandler<MouseEvent> cellClickEvent = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent mouseEvent) {
-            // Clic gauche
-            if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                Game.Debug(3,"Cell click triggered.");
-                    CellView clicked = (CellView)mouseEvent.getSource();
-                    Game.Debug(2,"Clicked on cell at ( "+clicked.getGridPos().getX()+" , "+clicked.getGridPos().getY()+" )");
-                    gw.cellClick(clicked);
+                CellView clicked = (CellView)mouseEvent.getSource();
+                Game.Debug(2,"Clicked on cell at ( "+clicked.getGridPos().getX()+" , "+clicked.getGridPos().getY()+" )");
+                if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    gw.cellLeftClick(clicked);
+                } else if(mouseEvent.getButton() == MouseButton.SECONDARY) {
+                    gw.cellRightClick(clicked);
                 }
-
             }
-
         };
 
     // Évènement d'entrée du curseur dans la cellule

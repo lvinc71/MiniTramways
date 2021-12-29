@@ -1,9 +1,11 @@
 package com.stonksco.minitramways.views;
 
 import com.stonksco.minitramways.control.MapController;
-import com.stonksco.minitramways.control.interfaces.Listener;
+import com.stonksco.minitramways.control.utils.Listener;
+import com.stonksco.minitramways.control.utils.Notification;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
+import com.stonksco.minitramways.logic.interactions.ClickStateMachine;
 import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
 import com.stonksco.minitramways.views.layers.*;
 import com.stonksco.minitramways.views.layers.cells.CellView;
@@ -31,6 +33,7 @@ public class GameView extends Scene implements Listener {
     private final Stage primaryStage;
     // Contrôleurs
     private final MapController mapController;
+
     // Couleurs
     private final Map<ColorEnum,Color> colors = Map.ofEntries(
             Map.entry(ColorEnum.LINE_BLUE,Color.web("0x3333FF",1)),
@@ -83,14 +86,15 @@ public class GameView extends Scene implements Listener {
      * @param primaryStage
      * @author Léo Vincent
      */
-    public GameView(Group parent, Stage primaryStage) {
+    public GameView(Group parent, Stage primaryStage, MapController controller) {
         super(parent, 1600,900);
         instances.add(this);
 
         this.root = parent;
         this.primaryStage = primaryStage;
 
-        mapController = new MapController(Game.get().getMap(), this);
+        mapController = controller;
+        controller.register(this);
 
         Game.get().initGame();
 
@@ -232,12 +236,13 @@ public class GameView extends Scene implements Listener {
     }
 
     /**
-     * Appelée au clic sur une cellule de la grille
+     * Appelée au clic gauche sur une cellule de la grille
      * @param cell sur laquelle le clic a été fait
      * @author Thomas Coulon, Léo Vincent
      */
-    public void cellClick(CellView cell)
+    public void cellLeftClick(CellView cell)
     {
+        /*
             if (firstCell == null)
             {
                 firstCell = cell;
@@ -273,13 +278,17 @@ public class GameView extends Scene implements Listener {
                 }
                 secondCell = null;
             }
+         */
+
+        mapController.sendLeftClick(new Vector2(GridPane.getColumnIndex(cell),GridPane.getRowIndex(cell)));
     }
 
     /**
      * Appelée lors du clic droit sur la grille
      */
-    public void gridRightClick() {
-        resetCellSelection();
+    public void cellRightClick(CellView cell) {
+        //resetCellSelection();
+        mapController.sendRightClick(new Vector2(GridPane.getColumnIndex(cell),GridPane.getRowIndex(cell)));
     }
 
 
@@ -307,8 +316,13 @@ public class GameView extends Scene implements Listener {
     }
 
     @Override
-    public void Notify(String msg) {
-
+    public void Notify(Notification notif) {
+        String msg = notif.getMessage();
+        switch(msg) {
+            case "updatelines" :
+                updateLines((ArrayList<Integer>)notif.getData());
+                break;
+        }
     }
 
 
@@ -396,9 +410,8 @@ public class GameView extends Scene implements Listener {
         return p;
     }
 
-    public void updateLines() {
-        Integer[] lines = Game.get().getLinesID();
-        for(int l : lines) {
+    public void updateLines(ArrayList<Integer> data) {
+        for(int l : data) {
             Game.Debug(2,"VIEW : Refreshing line "+l);
             linesPane.removeLine(l);
             linesPane.addLine(l);

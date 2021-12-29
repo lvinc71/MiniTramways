@@ -1,5 +1,6 @@
 package com.stonksco.minitramways;
 
+import com.stonksco.minitramways.control.MapController;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.views.GameView;
 import javafx.application.Application;
@@ -29,9 +30,6 @@ public class MiniTramways extends Application {
                 "  \\$$$$$$     \\$$$$   \\$$$$$$  \\$$   \\$$ \\$$   \\$$ \\$$$$$$$         \\$$$$$$   \\$$$$$$  \\$$\n\n\n");
 
 
-
-        getParameters().getNamed().toString();
-
         if(getParameters().getNamed().containsKey("debug")) {
             int nb = Integer.valueOf(getParameters().getNamed().get("debug"));
             if (nb > 0)
@@ -43,7 +41,9 @@ public class MiniTramways extends Application {
 
         Group root = new Group();
 
-        GameView gw = new GameView(root,primaryStage);
+        MapController controller = new MapController();
+
+        GameView gw = new GameView(root,primaryStage,controller);
         primaryStage.setScene(gw);
         primaryStage.show();
         gw.enable();
