@@ -214,4 +214,15 @@ public class Game {
             res = l.getID();
         return res;
     }
+
+    public void destroyStation(Vector2 stationtodestroy) {
+        ArrayList<Integer> res = map.destroyStation(stationtodestroy);
+        if(res!=null) {
+            if(res.size()>0) {
+                for(People p : People.getAll()) {
+                    p.destroyed(stationtodestroy);
+                }
+            }
+        }
+    }
 }

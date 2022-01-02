@@ -6,6 +6,7 @@ import com.stonksco.minitramways.views.GameView;
 import com.stonksco.minitramways.views.layers.cells.CellView;
 import com.stonksco.minitramways.views.layers.cells.StationView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StationsLayer extends GridView{
@@ -34,15 +35,18 @@ public class StationsLayer extends GridView{
         this.add(s,(int)at.getX(),(int)at.getY());
     }
 
-    public void updateStations() {
+    public ArrayList<Vector2> updateStations() {
+        ArrayList<Vector2> res = new ArrayList<>();
         this.stations.clear();
         this.getChildren().clear();
         this.getColumnConstraints().clear();
         this.getRowConstraints().clear();
         this.fill(CellView.class);
         for(Vector2 v : Game.get().getStations()) {
-            addStationAt(v.round());
+            addStationAt(v);
+            res.add(v);
         }
+        return res;
     }
 
     public void showRadiusOf(Vector2 cell) {

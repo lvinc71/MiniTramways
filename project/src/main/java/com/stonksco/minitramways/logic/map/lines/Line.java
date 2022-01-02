@@ -208,4 +208,46 @@ public class Line {
 	public int getLastIndex() {
 		return first.getLast().getEnd();
 	}
+
+	/**
+	 * "Rogne" la ligne à une extrémité (détruit la station et le tronçon associé)
+	 * @param todestroy extrémité à détruire
+	 * @return true si le rognage a bien été effectué, false sinon
+	 */
+    public boolean Trim(Vector2 todestroy) {
+		boolean res = false;
+
+		LinePart lp = null;
+		if(first.getStartPos().equals(todestroy)) {
+			lp=first;
+		} else if(first.getLast().getEndPos().equals(todestroy)){
+			lp=first.getLast();
+		}
+
+		if(lp!=null) {
+			boolean noTrams = true;
+			for(Tramway t : getTrams()) {
+				if(t.getLinePos()>=lp.getStart() && t.getLinePos()<=lp.getEnd()) {
+					noTrams=false;
+					break;
+				}
+			}
+
+			if(noTrams) {
+				String oldLine = this.toString();
+				LinePart newExt = lp.destroy(todestroy);
+				res = true;
+				if(first==lp)
+					first=newExt;
+				Game.Debug(1,"Destroyed station "+todestroy+" of part "+lp);
+				Game.Debug(2,"       Old line :      "+oldLine);
+				Game.Debug(2,"       Updated line :  "+this);
+			}
+		}
+
+
+
+
+		return res;
+    }
 }

@@ -198,6 +198,9 @@ public class GameMap {
 
 
     public ArrayList<Integer> getLinesToUpdate() {
+        if(linesToUpdate==null)
+            linesToUpdate=new ArrayList<>();
+
         ArrayList<Integer> temp = (ArrayList<Integer>) linesToUpdate.clone();
         linesToUpdate.clear();
         return temp;
@@ -770,5 +773,46 @@ public class GameMap {
     }
 
 
+    /**
+     * Détruit la station passée en paramètre si cela est possible
+     * @param stationtodestroy station à détruire
+     * @return liste des lignes modifiées
+     */
+    public ArrayList<Integer> destroyStation(Vector2 stationtodestroy) {
+        ArrayList<Integer> updatedLines = new ArrayList<>();
 
+        if(getBuildingAt(stationtodestroy) instanceof Station) {
+            Station s = (Station) getBuildingAt(stationtodestroy);
+            boolean canContinue = true;
+
+            // Si la station est bien sur une extrémité de chacune de ses lignes
+            for(Line l : s.getLines()) {
+                if(!l.isAtExtremity(stationtodestroy))
+                    canContinue=false;
+            }
+
+            if(canContinue) {
+                for(Line l : s.getLines()) {
+                    boolean trimmed = l.Trim(stationtodestroy);
+                    if(trimmed) {
+                        updatedLines.add(l.getID());
+                        linesToUpdate.add(l.getID());
+                        s.removeLine(l.getID());
+                    }
+
+                }
+                stations.remove(stationtodestroy);
+
+
+
+
+                // Nettoyer la liste des stations (détruire celles qui ne sont plus reliées à rien)
+
+            }
+        }
+
+
+
+        return updatedLines;
+    }
 }

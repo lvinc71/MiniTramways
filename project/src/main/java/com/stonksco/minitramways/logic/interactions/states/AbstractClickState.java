@@ -4,6 +4,8 @@ import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.interactions.ClickStateMachine;
 import com.stonksco.minitramways.logic.map.lines.LinePart;
 
+import java.util.HashMap;
+
 public abstract class AbstractClickState {
 
     protected ClickStateMachine sm;
@@ -70,6 +72,10 @@ public abstract class AbstractClickState {
     @Override
     public String toString() {
         return "[ ("+stateName+"):"+sm.getData()+" ]";
+    }
+
+    public HashMap<String,Object> getData() {
+        return (HashMap<String, Object>) sm.getData().clone();
     }
 
 }

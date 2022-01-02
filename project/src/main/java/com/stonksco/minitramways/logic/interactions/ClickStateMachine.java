@@ -33,7 +33,7 @@ public class ClickStateMachine {
                 currentState = currentState.leftTransition((Vector2)at);
             }
 
-            currentState = currentState.naturalTransition();
+            naturalTransition();
 
             Game.Debug(1,"Click state machine updated : "+currentState);
 
@@ -54,11 +54,23 @@ public class ClickStateMachine {
             }
         }
 
-        currentState = currentState.naturalTransition();
+        naturalTransition();
 
         Game.Debug(1,"Click state machine updated : "+currentState);
 
         return currentState;
+    }
+
+    private void naturalTransition() {
+        // On effectue les transitions naturelles tant qu'elles donnent un autre état que l'état courant
+        boolean exit = false;
+        AbstractClickState precState = currentState;
+        while(!exit) {
+            currentState = currentState.naturalTransition();
+            if(precState==currentState)
+                exit=true;
+            precState = currentState;
+        }
     }
 
     public HashMap<String,Object> getData() {

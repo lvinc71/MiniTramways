@@ -1,4 +1,4 @@
-package com.stonksco.minitramways.views.layers;
+package com.stonksco.minitramways.views.ui;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.views.Clock;
@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class UILayer extends BorderPane {
+public class infosLayer extends BorderPane {
 
     // Zones
     private HBox topRight;
@@ -42,7 +42,7 @@ public class UILayer extends BorderPane {
     // Satisfaction
     private ProgressBar satisfactionBar;
 
-    public UILayer() {
+    public infosLayer() {
         topRight = new HBox(15);
         time = new Group();
         money = new Group();

@@ -56,7 +56,7 @@ public class Station extends Building {
 	}
 
 	/**
-	 * Retourne l'ensemble des lignes qui désservent par la station
+	 * Retourne l'ensemble des lignes qui desservent la station
 	 */
 	public Line[] getLines() {
 		Line[] res;
@@ -77,4 +77,7 @@ public class Station extends Building {
 		return radius;
 	}
 
+    public void removeLine(int id) {
+
+    }
 }

@@ -12,28 +12,6 @@ import java.util.ArrayList;
 
 public class MapController extends Listened {
 
-    public MapController() {
-    }
-
-
-
-
-
-
-   public boolean createLine(Vector2 start, Vector2 end)
-   {
-       boolean res = false;
-       Integer lineID = Game.get().CreateLine(start,end);
-       if(lineID!=null) {
-           res=true;
-       }
-
-       Notification notif = new Notification("updatelines");
-       notif.setData(Game.get().getMap().getLinesToUpdate());
-       Notify(notif);
-       return res;
-   }
-
     public void sendLeftClick(Vector2 at) {
         AbstractClickState oldState = Game.get().getCurrentClickState();
         AbstractClickState newState = Game.get().sendLeftClick(at);
@@ -44,12 +22,20 @@ public class MapController extends Listened {
             Notify(notif);
         }
 
+        Notify(new Notification("updateinteractions"));
     }
 
     public void sendRightClick(Vector2 at) {
         AbstractClickState oldState = Game.get().getCurrentClickState();
         AbstractClickState newState = Game.get().sendRightClick(at);
 
+        ArrayList<Integer> toUpdate = Game.get().getMap().getLinesToUpdate();
+        if(toUpdate!=null && toUpdate.size()>0) {
+            Notification notif = new Notification("updatelines");
+            notif.setData(toUpdate);
+            Notify(notif);
+        }
 
+        Notify(new Notification("updateinteractions"));
     }
 }

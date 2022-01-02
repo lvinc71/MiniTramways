@@ -5,6 +5,10 @@ import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.interactions.ClickStateMachine;
 import com.stonksco.minitramways.logic.map.lines.LinePart;
 
+/**
+ * Création de ligne en cours
+ * @Data firstcell
+ */
 public class LineCreationState extends AbstractClickState {
 
 

@@ -282,4 +282,30 @@ public class LinePart {
     public int hashCode() {
         return Objects.hash(startStation, endStation, line, start, end);
     }
+
+    /**
+     * Détruit la station passée en paramètre si ce tronçon y est directement lié (non récursif)
+     * DANGEREUX : cette méthode peut engendrer des exceptions si un tram se trouve sur le tronçon
+     * @param todestroy station à détruire
+     * @return le nouveau tronçon d'extrémité, ou null si aucune modification ou si ce tronçon était seul
+     */
+    LinePart destroy(Vector2 todestroy) {
+        LinePart res = null;
+
+        if(startStation.equals(todestroy) && prec==null) {
+            // On détruit startStation
+            if(next!=null)
+                next.prec=null;
+            res = next;
+        } else if(endStation.equals(todestroy) && next==null) {
+            // On détruit endStation
+            if(prec!=null)
+                prec.next=null;
+            res=prec;
+        }
+
+
+
+        return res;
+    }
 }
