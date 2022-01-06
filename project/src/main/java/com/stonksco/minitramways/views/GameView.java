@@ -355,6 +355,10 @@ public class GameView extends Scene implements Listener {
         return p;
     }
 
+    /**
+     *
+     * @param lines
+     */
     public void updateLines(ArrayList<Integer> lines) {
 
     }
