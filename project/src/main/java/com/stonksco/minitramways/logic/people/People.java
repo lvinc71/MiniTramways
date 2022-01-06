@@ -34,6 +34,8 @@ public class People {
 
 	private int satisfaction = 0;
 
+	private boolean pathNeedsUpdate = true;
+
 
 	public People(PlaceToBe place) {
 		instances.add(this);
@@ -46,7 +48,11 @@ public class People {
 
 	private void getPath() {
 		if(Game.get().getMap().getStations().size()>1) {
-			pf.changeStart(place.getCoordinates());
+			if(place instanceof Tramway) {
+				pf.changeStart(((Tramway)place).getTarget());
+			} else {
+				pf.changeStart(place.getCoordinates());
+			}
 			pf.changeTarget(target.getCoordinates());
 			ArrayList<Vector2> foundPath = pf.getPath();
 			if(foundPath.size()>0) {
@@ -54,6 +60,7 @@ public class People {
 					pathToFollow.add(Game.get().getMap().VectorToPlace(v));
 				}
 				Game.Debug(2,"Chemin trouvé pour "+this+" :  -   Chemin = "+pathToFollow);
+				pathNeedsUpdate=false;
 			}
 		}
 	}
@@ -85,7 +92,7 @@ public class People {
 	}
 
 	public void Update() {
-		if(pathToFollow.size() == 0 && target!=null) {
+		if((pathToFollow.size() == 0 && target!=null) || pathNeedsUpdate) {
 			getPath();
 		} else {
 			chooseMove();
@@ -286,4 +293,20 @@ public class People {
 	public String toString() {
 		return "People:["+place.toString()+"]";
 	}
+
+    public void destroyed(Vector2 stationtodestroy) {
+		boolean pathContainsDestroyed = false;
+		for(PlaceToBe p : pathToFollow) {
+			if(p.getCoordinates().equals(stationtodestroy)) {
+				pathContainsDestroyed = true;
+				break;
+			}
+		}
+
+		if(pathContainsDestroyed) {
+			pathToFollow.clear();
+			pathNeedsUpdate = true;
+		}
+
+    }
 }

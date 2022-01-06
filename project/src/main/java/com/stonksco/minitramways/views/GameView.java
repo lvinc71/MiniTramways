@@ -1,7 +1,8 @@
 package com.stonksco.minitramways.views;
 
 import com.stonksco.minitramways.control.MapController;
-import com.stonksco.minitramways.control.interfaces.Listener;
+import com.stonksco.minitramways.control.utils.Listener;
+import com.stonksco.minitramways.control.utils.Notification;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
@@ -9,6 +10,8 @@ import com.stonksco.minitramways.views.layers.*;
 import com.stonksco.minitramways.views.layers.cells.CellView;
 import com.stonksco.minitramways.views.layers.cells.GridDisplayCell;
 import com.stonksco.minitramways.views.layers.cells.StationView;
+import com.stonksco.minitramways.views.ui.infosLayer;
+import com.stonksco.minitramways.views.ui.InteractionsViewLayer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.When;
 import javafx.beans.property.DoubleProperty;
@@ -31,6 +34,7 @@ public class GameView extends Scene implements Listener {
     private final Stage primaryStage;
     // Contrôleurs
     private final MapController mapController;
+
     // Couleurs
     private final Map<ColorEnum,Color> colors = Map.ofEntries(
             Map.entry(ColorEnum.LINE_BLUE,Color.web("0x3333FF",1)),
@@ -51,7 +55,8 @@ public class GameView extends Scene implements Listener {
             Map.entry(ColorEnum.OFFICE_BORDER,Color.web("0x65D6FF",1)),
             Map.entry(ColorEnum.PIN_COLOR,Color.web("0xED362E",1)),
             Map.entry(ColorEnum.TARGET_COLOR,Color.web("0xE0BFB8",0.2d)),
-            Map.entry(ColorEnum.TARGET_OUTLINE_COLOR,Color.web("0xE0BFB8",0.6d))
+            Map.entry(ColorEnum.TARGET_OUTLINE_COLOR,Color.web("0xE0BFB8",0.6d)),
+            Map.entry(ColorEnum.CELL_SELECTION,Color.web("0x74df64",0.7d))
     );
     // Taille des cellules
     DoubleProperty cellSizeX;
@@ -60,13 +65,14 @@ public class GameView extends Scene implements Listener {
     private GridDisplay gridDisplay; // Points de la grille
     private StationsLayer gridStations; // Stations
     private BuildingsLayer gridBuildings; // Bâtiments (sauf stations)
-    private CellInteractionsLayer interactionLayer; // Épingles représentant le nombre de personnes
+    private CellInteractionsLayer cellInteractionsLayer; // Épingles représentant le nombre de personnes
     private AreasLayer areasPane; // Quartiers
     private LinesLayer linesPane; // Lignes et trams
     private RadiusLayer radiusLayer; // Rayons des stations
     private TargetsLayer targetsLayer; // Objectifs des personnes
     private PinsLayer pinsLayer; // Nombre de personnes dans bâtiments
-    private UILayer uiLayer; // Interface
+    private infosLayer infosLayer; // Interface (temps, argent, satisfaction)
+    private InteractionsViewLayer interactionsViewLayer; // Sélections, contrôles
 
     private StackPane mainPane; // Conteneur principal remplissant la fenêtre
     private Pane centerPane; // Conteneur central contenant la carte du jeu
@@ -83,14 +89,15 @@ public class GameView extends Scene implements Listener {
      * @param primaryStage
      * @author Léo Vincent
      */
-    public GameView(Group parent, Stage primaryStage) {
+    public GameView(Group parent, Stage primaryStage, MapController controller) {
         super(parent, 1600,900);
         instances.add(this);
 
         this.root = parent;
         this.primaryStage = primaryStage;
 
-        mapController = new MapController(Game.get().getMap(), this);
+        mapController = controller;
+        controller.register(this);
 
         Game.get().initGame();
 
@@ -121,7 +128,8 @@ public class GameView extends Scene implements Listener {
 
         centerPane = new Pane();
         mainPane = new StackPane();
-        uiLayer = new UILayer();
+        infosLayer = new infosLayer();
+        interactionsViewLayer = new InteractionsViewLayer(this);
 
         mainPane.prefWidthProperty().bind(this.widthProperty());
         mainPane.prefHeightProperty().bind(this.heightProperty());
@@ -142,8 +150,9 @@ public class GameView extends Scene implements Listener {
 
 
         mainPane.paddingProperty().bind(Bindings.createObjectBinding(() -> new Insets(mainPane.heightProperty().multiply(0.05d).get())));
-        mainPane.getChildren().add(uiLayer);
+        mainPane.getChildren().add(infosLayer);
         mainPane.getChildren().add(centerPane);
+        mainPane.getChildren().add(interactionsViewLayer);
         root.getChildren().add(mainPane);
 
         When bindCondition = new When(mainPane.widthProperty().lessThan(mainPane.heightProperty().multiply(Game.get().getMapSize().getX()/Game.get().getMapSize().getY())));
@@ -179,7 +188,7 @@ public class GameView extends Scene implements Listener {
         gridDisplay = new GridDisplay(this,s);
         gridStations = new StationsLayer(this,s);
         gridBuildings = new BuildingsLayer(this,s);
-        interactionLayer = new CellInteractionsLayer(this,s);
+        cellInteractionsLayer = new CellInteractionsLayer(this,s);
         areasPane = new AreasLayer(this);
         linesPane = new LinesLayer(this);
         radiusLayer = new RadiusLayer(this);
@@ -194,7 +203,7 @@ public class GameView extends Scene implements Listener {
         centerPane.getChildren().add(gridStations);
         centerPane.getChildren().add(pinsLayer);
         centerPane.getChildren().add(targetsLayer);
-        centerPane.getChildren().add(interactionLayer);
+        mainPane.getChildren().add(cellInteractionsLayer);
 
         centerPane.layout();
 
@@ -208,7 +217,7 @@ public class GameView extends Scene implements Listener {
         //layersList.add(gridDisplay);
         layersList.add(gridStations);
         layersList.add(gridBuildings);
-        layersList.add(interactionLayer);
+        layersList.add(cellInteractionsLayer);
         layersList.add(areasPane);
         layersList.add(linesPane);
         layersList.add(radiusLayer);
@@ -232,54 +241,19 @@ public class GameView extends Scene implements Listener {
     }
 
     /**
-     * Appelée au clic sur une cellule de la grille
+     * Appelée au clic gauche sur une cellule de la grille
      * @param cell sur laquelle le clic a été fait
-     * @author Thomas Coulon, Léo Vincent
      */
-    public void cellClick(CellView cell)
+    public void cellLeftClick(CellView cell)
     {
-            if (firstCell == null)
-            {
-                firstCell = cell;
-                Game.Debug(2, "First cell at ( " + GridPane.getColumnIndex(firstCell)+ " , "+ GridPane.getRowIndex(firstCell) + " )");
-                if(Game.get().getMap().getCellAt(firstCell.getGridPos()).getBuilding()==null) {
-                    tempStation = new StationView(this, firstCell.getGridPos());
-                    tempStation.opacityProperty().setValue(0.5);
-                    firstCell.getChildren().add(tempStation);
-                } else {
-                    if (!Game.get().isAtExtremity(firstCell.getGridPos())) {
-                        resetCellSelection();
-                    }
-                }
-            }
-            else if (secondCell == null && cell != firstCell)
-            {
-                secondCell = cell;
-                Game.Debug(2, "Second cell at ( " + GridPane.getColumnIndex(secondCell)+ " , "+ GridPane.getRowIndex(secondCell)+ " )");
-            }
-
-            if (firstCell != null && secondCell != null)
-            {
-                Vector2 firstPos = new Vector2(GridPane.getColumnIndex(firstCell),GridPane.getRowIndex(firstCell));
-                Vector2 secondPos = new Vector2(GridPane.getColumnIndex(secondCell),GridPane.getRowIndex(secondCell));
-                Game.Debug(2, "Two cells selected.");
-                if (mapController.createLine(firstPos, secondPos)) {
-                    firstCell.getChildren().remove(tempStation);
-                    tempStation = null;
-                    firstCell=secondCell;
-
-                } else {
-                    Game.Debug(1, "Line creation aborted.");
-                }
-                secondCell = null;
-            }
+        mapController.sendLeftClick(new Vector2(GridPane.getColumnIndex(cell),GridPane.getRowIndex(cell)));
     }
 
     /**
      * Appelée lors du clic droit sur la grille
      */
-    public void gridRightClick() {
-        resetCellSelection();
+    public void cellRightClick(CellView cell) {
+        mapController.sendRightClick(new Vector2(GridPane.getColumnIndex(cell),GridPane.getRowIndex(cell)));
     }
 
 
@@ -293,21 +267,18 @@ public class GameView extends Scene implements Listener {
         targetsLayer.Exit(cell);
     }
 
-    /**
-     * Réinitialise les cellules actuellement sélectionnées
-     * @author Thomas Coulon
-     */
-    private void resetCellSelection() {
-        if(firstCell!=null)
-            firstCell.getChildren().remove(tempStation);
-        tempStation = null;
-        firstCell = null;
-        secondCell = null;
-        Game.Debug(2,"Cell selection cleared.");
-    }
 
     @Override
-    public void Notify(String msg) {
+    public void Notify(Notification notif) {
+        String msg = notif.getMessage();
+        switch(msg) {
+            case "updatelines" :
+                updateLines((ArrayList<Integer>)notif.getData());
+                break;
+            case "updateinteractions":
+                interactionsViewLayer.changeState(Game.get().getCurrentClickState());
+                break;
+        }
 
     }
 
@@ -386,7 +357,9 @@ public class GameView extends Scene implements Listener {
     
     public ReadOnlyDoubleProperty gridPosX() {
         SimpleDoubleProperty p = new SimpleDoubleProperty();
-        p.bind(this.gridDisplay.layoutXProperty());
+        //p.bind(this.gridDisplay.layoutXProperty());
+        //p.bind(((GridDisplayCell)gridDisplay.getCellAt(new Vector2(0,0))).getPixelsX());
+        p.bind()
         return p;
     }
 
@@ -396,9 +369,8 @@ public class GameView extends Scene implements Listener {
         return p;
     }
 
-    public void updateLines() {
-        Integer[] lines = Game.get().getLinesID();
-        for(int l : lines) {
+    public void updateLines(ArrayList<Integer> data) {
+        for(int l : data) {
             Game.Debug(2,"VIEW : Refreshing line "+l);
             linesPane.removeLine(l);
             linesPane.addLine(l);
@@ -407,7 +379,8 @@ public class GameView extends Scene implements Listener {
     }
 
     public void updateStations() {
-        gridStations.updateStations();
+        ArrayList<Vector2> stations = gridStations.updateStations();
+        radiusLayer.updateStationsSet(stations);
     }
 
     /**
@@ -421,7 +394,7 @@ public class GameView extends Scene implements Listener {
         gridBuildings.updateBuildings();
         gridBuildings.updateBuildingsPins();
         gridStations.updateStationsPins();
-        uiLayer.Update();
+        infosLayer.Update();
     }
 
     public RadiusLayer getRadiusLayer() {

@@ -1,7 +1,10 @@
 package com.stonksco.minitramways.logic;
 
+import com.stonksco.minitramways.logic.interactions.ClickStateMachine;
+import com.stonksco.minitramways.logic.interactions.states.AbstractClickState;
 import com.stonksco.minitramways.logic.map.Area;
 import com.stonksco.minitramways.logic.map.GameMap;
+import com.stonksco.minitramways.logic.map.lines.Line;
 import com.stonksco.minitramways.logic.map.lines.Tramway;
 import com.stonksco.minitramways.logic.map.buildings.BuildingEnum;
 import com.stonksco.minitramways.logic.people.People;
@@ -14,6 +17,7 @@ public class Game {
     private int debug = 0;
     private int satisfaction = 0; // Moyenne de la satisfaction entre 0 et 100
     private LinkedHashMap<People,Integer> satisfactions;
+    private ClickStateMachine clicksm;
 
     private static final Game g = new Game();
 
@@ -25,6 +29,7 @@ public class Game {
             }
         };
         computeSatisfaction();
+        clicksm = new ClickStateMachine();
     }
 
     public static Game get() {
@@ -55,18 +60,18 @@ public class Game {
         map = new GameMap();
         player = new Player();
         map.init();
-        satisfactions.put(null,60);
+        satisfactions.put(null,50);
     }
 
     public int getDebug() {
         return this.debug;
     }
 
-    public ArrayList<Integer> CreateLine(Vector2 start, Vector2 end) {
-        ArrayList<Integer> res = null;
+    public Integer CreateLine(Vector2 start, Vector2 end) {
+        Integer res = null;
 
         // Vérifier argent, si c'est ok on exécute
-        res = map.CreateLine(start, end);
+        res = map.CreateLine(start, end).getID();
 
         return res;
     }
@@ -188,5 +193,36 @@ public class Game {
 
     public int getSatisfaction() {
         return satisfaction;
+    }
+
+    public AbstractClickState sendLeftClick(Vector2 at) {
+        return clicksm.sendLeftClick(at);
+    }
+
+    public AbstractClickState sendRightClick(Vector2 at) {
+        return clicksm.sendRightClick(at);
+    }
+
+    public AbstractClickState getCurrentClickState() {
+        return clicksm.getCurrentState();
+    }
+
+    public Integer ExtendLine(Vector2 v1, Vector2 v2, Integer id) {
+        Line l = map.ExtendLine(v1,v2,id);
+        int res=-1;
+        if(l!=null)
+            res = l.getID();
+        return res;
+    }
+
+    public void destroyStation(Vector2 stationtodestroy) {
+        ArrayList<Integer> res = map.destroyStation(stationtodestroy);
+        if(res!=null) {
+            if(res.size()>0) {
+                for(People p : People.getAll()) {
+                    p.destroyed(stationtodestroy);
+                }
+            }
+        }
     }
 }

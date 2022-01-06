@@ -78,22 +78,25 @@ public class GameMap {
         return gridSize.clone();
     }
 
+
+    private ArrayList<Integer> linesToUpdate;
+
     /**
-     * Crée une ligne et retourne les éventuelles intersections engendrées
+     * Crée une ligne et retourne son id
      * @param start
      * @param end
      * @return ArrayList vide si aucune ligne n'a été affectée ; Sinon liste des ID des lignes affectées
      */
-    public ArrayList<Integer> CreateLine(Vector2 start, Vector2 end) {
-        ArrayList<Integer> updatedLines = new ArrayList<>();
+    public Line CreateLine(Vector2 start, Vector2 end) {
+        linesToUpdate = new ArrayList<>();
+        Line createdLine = null;
 
         Game.Debug(2,"Line modification initiated from "+start+" to "+end);
         int creationMode = 0; // Mode de création selon le contexte :
         // 0 = impossible de créer ;
-        // 1 = création d'une nouvelle ligne complète OU Création d'une nouvelle ligne avec la deuxième station existante;
-        // 2 = Extension d'une ligne existante depuis la première station OU Extension d'une ligne existante, mais la deuxième station existe déjà également
+        // 1 = création d'une nouvelle ligne complète OU Création d'une nouvelle ligne avec la deuxième station existante
 
-        if(getBuildingAt(start)==null) {
+        if(getBuildingAt(start)==null || getBuildingAt(start) instanceof Station) {
             // Création d'une nouvelle ligne
             if(getBuildingAt(end) instanceof Station) {
                     // On crée une nouvelle ligne qu'on associe à la station de la deuxième case
@@ -103,7 +106,56 @@ public class GameMap {
                 // On crée une nouvelle ligne complète
                 creationMode = 1;
             }
-        } else if(getBuildingAt(start) instanceof Station) {
+        }
+
+        if(creationMode==1) { // On crée une ligne complète, à partir de rien
+                // On crée la ligne, qui créera elle-même les stations nécessaires
+                Line l = new Line(start,end,lines.size());
+                lines.put(lines.size(),l);
+                // On génère les intersections si nécessaire
+                linesToUpdate.add(l.getID());
+                HashMap<LinePart,Vector2> intersections =  checkIntersections(l.getFirstPart());
+                processIntersections(intersections,l.getFirstPart());
+                // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
+                for(Map.Entry e : intersections.entrySet()) {
+                    linesToUpdate.add(getIdOf(((LinePart)e.getKey()).getLine()));
+                }
+                Game.Debug(1,"Line "+l.getID()+" created from "+start+" to "+end);
+                createdLine = l;
+        }
+
+        Game.Debug(2,"Updated lines : "+linesToUpdate);
+
+        if(linesToUpdate.size()>0)
+            People.UpdateGraph();
+
+        return createdLine;
+    }
+
+    /**
+     * Étend une ligne existante depuis une extrémité et retourne son ID
+     * @param start
+     * @param end
+     * @return ArrayList vide si aucune ligne n'a été affectée ; Sinon liste des ID des lignes affectées
+     */
+    public Line ExtendLine(Vector2 start, Vector2 end, Integer lineID) {
+        linesToUpdate = new ArrayList<>();
+        Line extendedLine = null;
+
+        Line l2 = null;
+        if(lineID!=null) {
+            l2 = lines.get(lineID);
+        } else {
+            l2 = ((Station)getCellAt(start).getBuilding()).getLines()[0];
+        }
+
+
+        Game.Debug(2,"Line modification initiated from "+start+" to "+end);
+        int creationMode = 0; // Mode de création selon le contexte :
+        // 0 = impossible de créer ;
+        // 2 = Extension d'une ligne existante depuis la première station OU Extension d'une ligne existante, mais la deuxième station existe déjà également
+
+        if(getBuildingAt(start) instanceof Station) {
             // On étend une ligne existante
             if(getBuildingAt(end) != null) {
                 // Il existe un bâtiment sur la deuxième case
@@ -118,47 +170,40 @@ public class GameMap {
 
         }
 
-        switch(creationMode) {
-            case 1 : // On crée une ligne complète, à partir de rien OU on
-                // On crée la ligne, qui créera elle-même les stations nécessaires
-                Line l = new Line(start,end,lines.size());
-                lines.put(lines.size(),l);
+        if(creationMode==2) {
+            // On étend une ligne existante, la station end n'existe pas OU elle existe
+
+            LinePart lp2 = l2.extend(start,end);
+            if(lp2!=null) {
                 // On génère les intersections si nécessaire
-                updatedLines.add(l.getID());
-                HashMap<LinePart,Vector2> intersections =  checkIntersections(l.getFirstPart());
-                processIntersections(intersections,l.getFirstPart());
+                linesToUpdate.add(l2.getID());
+                HashMap<LinePart,Vector2> intersections2 =  checkIntersections(lp2);
+                processIntersections(intersections2,lp2);
                 // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
-                for(Map.Entry e : intersections.entrySet()) {
-                    updatedLines.add(getIdOf(((LinePart)e.getKey()).getLine()));
+                for(Map.Entry e : intersections2.entrySet()) {
+                    linesToUpdate.add(getIdOf(((LinePart)e.getKey()).getLine()));
                 }
-                Game.Debug(1,"Line "+l.getID()+" created from "+start+" to "+end);
-                break;
-            case 2 : // On étend une ligne existante, la station end n'existe pas OU elle existe
-                Line l2 = ((Station)getCellAt(start).getBuilding()).getLines()[0];
-                LinePart lp2 = l2.extend(start,end);
-                if(lp2!=null) {
-                    // On génère les intersections si nécessaire
-                    updatedLines.add(l2.getID());
-                    HashMap<LinePart,Vector2> intersections2 =  checkIntersections(lp2);
-                    processIntersections(intersections2,lp2);
-                    // Pour chaque intersection, on ajoute la ligne concernée à la liste des lignes mises à jour
-                    for(Map.Entry e : intersections2.entrySet()) {
-                        updatedLines.add(getIdOf(((LinePart)e.getKey()).getLine()));
-                    }
-                    Game.Debug(1,"Line "+l2.getID()+" extended from "+start+" to "+end);
-                }
-
-
-                break;
-            default: // Autres cas, ne rien créer
+                Game.Debug(1,"Line "+l2.getID()+" extended from "+start+" to "+end);
+                extendedLine=l2;
+            }
         }
 
-        Game.Debug(2,"Updated lines : "+updatedLines);
+        Game.Debug(2,"Updated lines : "+linesToUpdate);
 
-        if(updatedLines.size()>0)
+        if(linesToUpdate.size()>0)
             People.UpdateGraph();
 
-        return updatedLines;
+        return extendedLine;
+    }
+
+
+    public ArrayList<Integer> getLinesToUpdate() {
+        if(linesToUpdate==null)
+            linesToUpdate=new ArrayList<>();
+
+        ArrayList<Integer> temp = (ArrayList<Integer>) linesToUpdate.clone();
+        linesToUpdate.clear();
+        return temp;
     }
 
 
@@ -204,9 +249,11 @@ public class GameMap {
         LinePart partToDivide = with;
         for(Vector2 v : divisionsByDistance) {
             partToDivide = partToDivide.divide(partToDivide.getStartPos(),partToDivide.getEndPos(),v);
-            ((Station)getBuildingAt(v)).addLine(with.getLine());
-            for(People p : People.getAll()) {
-                p.addIntersectionBetween(v,partToDivide.getStartPos(),partToDivide.getEndPos());
+            if(partToDivide!=null) {
+                ((Station) getBuildingAt(v)).addLine(with.getLine());
+                for (People p : People.getAll()) {
+                    p.addIntersectionBetween(v, partToDivide.getStartPos(), partToDivide.getEndPos());
+                }
             }
         }
 
@@ -725,4 +772,47 @@ public class GameMap {
         return ids.toArray(new Integer[0]);
     }
 
+
+    /**
+     * Détruit la station passée en paramètre si cela est possible
+     * @param stationtodestroy station à détruire
+     * @return liste des lignes modifiées
+     */
+    public ArrayList<Integer> destroyStation(Vector2 stationtodestroy) {
+        ArrayList<Integer> updatedLines = new ArrayList<>();
+
+        if(getBuildingAt(stationtodestroy) instanceof Station) {
+            Station s = (Station) getBuildingAt(stationtodestroy);
+            boolean canContinue = true;
+
+            // Si la station est bien sur une extrémité de chacune de ses lignes
+            for(Line l : s.getLines()) {
+                if(!l.isAtExtremity(stationtodestroy))
+                    canContinue=false;
+            }
+
+            if(canContinue) {
+                for(Line l : s.getLines()) {
+                    boolean trimmed = l.Trim(stationtodestroy);
+                    if(trimmed) {
+                        updatedLines.add(l.getID());
+                        linesToUpdate.add(l.getID());
+                        s.removeLine(l.getID());
+                    }
+
+                }
+                stations.remove(stationtodestroy);
+
+
+
+
+                // Nettoyer la liste des stations (détruire celles qui ne sont plus reliées à rien)
+
+            }
+        }
+
+
+
+        return updatedLines;
+    }
 }
