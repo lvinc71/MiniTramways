@@ -6,7 +6,7 @@ package com.stonksco.minitramways.logic;
 public class Player {
 
 	private double satisfactionAvg;
-	private int money = 0;
+	private int money = 200;
 
 	public double getSatisfactionAvg() {
 		return this.satisfactionAvg;

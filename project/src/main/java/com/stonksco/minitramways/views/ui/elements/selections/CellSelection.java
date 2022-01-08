@@ -18,13 +18,6 @@ public class CellSelection extends Group {
         this.gw = gw;
         cellPos=pos;
 
-        Circle c = new Circle();
-        c.setFill(Color.BLUE);
-        c.translateXProperty().bind(gw.gridPosX());
-        c.translateYProperty().bind(gw.gridPosY());
-        c.setRadius(20);
-        this.getChildren().add(c);
-
         show();
     }
 
@@ -32,8 +25,8 @@ public class CellSelection extends Group {
         Circle c = new Circle();
         c.radiusProperty().bind(gw.getCellSizeX().multiply(0.6d));
         c.setFill(gw.getColor(ColorEnum.CELL_SELECTION));
-        c.centerYProperty().bind(gw.CellToPixelsY(cellPos));
-        c.centerXProperty().bind(gw.CellToPixelsX(cellPos));
+        c.centerYProperty().bind(gw.CellToPixelsY(cellPos).add(gw.gridPosY()));
+        c.centerXProperty().bind(gw.CellToPixelsX(cellPos).add(gw.gridPosX()));
         this.getChildren().add(c);
     }
 

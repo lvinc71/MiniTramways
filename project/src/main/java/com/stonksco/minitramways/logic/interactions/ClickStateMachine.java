@@ -22,7 +22,7 @@ public class ClickStateMachine {
         currentState = new StartState(this);
     };
 
-    public AbstractClickState sendLeftClick(Vector2 at) {
+    public AbstractClickState sendLeftClick(Vector2 at) throws InteractionException {
         if(at != null) {
             Building bAt = Game.get().getMap().getBuildingAt((Vector2)at);
             if(bAt instanceof Station) {
@@ -41,7 +41,7 @@ public class ClickStateMachine {
         return currentState;
     }
 
-    public AbstractClickState sendRightClick(Object at) {
+    public AbstractClickState sendRightClick(Object at) throws InteractionException {
         if(at instanceof Vector2) {
 
             Building bAt = Game.get().getMap().getBuildingAt((Vector2)at);

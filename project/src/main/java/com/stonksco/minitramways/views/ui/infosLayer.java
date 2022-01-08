@@ -2,6 +2,7 @@ package com.stonksco.minitramways.views.ui;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.views.Clock;
+import com.stonksco.minitramways.views.ColorEnum;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -9,8 +10,13 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.util.Map;
 
 public class infosLayer extends BorderPane {
 
@@ -39,6 +45,11 @@ public class infosLayer extends BorderPane {
     private Text m3;
     private Text m4;
 
+    // Error message
+    private Text errorText;
+    private Rectangle errorBackground;
+    private StackPane errorGroup;
+
     // Satisfaction
     private ProgressBar satisfactionBar;
 
@@ -53,6 +64,7 @@ public class infosLayer extends BorderPane {
         setupSatisfaction();
         setupMoney();
         setupTime();
+        setupError();
 
     }
 
@@ -173,6 +185,7 @@ public class infosLayer extends BorderPane {
         updateTimer();
         updateMoney();
         updateSatisfaction();
+        updateErrorMessage();
     }
 
     private void setupSatisfaction() {
@@ -185,7 +198,51 @@ public class infosLayer extends BorderPane {
         satisfactionBar.progressProperty().setValue(Game.get().getSatisfaction()/100d);
     }
 
+    private final Map<String, String> messages = Map.ofEntries(
+            Map.entry("money","Vous n'avez pas suffisamment d'argent pour faire cela."),
+            Map.entry("obstructed","Un autre objet vous empêche de construire ici."),
+            Map.entry("unknown","Une erreur inconnue vous empêche de faire ceci.")
+    );
 
+    private void setupError() {
+        errorBackground = new Rectangle();
+        errorText = new Text("");
+        errorGroup = new StackPane();
+
+        errorGroup.getChildren().add(errorBackground);
+        errorGroup.getChildren().add(errorText);
+        this.setCenter(errorGroup);
+    }
+
+    private long timeUntilMessageHides = 0l;
+    private boolean messageHidden = true;
+
+    public void setErrorMessage(String messagecode) {
+
+        if(messages.get(messagecode)!=null) {
+            errorText.setText(messages.get(messagecode));
+        } else {
+            errorText.setText(messages.get("unknown"));
+        }
+        timeUntilMessageHides=7000000000l;
+    }
+
+    private void updateErrorMessage() {
+        if(timeUntilMessageHides>0) {
+            if(messageHidden) {
+                errorText.setOpacity(1);
+                errorBackground.setOpacity(1);
+                messageHidden=false;
+            }
+            timeUntilMessageHides-=Clock.get().DeltaTime();
+        } else {
+            if(!messageHidden) {
+                errorText.setOpacity(0);
+                errorBackground.setOpacity(0);
+                messageHidden=true;
+            }
+        }
+    }
 
 }
 

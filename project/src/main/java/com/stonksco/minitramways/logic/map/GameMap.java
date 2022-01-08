@@ -792,19 +792,19 @@ public class GameMap {
             }
 
             if(canContinue) {
+                boolean canDestroy = true;
                 for(Line l : s.getLines()) {
                     boolean trimmed = l.Trim(stationtodestroy);
                     if(trimmed) {
                         updatedLines.add(l.getID());
                         linesToUpdate.add(l.getID());
                         s.removeLine(l.getID());
+                    } else {
+                        canDestroy=false;
                     }
-
                 }
-                stations.remove(stationtodestroy);
-
-
-
+                if(canDestroy)
+                    stations.remove(stationtodestroy);
 
                 // Nettoyer la liste des stations (détruire celles qui ne sont plus reliées à rien)
 

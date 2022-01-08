@@ -19,6 +19,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -278,6 +279,9 @@ public class GameView extends Scene implements Listener {
             case "updateinteractions":
                 interactionsViewLayer.changeState(Game.get().getCurrentClickState());
                 break;
+            case "interactionerror":
+                this.setErrorMessage((String) notif.getData());
+                break;
         }
 
     }
@@ -358,14 +362,14 @@ public class GameView extends Scene implements Listener {
     public ReadOnlyDoubleProperty gridPosX() {
         SimpleDoubleProperty p = new SimpleDoubleProperty();
         //p.bind(this.gridDisplay.layoutXProperty());
-        //p.bind(((GridDisplayCell)gridDisplay.getCellAt(new Vector2(0,0))).getPixelsX());
-        p.bind()
+        p.bind(centerPane.layoutXProperty());
         return p;
     }
 
     public ReadOnlyDoubleProperty gridPosY() {
         SimpleDoubleProperty p = new SimpleDoubleProperty();
-        p.bind(this.gridDisplay.layoutYProperty());
+        //p.bind(this.gridDisplay.layoutYProperty());
+        p.bind(centerPane.layoutYProperty());
         return p;
     }
 
@@ -432,7 +436,9 @@ public class GameView extends Scene implements Listener {
 
     /** Fin Pins */
 
-
+    private void setErrorMessage(String messagecode) {
+        this.infosLayer.setErrorMessage(messagecode);
+    }
 
 }
 
