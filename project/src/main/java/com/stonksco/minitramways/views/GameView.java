@@ -150,8 +150,8 @@ public class GameView extends Scene implements Listener {
 
         mainPane.paddingProperty().bind(Bindings.createObjectBinding(() -> new Insets(mainPane.heightProperty().multiply(0.05d).get())));
         mainPane.getChildren().add(centerPane);
-        mainPane.getChildren().add(infosLayer);
         mainPane.getChildren().add(interactionsViewLayer);
+        mainPane.getChildren().add(infosLayer);
         root.getChildren().add(mainPane);
 
         When bindCondition = new When(mainPane.widthProperty().lessThan(mainPane.heightProperty().multiply(Game.get().getMapSize().getX()/Game.get().getMapSize().getY())));
