@@ -2,6 +2,7 @@ package com.stonksco.minitramways.logic.interactions.states;
 
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.interactions.ClickStateMachine;
+import com.stonksco.minitramways.logic.interactions.InteractionException;
 import com.stonksco.minitramways.logic.map.lines.LinePart;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public abstract class AbstractClickState {
      * Retourne l'état après clic gauche sur une case "vide"
      * @return
      */
-    public AbstractClickState leftTransition(Vector2 clicked) {
+    public AbstractClickState leftTransition(Vector2 clicked) throws InteractionException {
         return this;
     }
 
@@ -27,7 +28,7 @@ public abstract class AbstractClickState {
      * Retourne l'état après clic gauche sur une station
      * @return
      */
-    public AbstractClickState leftStationTransition(Vector2 clicked) {
+    public AbstractClickState leftStationTransition(Vector2 clicked) throws InteractionException {
         return this;
     }
 
@@ -35,7 +36,7 @@ public abstract class AbstractClickState {
      * Retourne l'état après clic droit sur une case "vide"
      * @return
      */
-    public AbstractClickState rightTransition(Vector2 clicked) {
+    public AbstractClickState rightTransition(Vector2 clicked) throws InteractionException {
         return this;
     }
 
@@ -43,7 +44,7 @@ public abstract class AbstractClickState {
      * Retourne l'état après clic droit sur une station
      * @return
      */
-    public AbstractClickState rightStationTransition(Vector2 clicked) {
+    public AbstractClickState rightStationTransition(Vector2 clicked) throws InteractionException {
         return this;
     }
 
@@ -51,7 +52,7 @@ public abstract class AbstractClickState {
      * Retourne l'état après clic droit sur un tronçon
      * @return
      */
-    public AbstractClickState rightPartTransition(LinePart clicked) {
+    public AbstractClickState rightPartTransition(LinePart clicked) throws InteractionException {
         return this;
     }
 
@@ -67,7 +68,7 @@ public abstract class AbstractClickState {
     /**
      * Actions à effectuer selon l'interaction
      */
-    public abstract void action();
+    public abstract void action() throws InteractionException;
 
     @Override
     public String toString() {

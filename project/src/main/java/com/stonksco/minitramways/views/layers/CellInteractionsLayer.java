@@ -7,6 +7,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * Calque réceptionnant les interactions des cellules (clic sur une cellule, survol)
+ */
 public class CellInteractionsLayer extends GridView {
 
     public CellInteractionsLayer(GameView gw, Vector2 size) {

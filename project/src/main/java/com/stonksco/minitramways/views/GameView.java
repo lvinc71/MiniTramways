@@ -19,6 +19,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -76,11 +77,6 @@ public class GameView extends Scene implements Listener {
 
     private StackPane mainPane; // Conteneur principal remplissant la fenêtre
     private Pane centerPane; // Conteneur central contenant la carte du jeu
-    // Sélection de cellules
-    private CellView firstCell = null;
-    private CellView secondCell = null;
-    // Station temporaire pour affichage ; aucun lien métier
-    private StationView tempStation;
 
 
     /**
@@ -128,8 +124,11 @@ public class GameView extends Scene implements Listener {
 
         centerPane = new Pane();
         mainPane = new StackPane();
-        infosLayer = new infosLayer();
+        infosLayer = new infosLayer(this);
         interactionsViewLayer = new InteractionsViewLayer(this);
+
+        this.getWindow().setWidth(this.getWindow().getWidth()+0.001);
+        this.getWindow().setWidth(this.getWindow().getWidth()-0.001);
 
         mainPane.prefWidthProperty().bind(this.widthProperty());
         mainPane.prefHeightProperty().bind(this.heightProperty());
@@ -150,8 +149,8 @@ public class GameView extends Scene implements Listener {
 
 
         mainPane.paddingProperty().bind(Bindings.createObjectBinding(() -> new Insets(mainPane.heightProperty().multiply(0.05d).get())));
-        mainPane.getChildren().add(infosLayer);
         mainPane.getChildren().add(centerPane);
+        mainPane.getChildren().add(infosLayer);
         mainPane.getChildren().add(interactionsViewLayer);
         root.getChildren().add(mainPane);
 
@@ -278,10 +277,11 @@ public class GameView extends Scene implements Listener {
             case "updateinteractions":
                 interactionsViewLayer.changeState(Game.get().getCurrentClickState());
                 break;
+            case "interactionerror":
+                this.setErrorMessage((String) notif.getData());
+                break;
         }
-
     }
-
 
 
     /**
@@ -358,14 +358,14 @@ public class GameView extends Scene implements Listener {
     public ReadOnlyDoubleProperty gridPosX() {
         SimpleDoubleProperty p = new SimpleDoubleProperty();
         //p.bind(this.gridDisplay.layoutXProperty());
-        //p.bind(((GridDisplayCell)gridDisplay.getCellAt(new Vector2(0,0))).getPixelsX());
-        p.bind()
+        p.bind(centerPane.layoutXProperty());
         return p;
     }
 
     public ReadOnlyDoubleProperty gridPosY() {
         SimpleDoubleProperty p = new SimpleDoubleProperty();
-        p.bind(this.gridDisplay.layoutYProperty());
+        //p.bind(this.gridDisplay.layoutYProperty());
+        p.bind(centerPane.layoutYProperty());
         return p;
     }
 
@@ -432,7 +432,9 @@ public class GameView extends Scene implements Listener {
 
     /** Fin Pins */
 
-
+    private void setErrorMessage(String messagecode) {
+        this.infosLayer.setErrorMessage(messagecode);
+    }
 
 }
 

@@ -1,5 +1,6 @@
 package com.stonksco.minitramways.logic.interactions.states;
 
+import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.logic.Vector2;
 import com.stonksco.minitramways.logic.interactions.ClickStateMachine;
 
@@ -20,7 +21,10 @@ public class StartState extends AbstractClickState {
     @Override
     public AbstractClickState leftStationTransition(Vector2 clicked) {
         sm.getData().put("firstcell",clicked);
-        return new LineExtensionState(sm);
+        if(Game.get().isAtExtremity(clicked))
+            return new LineExtensionState(sm);
+        else
+            return new LineCreationState(sm);
     }
 
     @Override

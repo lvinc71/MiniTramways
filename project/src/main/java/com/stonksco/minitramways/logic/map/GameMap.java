@@ -792,27 +792,48 @@ public class GameMap {
             }
 
             if(canContinue) {
+                boolean canDestroy = true;
                 for(Line l : s.getLines()) {
                     boolean trimmed = l.Trim(stationtodestroy);
                     if(trimmed) {
                         updatedLines.add(l.getID());
                         linesToUpdate.add(l.getID());
                         s.removeLine(l.getID());
+                        // On rembourse 15 par tronçon détruit
+                        Game.get().addMoney(15);
+                    } else {
+                        canDestroy=false;
                     }
-
                 }
-                stations.remove(stationtodestroy);
-
-
-
-
+                if(canDestroy) {
+                    stations.remove(stationtodestroy);
+                    // On rembourse 30 si la station est détruite
+                    Game.get().addMoney(30);
+                }
                 // Nettoyer la liste des stations (détruire celles qui ne sont plus reliées à rien)
-
+                for(Station s_ : stations.values()) {
+                    if(s_.getLines().length==0)
+                        stations.remove(s_.getCoordinates());
+                }
             }
         }
 
 
 
         return updatedLines;
+    }
+
+    public Integer lineFromExtremity(Vector2 firstcell) {
+        Line l = null;
+        for(Line l_ : lines.values()) {
+            if(l_.isAtExtremity(firstcell)) {
+                l=l_;
+                break;
+            }
+        }
+        Integer res = null;
+        if(l!=null)
+            res = l.getID();
+        return res;
     }
 }

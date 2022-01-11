@@ -2,6 +2,14 @@ package com.stonksco.minitramways.views.ui;
 
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.views.Clock;
+import com.stonksco.minitramways.views.ColorEnum;
+import com.stonksco.minitramways.views.GameView;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectExpression;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -9,10 +17,19 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import java.util.Map;
+
 public class infosLayer extends BorderPane {
+
+    private GameView gw;
 
     // Zones
     private HBox topRight;
@@ -39,10 +56,17 @@ public class infosLayer extends BorderPane {
     private Text m3;
     private Text m4;
 
+    // Error message
+    private Text errorText;
+    private Rectangle errorBackground;
+    private StackPane errorGroup;
+
     // Satisfaction
     private ProgressBar satisfactionBar;
 
-    public infosLayer() {
+    public infosLayer(GameView gw) {
+        this.gw = gw;
+
         topRight = new HBox(15);
         time = new Group();
         money = new Group();
@@ -53,6 +77,7 @@ public class infosLayer extends BorderPane {
         setupSatisfaction();
         setupMoney();
         setupTime();
+        setupError();
 
     }
 
@@ -173,6 +198,7 @@ public class infosLayer extends BorderPane {
         updateTimer();
         updateMoney();
         updateSatisfaction();
+        updateErrorMessage();
     }
 
     private void setupSatisfaction() {
@@ -185,7 +211,72 @@ public class infosLayer extends BorderPane {
         satisfactionBar.progressProperty().setValue(Game.get().getSatisfaction()/100d);
     }
 
+    private final Map<String, String> messages = Map.ofEntries(
+            Map.entry("money","Vous n'avez pas suffisamment d'argent pour faire cela."),
+            Map.entry("obstructed","Un autre objet vous empêche de construire ici."),
+            Map.entry("unknown","Une erreur inconnue vous empêche de faire ceci.")
+    );
 
+    private void setupError() {
+        errorBackground = new Rectangle();
+        errorText = new Text("");
+        errorGroup = new StackPane();
+
+        errorBackground.setFill(gw.getColor(ColorEnum.PIN_COLOR));
+        errorBackground.arcWidthProperty().bind(gw.getCellSizeX().multiply(0.5d));
+        errorBackground.arcHeightProperty().bind(gw.getCellSizeY().multiply(0.5d));
+        errorBackground.heightProperty().bind(gw.getCellSizeY().multiply(2.5d));
+        errorBackground.widthProperty().bind(gw.getCellSizeX().multiply(12.5d));
+
+        ObjectProperty<Font> dynFont = new SimpleObjectProperty<Font>(new Font(25));
+
+        widthProperty().addListener(new ChangeListener<Number>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldWidth, Number newWidth)
+            {
+                dynFont.set(Font.font(gw.getCellSizeX().divide(2d).doubleValue()));
+            }
+
+        });
+
+        errorText.fontProperty().bind(dynFont);
+        this.layout();
+        errorText.setFill(Color.WHITE);
+
+        errorGroup.getChildren().add(errorBackground);
+        errorGroup.getChildren().add(errorText);
+        this.setCenter(errorGroup);
+        errorGroup.setOpacity(0);
+    }
+
+    private long timeUntilMessageHides = 0l;
+    private boolean messageHidden = true;
+
+    public void setErrorMessage(String messagecode) {
+
+        if(messages.get(messagecode)!=null) {
+            errorText.setText(messages.get(messagecode));
+        } else {
+            errorText.setText(messages.get("unknown"));
+        }
+        timeUntilMessageHides=7000000000l;
+    }
+
+    private void updateErrorMessage() {
+        if(timeUntilMessageHides>0) {
+            if(messageHidden) {
+                errorGroup.setOpacity(1);
+                messageHidden=false;
+            }
+            timeUntilMessageHides-=Clock.get().DeltaTime();
+        } else {
+            if(!messageHidden) {
+                errorGroup.setOpacity(0);
+                messageHidden=true;
+            }
+        }
+    }
 
 }
 

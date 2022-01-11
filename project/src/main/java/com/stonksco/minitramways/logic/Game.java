@@ -1,6 +1,7 @@
 package com.stonksco.minitramways.logic;
 
 import com.stonksco.minitramways.logic.interactions.ClickStateMachine;
+import com.stonksco.minitramways.logic.interactions.InteractionException;
 import com.stonksco.minitramways.logic.interactions.states.AbstractClickState;
 import com.stonksco.minitramways.logic.map.Area;
 import com.stonksco.minitramways.logic.map.GameMap;
@@ -160,7 +161,7 @@ public class Game {
     }
 
     public void addMoney(int nb) {
-            player.addMoney(5);
+            player.addMoney(nb);
     }
 
     public int getMoney() {
@@ -195,11 +196,11 @@ public class Game {
         return satisfaction;
     }
 
-    public AbstractClickState sendLeftClick(Vector2 at) {
+    public AbstractClickState sendLeftClick(Vector2 at) throws InteractionException {
         return clicksm.sendLeftClick(at);
     }
 
-    public AbstractClickState sendRightClick(Vector2 at) {
+    public AbstractClickState sendRightClick(Vector2 at) throws InteractionException {
         return clicksm.sendRightClick(at);
     }
 
@@ -224,5 +225,14 @@ public class Game {
                 }
             }
         }
+    }
+
+    /**
+     * Retourne l'ID d'une ligne dont firstcell est une extrémité
+     * @param firstcell
+     * @return
+     */
+    public Integer lineFromExtremity(Vector2 firstcell) {
+        return map.lineFromExtremity(firstcell);
     }
 }
