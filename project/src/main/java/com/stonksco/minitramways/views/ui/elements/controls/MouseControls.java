@@ -81,17 +81,18 @@ public class MouseControls extends Pane {
         //rightLabel.setFill(Color.WHITE);
 
         // Layout
+        this.layout();
         this.prefWidthProperty().bind(gw.widthProperty());
         this.prefHeightProperty().bind(gw.heightProperty());
         ctrlVContainer.prefWidthProperty().bind(gw.widthProperty());
         ctrlVContainer.prefHeightProperty().bind(gw.heightProperty());
-        ctrlVContainer.setAlignment(Pos.BOTTOM_CENTER);
-        ctrlHContainer.setAlignment(Pos.BOTTOM_CENTER);
+        ctrlVContainer.setAlignment(Pos.TOP_LEFT);
+        ctrlHContainer.setAlignment(Pos.TOP_LEFT);
         ctrlStack.prefHeightProperty().bind(gw.heightProperty().multiply(0.1d));
         ctrlStack.minHeight(50);
         mouseImgView.fitHeightProperty().bind(ctrlStack.heightProperty().multiply(1.2d));
         mouseImgView.translateYProperty().bind(mouseImg.heightProperty().multiply(0.2));
-
+        this.layout();
         hide();
     }
 

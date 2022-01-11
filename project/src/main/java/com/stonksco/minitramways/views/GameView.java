@@ -77,11 +77,6 @@ public class GameView extends Scene implements Listener {
 
     private StackPane mainPane; // Conteneur principal remplissant la fenêtre
     private Pane centerPane; // Conteneur central contenant la carte du jeu
-    // Sélection de cellules
-    private CellView firstCell = null;
-    private CellView secondCell = null;
-    // Station temporaire pour affichage ; aucun lien métier
-    private StationView tempStation;
 
 
     /**

@@ -226,4 +226,13 @@ public class Game {
             }
         }
     }
+
+    /**
+     * Retourne l'ID d'une ligne dont firstcell est une extrémité
+     * @param firstcell
+     * @return
+     */
+    public Integer lineFromExtremity(Vector2 firstcell) {
+        return map.lineFromExtremity(firstcell);
+    }
 }

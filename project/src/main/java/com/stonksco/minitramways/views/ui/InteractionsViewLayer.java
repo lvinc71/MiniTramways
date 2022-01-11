@@ -13,6 +13,9 @@ import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 
+/**
+ * Calque qui affiche les données relatives aux interactions (sélections de cases, contrôles)
+ */
 public class InteractionsViewLayer extends Pane {
 
     private GameView gw;

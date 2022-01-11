@@ -26,6 +26,13 @@ public class LineCreationState extends AbstractClickState {
     }
 
     @Override
+    public AbstractClickState leftStationTransition(Vector2 clicked) throws InteractionException {
+        sm.getData().put("secondcell",clicked);
+        action();
+        return new LineExtensionState(sm);
+    }
+
+    @Override
     public AbstractClickState rightTransition(Vector2 clicked) {
         return new ResetClickState(sm);
     }
@@ -44,7 +51,7 @@ public class LineCreationState extends AbstractClickState {
     public void action() throws InteractionException {
         Vector2 v1 = (Vector2) sm.getData().get("firstcell");
         Vector2 v2 = (Vector2) sm.getData().get("secondcell");
-        Integer creationCost = (2*35)+(int)(Vector2.AbstractDistance(v1,v2)/5);
+        Integer creationCost = (2*35)+(int)(Vector2.AbstractDistance(v1,v2)/7);
         if(Game.get().getMoney()<creationCost) {
             throw new InteractionException("money");
         } else {

@@ -22,6 +22,9 @@ public class LineExtensionState extends AbstractClickState{
 
         if(Game.get().isAtExtremity((Vector2)d.get("firstcell"))) {
             canExtend=true;
+
+            d.put("linetoextend",Game.get().lineFromExtremity((Vector2)d.get("firstcell")));
+
         } else {
             Game.Debug(1,"Selected station is not at an extremity of its line. Extension will abort, and a new line will be created.");
         }
@@ -71,7 +74,7 @@ public class LineExtensionState extends AbstractClickState{
         Vector2 v1 = (Vector2) sm.getData().get("firstcell");
         Vector2 v2 = (Vector2) sm.getData().get("secondcell");
 
-        Integer creationCost = (35)+(int)(Vector2.AbstractDistance(v1,v2)/5);
+        Integer creationCost = (35)+(int)(Vector2.AbstractDistance(v1,v2)/7);
         if(Game.get().getMoney()<creationCost) {
             throw new InteractionException("money");
         } else {
