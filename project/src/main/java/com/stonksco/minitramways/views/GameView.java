@@ -129,8 +129,11 @@ public class GameView extends Scene implements Listener {
 
         centerPane = new Pane();
         mainPane = new StackPane();
-        infosLayer = new infosLayer();
+        infosLayer = new infosLayer(this);
         interactionsViewLayer = new InteractionsViewLayer(this);
+
+        this.getWindow().setWidth(this.getWindow().getWidth()+0.001);
+        this.getWindow().setWidth(this.getWindow().getWidth()-0.001);
 
         mainPane.prefWidthProperty().bind(this.widthProperty());
         mainPane.prefHeightProperty().bind(this.heightProperty());
@@ -151,8 +154,8 @@ public class GameView extends Scene implements Listener {
 
 
         mainPane.paddingProperty().bind(Bindings.createObjectBinding(() -> new Insets(mainPane.heightProperty().multiply(0.05d).get())));
-        mainPane.getChildren().add(infosLayer);
         mainPane.getChildren().add(centerPane);
+        mainPane.getChildren().add(infosLayer);
         mainPane.getChildren().add(interactionsViewLayer);
         root.getChildren().add(mainPane);
 
@@ -283,9 +286,7 @@ public class GameView extends Scene implements Listener {
                 this.setErrorMessage((String) notif.getData());
                 break;
         }
-
     }
-
 
 
     /**

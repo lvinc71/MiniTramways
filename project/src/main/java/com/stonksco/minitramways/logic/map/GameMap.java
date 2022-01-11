@@ -799,13 +799,17 @@ public class GameMap {
                         updatedLines.add(l.getID());
                         linesToUpdate.add(l.getID());
                         s.removeLine(l.getID());
+                        // On rembourse 15 par tronçon détruit
+                        Game.get().addMoney(15);
                     } else {
                         canDestroy=false;
                     }
                 }
-                if(canDestroy)
+                if(canDestroy) {
                     stations.remove(stationtodestroy);
-
+                    // On rembourse 30 si la station est détruite
+                    Game.get().addMoney(30);
+                }
                 // Nettoyer la liste des stations (détruire celles qui ne sont plus reliées à rien)
 
             }

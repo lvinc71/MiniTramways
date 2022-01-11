@@ -77,7 +77,12 @@ public class ImageGetter {
                     break;
                 case PIN:
                     imgPath = getClass().getResource("/assets/pin.png");
-                    Game.Debug(4,"found url for pin image : " +imgPath);
+                    Game.Debug(4,"found URL for PIN image : " +imgPath);
+                    image = new Image(imgPath.toString());
+                    break;
+                case MOUSE:
+                    imgPath = getClass().getResource("/assets/mouse.png");
+                    Game.Debug(4,"found URL for MOUSE image : " +imgPath);
                     image = new Image(imgPath.toString());
                     break;
             }

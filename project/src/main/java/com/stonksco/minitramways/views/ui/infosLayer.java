@@ -3,6 +3,13 @@ package com.stonksco.minitramways.views.ui;
 import com.stonksco.minitramways.logic.Game;
 import com.stonksco.minitramways.views.Clock;
 import com.stonksco.minitramways.views.ColorEnum;
+import com.stonksco.minitramways.views.GameView;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectExpression;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -14,11 +21,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.Map;
 
 public class infosLayer extends BorderPane {
+
+    private GameView gw;
 
     // Zones
     private HBox topRight;
@@ -53,7 +64,9 @@ public class infosLayer extends BorderPane {
     // Satisfaction
     private ProgressBar satisfactionBar;
 
-    public infosLayer() {
+    public infosLayer(GameView gw) {
+        this.gw = gw;
+
         topRight = new HBox(15);
         time = new Group();
         money = new Group();
@@ -209,9 +222,32 @@ public class infosLayer extends BorderPane {
         errorText = new Text("");
         errorGroup = new StackPane();
 
+        errorBackground.setFill(gw.getColor(ColorEnum.PIN_COLOR));
+        errorBackground.arcWidthProperty().bind(gw.getCellSizeX().multiply(0.5d));
+        errorBackground.arcHeightProperty().bind(gw.getCellSizeY().multiply(0.5d));
+        errorBackground.heightProperty().bind(gw.getCellSizeY().multiply(2.5d));
+        errorBackground.widthProperty().bind(gw.getCellSizeX().multiply(12.5d));
+
+        ObjectProperty<Font> dynFont = new SimpleObjectProperty<Font>(new Font(25));
+
+        widthProperty().addListener(new ChangeListener<Number>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldWidth, Number newWidth)
+            {
+                dynFont.set(Font.font(gw.getCellSizeX().divide(2d).doubleValue()));
+            }
+
+        });
+
+        errorText.fontProperty().bind(dynFont);
+        this.layout();
+        errorText.setFill(Color.WHITE);
+
         errorGroup.getChildren().add(errorBackground);
         errorGroup.getChildren().add(errorText);
         this.setCenter(errorGroup);
+        errorGroup.setOpacity(0);
     }
 
     private long timeUntilMessageHides = 0l;
@@ -230,15 +266,13 @@ public class infosLayer extends BorderPane {
     private void updateErrorMessage() {
         if(timeUntilMessageHides>0) {
             if(messageHidden) {
-                errorText.setOpacity(1);
-                errorBackground.setOpacity(1);
+                errorGroup.setOpacity(1);
                 messageHidden=false;
             }
             timeUntilMessageHides-=Clock.get().DeltaTime();
         } else {
             if(!messageHidden) {
-                errorText.setOpacity(0);
-                errorBackground.setOpacity(0);
+                errorGroup.setOpacity(0);
                 messageHidden=true;
             }
         }
