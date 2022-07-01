@@ -1,45 +1,16 @@
-
-MiniTramways.vpp.bak_001d
-MiniTramways.vpp.bak_000f
-.MiniTramways.vpp.lck
-MiniTramways.vpp.bak_002d
-MiniTramways.vpp.bak_003d
-MiniTramways.vpp.bak_004d
-*.bak_005d
-*.bak_006d
-*.bak_008d
-MiniTramways.vpp.bak_011d
-MiniTramways.vpp.bak_010d
-MiniTramways.vpp.bak_009d
-MiniTramways.vpp.bak_007d
-MiniTramways.vpp.bak_012d
-*.bak_021d
-*.bak_019d
-*.bak_018d
-MiniTramways.vpp.bak_020d
-MiniTramways.vpp.bak_017d
-MiniTramways.vpp.bak_016d
-MiniTramways.vpp.bak_015d
-MiniTramways.vpp.bak_014d
-MiniTramways.vpp.bak_013d
-~$Backlog Mini Tramways.xlsx
-MiniTramways.vpp.bak_022d
-MiniTramways.vpp.bak_023d
-~$pport - présentation et études préliminaires.docx
-~$pport conception Mini Tramways.docx
-~$se rapports Mini Tramways.docx
-~$quette Mini Tramways.docx
-project/MiniTramways.iml
-project/MiniTramways.iml
-project/.idea/workspace.xml
-project/target
-project/.idea/workspace.xml
-project/MiniTramways.iml
-project/.idea/workspace.xml
-project/out/artifacts/MiniTramways_jar/MiniTramways.jar
-~$Nouveau backlog.xlsx
-project/out/artifacts/MiniTramways_jar/MiniTramways.jar
-project/out/artifacts/MiniTramways_jar/MiniTramways.jar
-project/.idea/workspace.xml
-*.class
-*.class
+project/.idea/**/workspace.xml
+project/.idea/**/tasks.xml
+project/.idea/**/usage.statistics.xml
+project/.idea/**/dictionaries
+project/.idea/**/shelf
+project/.idea/**/contentModel.xml
+project/.idea/**/dataSources/
+project/.idea/**/dataSources.ids
+project/.idea/**/dataSources.local.xml
+project/.idea/**/sqlDataSources.xml
+project/.idea/**/dynamic.xml
+project/.idea/**/uiDesigner.xml
+project/.idea/**/dbnavigator.xml
+project/.idea/**/gradle.xml
+project/.idea/**/libraries
+project/out/
